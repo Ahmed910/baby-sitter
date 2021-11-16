@@ -1,0 +1,93 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'as' => 'dashboard.',
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth' , 'admin']
+    ],
+    function () {
+
+        Route::prefix('dashboard')->group(function () {
+            // Home
+            Route::get('/','HomeController@index')->name('home');
+            // Route::get('import','HomeController@importDrivers');
+            // Role
+            Route::resource('role','RoleController');
+
+            // ====================HR===========================================
+            // Manager
+            Route::resource('manager','ManagerController');
+
+            // =====================Location====================================
+              // District
+            Route::resource('district','DistrictController');
+
+               // Selender
+            Route::resource('selender','SelenderController');
+
+               // Available Days
+            Route::resource('available_day','AvailableDayController');
+
+              // Car Type
+            Route::resource('car_type','CarTypeController');
+
+             // Slider
+            Route::resource('slider','SliderController');
+
+             // Main Category
+             Route::resource('main_category','MainCategoryController');
+
+             // First Sub Category
+            Route::resource('first_sub_category','FirstSubCategoryController');
+
+             // Second Sub Category
+             Route::resource('second_sub_category','SecondCategoryController');
+
+            //Favorite Time
+            Route::resource('favorite_time','FavoriteTimeController');
+
+            // ======================Setting====================================
+            // Notification
+            Route::resource('notification','NotificationController')->only('index','show','store');
+            // Setting
+            Route::resource('setting','SettingController')->only('index','store');
+
+            // Contact
+            Route::resource('contact','ContactController')->only('index','show','store','destroy');
+            Route::delete('reply/{reply_id}/delete','ContactController@deleteReply');
+
+            // =============================Utilities=============================
+
+            Route::get('search','HomeController@getSearch');
+
+            Route::get('get_profile','ProfileController@create')->name('profile.get_profile');
+            Route::post('update_profile','ProfileController@store')->name('profile.update_profile');
+            Route::post('update_password','ProfileController@updatePassword')->name('profile.update_password');
+
+            // ===========================AJAX==================================
+            Route::prefix('ajax')->group(function () {
+
+                Route::get('get_available_days_by_district/{district_id}','AjaxController@getAvailableDaysByDistrict');
+
+                Route::post('get_elm_reply/{driver_id}','AjaxController@getElmReply');
+                Route::post('register_driver_to_elm/{driver_id}','AjaxController@registerDriverToElm');
+
+                Route::get('get_users_by_type/{user_type}','AjaxController@getUsersByType');
+
+                Route::get('main_search','AjaxController@getSearch');
+                Route::get('get_new_orders','AjaxController@getNewOrders');
+                Route::get('get_current_orders','AjaxController@getCurrentOrders');
+                Route::get('get_finished_orders','AjaxController@getFinishedOrders');
+
+                Route::post('update_order_status/{order_id}','AjaxController@updateOrderStatus');
+                // Delete Images
+                Route::delete('delete_app_image/{image_id}','AjaxController@deleteAppImage');
+
+                // Generate Code
+                Route::get('generate_code/{char_length?}/{char_type?}/{model?}/{col?}/{letter_type?}','AjaxController@generateCode');
+            });
+        });
+    });

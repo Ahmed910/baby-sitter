@@ -1,0 +1,37 @@
+{
+	"authHost": "http://localhost/ma7ta_mobile/public",
+	"authEndpoint": "/broadcasting/auth",
+	"clients": [
+		{
+			"appId": "a4bdef1fb8809fb7",
+			"key": "7f1b299c2fa728d3a62da07d9b99ff5e"
+		}
+	],
+	"database": "redis",
+	"databaseConfig": {
+		"redis": {},
+		"sqlite": {
+			"databasePath": "/database/laravel-echo-server.sqlite"
+		}
+	},
+	"devMode": true,
+	"host": null,
+	"port": "6001",
+	"protocol": "http",
+	"socketio": {},
+	"secureOptions": 67108864,
+	"sslCertPath": "",
+	"sslKeyPath": "",
+	"sslCertChainPath": "",
+	"sslPassphrase": "",
+	"subscribers": {
+		"http": true,
+		"redis": true
+	},
+	"apiOriginAllow": {
+		"allowCors": false,
+		"allowOrigin": "",
+		"allowMethods": "",
+		"allowHeaders": ""
+	}
+}
