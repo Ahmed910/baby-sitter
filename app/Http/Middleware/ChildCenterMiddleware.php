@@ -16,7 +16,7 @@ class ChildCenterMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth('api')->check() && in_array(auth('api')->user()->user_type,['child']) && ! auth('api')->user()->is_user_deactive) {
+        if (auth('api')->check() && in_array(auth('api')->user()->user_type,['childcenter']) && ! auth('api')->user()->is_user_deactive) {
             return $next($request);
         }elseif (auth('api')->check() &&  auth('api')->user()->is_user_deactive) {
             return response()->json(['status' => 'fail','message'=> 'تم حظر حسابك رجاء التواصل مع الادارة للتفعيل','data' => null] ,403);

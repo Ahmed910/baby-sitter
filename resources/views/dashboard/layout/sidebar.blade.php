@@ -106,29 +106,60 @@
 
 
 
-            {{-- District --}}
-            @if (auth()->user()->hasPermissions('district'))
+            {{-- Country --}}
+            @if (auth()->user()->hasPermissions('country'))
             <li class=" nav-item">
                 <a class="d-flex align-items-center" href="#">
-                    <i data-feather='package'></i>
-                    <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.district.districts') !!}">
-                        {!! trans('dashboard.district.districts') !!}
+                    <i class="fas fa-flag"></i>
+                    <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.country.countries') !!}">
+                        {!! trans('dashboard.country.countries') !!}
                     </span>
                 </a>
                 <ul class="menu-content">
-                    <li class="{{ request()->route()->getName() == 'dashboard.district.index' || request()->route()->getName() == 'dashboard.district.show' ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href="{!! route('dashboard.district.index') !!}">
+                    <li class="{{ request()->route()->getName() == 'dashboard.country.index' || request()->route()->getName() == 'dashboard.country.show' ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{!! route('dashboard.country.index') !!}">
                             <i data-feather="circle"></i>
-                            <span class="menu-item" data-i18n="{!! trans('dashboard.district.districts') !!}">
+                            <span class="menu-item" data-i18n="{!! trans('dashboard.country.countries') !!}">
                                 {!! trans('dashboard.general.show_all') !!}
                             </span>
                         </a>
                     </li>
-                    @if (auth()->user()->hasPermissions('district','store'))
-                    <li class="{{ request()->route()->getName() == 'dashboard.district.create' || request()->route()->getName() == 'dashboard.district.edit' ? 'active' : '' }}">
-                        <a class="d-flex align-items-center" href="{!! route('dashboard.district.create') !!}">
+                    @if (auth()->user()->hasPermissions('country','store'))
+                    <li class="{{ request()->route()->getName() == 'dashboard.country.create' || request()->route()->getName() == 'dashboard.country.edit' ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{!! route('dashboard.country.create') !!}">
                             <i data-feather="circle"></i>
-                            <span class="menu-item" data-i18n="{!! trans('dashboard.district.add_district') !!}">
+                            <span class="menu-item" data-i18n="{!! trans('dashboard.country.add_country') !!}">
+                                {!! trans('dashboard.general.add_new') !!}
+                            </span>
+                        </a>
+                    </li>
+                    @endif
+                </ul>
+            </li>
+            @endif
+            {{-- City --}}
+            @if (auth()->user()->hasPermissions('city'))
+            <li class=" nav-item">
+                <a class="d-flex align-items-center" href="#">
+                    <i class="fas fa-city"></i>
+                    <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.city.cities') !!}">
+                        {!! trans('dashboard.city.cities') !!}
+                    </span>
+                </a>
+                <ul class="menu-content">
+                    <li class="{{ request()->route()->getName() == 'dashboard.city.index' || request()->route()->getName() == 'dashboard.city.show' ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{!! route('dashboard.city.index') !!}">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item" data-i18n="{!! trans('dashboard.city.cities') !!}">
+                                {!! trans('dashboard.general.show_all') !!}
+                            </span>
+                        </a>
+                    </li>
+                    @if (auth()->user()->hasPermissions('city','store'))
+                    <li class="{{ request()->route()->getName() == 'dashboard.city.create' || request()->route()->getName() == 'dashboard.city.edit' ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{!! route('dashboard.city.create') !!}">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item" data-i18n="{!! trans('dashboard.city.add_city') !!}">
                                 {!! trans('dashboard.general.add_new') !!}
                             </span>
                         </a>
@@ -139,137 +170,7 @@
             @endif
 
 
-              {{-- Selender --}}
-              @if (auth()->user()->hasPermissions('selender'))
-              <li class=" nav-item">
-                  <a class="d-flex align-items-center" href="#">
-                      <i data-feather='package'></i>
-                      <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.selender.selenders') !!}">
-                          {!! trans('dashboard.selender.selenders') !!}
-                      </span>
-                  </a>
-                  <ul class="menu-content">
-                      <li class="{{ request()->route()->getName() == 'dashboard.selender.index' || request()->route()->getName() == 'dashboard.selender.show' ? 'active' : '' }}">
-                          <a class="d-flex align-items-center" href="{!! route('dashboard.selender.index') !!}">
-                              <i data-feather="circle"></i>
-                              <span class="menu-item" data-i18n="{!! trans('dashboard.selender.selenders') !!}">
-                                  {!! trans('dashboard.general.show_all') !!}
-                              </span>
-                          </a>
-                      </li>
-                      @if (auth()->user()->hasPermissions('selender','store'))
-                      <li class="{{ request()->route()->getName() == 'dashboard.selender.create' || request()->route()->getName() == 'dashboard.selender.edit' ? 'active' : '' }}">
-                          <a class="d-flex align-items-center" href="{!! route('dashboard.selender.create') !!}">
-                              <i data-feather="circle"></i>
-                              <span class="menu-item" data-i18n="{!! trans('dashboard.selender.add_selender') !!}">
-                                  {!! trans('dashboard.general.add_new') !!}
-                              </span>
-                          </a>
-                      </li>
-                      @endif
-                  </ul>
-              </li>
-              @endif
 
-
-                {{-- Available Days --}}
-                @if (auth()->user()->hasPermissions('available_day'))
-                <li class=" nav-item">
-                    <a class="d-flex align-items-center" href="#">
-                        <i data-feather='package'></i>
-                        <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.available_day.available_days') !!}">
-                            {!! trans('dashboard.available_day.available_days') !!}
-                        </span>
-                    </a>
-                    <ul class="menu-content">
-                        <li class="{{ request()->route()->getName() == 'dashboard.available_day.index' || request()->route()->getName() == 'dashboard.available_day.show' ? 'active' : '' }}">
-                            <a class="d-flex align-items-center" href="{!! route('dashboard.available_day.index') !!}">
-                                <i data-feather="circle"></i>
-                                <span class="menu-item" data-i18n="{!! trans('dashboard.available_day.available_days') !!}">
-                                    {!! trans('dashboard.general.show_all') !!}
-                                </span>
-                            </a>
-                        </li>
-                        @if (auth()->user()->hasPermissions('available_day','store'))
-                        <li class="{{ request()->route()->getName() == 'dashboard.available_day.create' || request()->route()->getName() == 'dashboard.available_day.edit' ? 'active' : '' }}">
-                            <a class="d-flex align-items-center" href="{!! route('dashboard.available_day.create') !!}">
-                                <i data-feather="circle"></i>
-                                <span class="menu-item" data-i18n="{!! trans('dashboard.available_day.add_available_day') !!}">
-                                    {!! trans('dashboard.general.add_new') !!}
-                                </span>
-                            </a>
-                        </li>
-                        @endif
-                    </ul>
-                </li>
-                @endif
-
-
-                 {{-- Favorite Times --}}
-                 @if (auth()->user()->hasPermissions('favorite_time'))
-                 <li class=" nav-item">
-                     <a class="d-flex align-items-center" href="#">
-                         <i data-feather='package'></i>
-                         <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.favorite_time.favorite_times') !!}">
-                             {!! trans('dashboard.favorite_time.favorite_times') !!}
-                         </span>
-                     </a>
-                     <ul class="menu-content">
-                         <li class="{{ request()->route()->getName() == 'dashboard.favorite_time.index' || request()->route()->getName() == 'dashboard.favorite_time.show' ? 'active' : '' }}">
-                             <a class="d-flex align-items-center" href="{!! route('dashboard.favorite_time.index') !!}">
-                                 <i data-feather="circle"></i>
-                                 <span class="menu-item" data-i18n="{!! trans('dashboard.favorite_time.favorite_times') !!}">
-                                     {!! trans('dashboard.general.show_all') !!}
-                                 </span>
-                             </a>
-                         </li>
-                         @if (auth()->user()->hasPermissions('favorite_time','store'))
-                         <li class="{{ request()->route()->getName() == 'dashboard.favorite_time.create' || request()->route()->getName() == 'dashboard.favorite_time.edit' ? 'active' : '' }}">
-                             <a class="d-flex align-items-center" href="{!! route('dashboard.favorite_time.create') !!}">
-                                 <i data-feather="circle"></i>
-                                 <span class="menu-item" data-i18n="{!! trans('dashboard.favorite_time.add_favorite_time') !!}">
-                                     {!! trans('dashboard.general.add_new') !!}
-                                 </span>
-                             </a>
-                         </li>
-                         @endif
-                     </ul>
-                 </li>
-                 @endif
-
-
-
-                                    {{-- Car Type --}}
-                  @if (auth()->user()->hasPermissions('car_type'))
-                  <li class=" nav-item">
-                      <a class="d-flex align-items-center" href="#">
-                          <i data-feather='package'></i>
-                          <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.car_type.car_types') !!}">
-                              {!! trans('dashboard.car_type.car_types') !!}
-                          </span>
-                      </a>
-                      <ul class="menu-content">
-                          <li class="{{ request()->route()->getName() == 'dashboard.car_type.index' || request()->route()->getName() == 'dashboard.car_type.show' ? 'active' : '' }}">
-                              <a class="d-flex align-items-center" href="{!! route('dashboard.car_type.index') !!}">
-                                  <i data-feather="circle"></i>
-                                  <span class="menu-item" data-i18n="{!! trans('dashboard.car_type.car_types') !!}">
-                                      {!! trans('dashboard.general.show_all') !!}
-                                  </span>
-                              </a>
-                          </li>
-                          @if (auth()->user()->hasPermissions('car_type','store'))
-                          <li class="{{ request()->route()->getName() == 'dashboard.car_type.create' || request()->route()->getName() == 'dashboard.car_type.edit' ? 'active' : '' }}">
-                              <a class="d-flex align-items-center" href="{!! route('dashboard.car_type.create') !!}">
-                                  <i data-feather="circle"></i>
-                                  <span class="menu-item" data-i18n="{!! trans('dashboard.car_type.add_car_type') !!}">
-                                      {!! trans('dashboard.general.add_new') !!}
-                                  </span>
-                              </a>
-                          </li>
-                          @endif
-                      </ul>
-                  </li>
-                  @endif
 
 
                     {{-- Sliders --}}
@@ -305,102 +206,6 @@
               @endif
 
 
-                  {{-- Main Category --}}
-                  @if (auth()->user()->hasPermissions('main_category'))
-                  <li class=" nav-item">
-                      <a class="d-flex align-items-center" href="#">
-                          <i data-feather='package'></i>
-                          <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.main_category.main_categories') !!}">
-                              {!! trans('dashboard.main_category.main_categories') !!}
-                          </span>
-                      </a>
-                      <ul class="menu-content">
-                          <li class="{{ request()->route()->getName() == 'dashboard.main_category.index' || request()->route()->getName() == 'dashboard.main_category.show' ? 'active' : '' }}">
-                              <a class="d-flex align-items-center" href="{!! route('dashboard.main_category.index') !!}">
-                                  <i data-feather="circle"></i>
-                                  <span class="menu-item" data-i18n="{!! trans('dashboard.main_category.main_categories') !!}">
-                                      {!! trans('dashboard.general.show_all') !!}
-                                  </span>
-                              </a>
-                          </li>
-                          @if (auth()->user()->hasPermissions('main_category','store'))
-                          <li class="{{ request()->route()->getName() == 'dashboard.main_category.create' || request()->route()->getName() == 'dashboard.main_category.edit' ? 'active' : '' }}">
-                              <a class="d-flex align-items-center" href="{!! route('dashboard.main_category.create') !!}">
-                                  <i data-feather="circle"></i>
-                                  <span class="menu-item" data-i18n="{!! trans('dashboard.main_category.add_main_category') !!}">
-                                      {!! trans('dashboard.general.add_new') !!}
-                                  </span>
-                              </a>
-                          </li>
-                          @endif
-                      </ul>
-                  </li>
-                  @endif
-
-
-                    {{-- First Sub Category --}}
-                    @if (auth()->user()->hasPermissions('first_sub_category'))
-                    <li class=" nav-item">
-                        <a class="d-flex align-items-center" href="#">
-                            <i data-feather='package'></i>
-                            <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.first_sub_category.first_sub_categories') !!}">
-                                {!! trans('dashboard.first_sub_category.first_sub_categories') !!}
-                            </span>
-                        </a>
-                        <ul class="menu-content">
-                            <li class="{{ request()->route()->getName() == 'dashboard.first_sub_category.index' || request()->route()->getName() == 'dashboard.first_sub_category.show' ? 'active' : '' }}">
-                                <a class="d-flex align-items-center" href="{!! route('dashboard.first_sub_category.index') !!}">
-                                    <i data-feather="circle"></i>
-                                    <span class="menu-item" data-i18n="{!! trans('dashboard.first_sub_category.main_categories') !!}">
-                                        {!! trans('dashboard.general.show_all') !!}
-                                    </span>
-                                </a>
-                            </li>
-                            @if (auth()->user()->hasPermissions('first_sub_category','store'))
-                            <li class="{{ request()->route()->getName() == 'dashboard.first_sub_category.create' || request()->route()->getName() == 'dashboard.first_sub_category.edit' ? 'active' : '' }}">
-                                <a class="d-flex align-items-center" href="{!! route('dashboard.first_sub_category.create') !!}">
-                                    <i data-feather="circle"></i>
-                                    <span class="menu-item" data-i18n="{!! trans('dashboard.first_sub_category.add_first_sub_category') !!}">
-                                        {!! trans('dashboard.general.add_new') !!}
-                                    </span>
-                                </a>
-                            </li>
-                            @endif
-                        </ul>
-                    </li>
-                    @endif
-
- {{-- Second Sub Category --}}
- @if (auth()->user()->hasPermissions('second_sub_category'))
- <li class=" nav-item">
-     <a class="d-flex align-items-center" href="#">
-         <i data-feather='package'></i>
-         <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.second_sub_category.second_sub_categories') !!}">
-             {!! trans('dashboard.second_sub_category.second_sub_categories') !!}
-         </span>
-     </a>
-     <ul class="menu-content">
-         <li class="{{ request()->route()->getName() == 'dashboard.second_sub_category.index' || request()->route()->getName() == 'dashboard.second_sub_category.show' ? 'active' : '' }}">
-             <a class="d-flex align-items-center" href="{!! route('dashboard.second_sub_category.index') !!}">
-                 <i data-feather="circle"></i>
-                 <span class="menu-item" data-i18n="{!! trans('dashboard.second_sub_category.main_categories') !!}">
-                     {!! trans('dashboard.general.show_all') !!}
-                 </span>
-             </a>
-         </li>
-         @if (auth()->user()->hasPermissions('second_sub_category','store'))
-         <li class="{{ request()->route()->getName() == 'dashboard.second_sub_category.create' || request()->route()->getName() == 'dashboard.second_sub_category.edit' ? 'active' : '' }}">
-             <a class="d-flex align-items-center" href="{!! route('dashboard.second_sub_category.create') !!}">
-                 <i data-feather="circle"></i>
-                 <span class="menu-item" data-i18n="{!! trans('dashboard.second_sub_category.add_second_sub_category') !!}">
-                     {!! trans('dashboard.general.add_new') !!}
-                 </span>
-             </a>
-         </li>
-         @endif
-     </ul>
- </li>
- @endif
 
 
         </ul>

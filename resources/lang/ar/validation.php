@@ -8,6 +8,7 @@ $attributes = [
     'first_name'            => 'حقل الاسم الأول',
     'last_name'             => 'حقل اسم العائلة',
     'password'              => 'حقل كلمة المرور',
+
     'password_confirmation' => 'حقل تأكيد كلمة المرور',
     'city_id'                  => 'حقل المدينة',
     'country_id'               => 'حقل الدولة',
@@ -74,8 +75,10 @@ $attributes = [
     'city_list.*'           => 'حقل المدن',
     'category_id'           => 'حقل القسم الرئيسي',
     'start_date'            => 'حقل تاريخ البدء',
-    'finish_date'           => 'حقل تاريخ الانتهاء',
-
+    'end_date'           => 'حقل تاريخ الانتهاء',
+    'promo_code'=>'حقل البرمو كود ',
+    'discount'=>'حقل الخصم ',
+   'photo'=>'حقل صورة العرض',
     // client
     'client_id'             => 'حقل العميل',
     'chat_id'               => 'حقل المحادثة',

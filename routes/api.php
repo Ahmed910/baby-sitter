@@ -79,7 +79,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
     Route::namespace('BabySitter')->prefix('baby_sitter')->group(function(){
         Route::middleware(['auth:api','baby_sitter_middleware'])->group(function(){
             // Offers
-            Route::apiResource('offers','OfferController');
+            Route::apiResource('offer','OfferController');
             // Rate && Review
             Route::post('rates','OrderController@SetRate');
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
@@ -88,12 +88,10 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
     });
     // Driver
-    Route::namespace('Driver')->prefix('driver')->group(function(){
-        Route::middleware(['auth:api','driver_middleware'])->group(function(){
-            // Order
-            Route::apiResource('orders','OrderController')->only('index','show');
-            Route::get('live_orders','OrderController@getCurrentOrder');
-            Route::apiResource('offers','OfferController')->only('index','show','store');
+    Route::namespace('ChildCenter')->prefix('child_center')->group(function(){
+        Route::middleware(['auth:api','child_center_middleware'])->group(function(){
+            // Offers
+            Route::apiResource('offer','OfferController');
 
             //
             Route::post('reject_orders','OfferController@rejectOrder');

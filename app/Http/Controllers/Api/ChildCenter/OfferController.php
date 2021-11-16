@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\BabySitter;
+namespace App\Http\Controllers\Api\ChildCenter;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\Offers\OfferRequest;
-use App\Models\Offer;
 use App\Traits\Offers;
 use Illuminate\Http\Request;
-
 
 class OfferController extends Controller
 {
@@ -30,7 +28,7 @@ class OfferController extends Controller
      */
     public function store(OfferRequest $request)
     {
-        return $this->CreateOffer($request);
+       return $this->CreateOffer($request);
     }
 
     /**
@@ -51,9 +49,9 @@ class OfferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(OfferRequest $request, $id)
+    public function update(OfferRequest $request,$id)
     {
-         return $this->UpdateOffer($request,$id);
+        return $this->UpdateOffer($request,$id);
     }
 
     /**

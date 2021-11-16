@@ -9,6 +9,8 @@ class Offer extends Model
 {
     protected $guarded = ['created_at','updated_at'];
 
+    protected $dates = ['start_date' , 'end_date'];
+
     protected static function boot()
     {
         parent::boot();
@@ -51,6 +53,13 @@ class Offer extends Model
         }
     }
 
+
+    // Scopes
+
+    public function scopeOfferUser($query)
+    {
+        $query->where('user_id',auth('api')->id());
+    }
 
      // Relations
      public function media()

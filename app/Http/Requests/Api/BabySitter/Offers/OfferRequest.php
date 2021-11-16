@@ -24,14 +24,20 @@ class OfferRequest extends ApiMasterRequest
      */
     public function rules()
     {
+        if(isset($this->offer) && $this->offer)
+        {
+            $photo_validation = 'nullable|image|mimes:jpeg,jpg,png';
+        }else{
+            $photo_validation = 'required|image|mimes:jpeg,jpg,png';
+        }
         return [
-            'start_date'=>'required|date_format:Y-m-d',
-            'end_date'  => 'required|date_format:Y-m-d',
+            'start_date'=>'required|date_format:Y-m-d|after_or_equal:today',
+            'end_date'  => 'required|date_format:Y-m-d|after:start_date',
             'title'=>'required|string|between:2,200',
             'max_num'=>'nullable|integer',
             'promo_code'=>'required',
             'discount'=>'required|numeric|between:0,100',
-
+            'photo'=>$photo_validation
 
         ];
     }
