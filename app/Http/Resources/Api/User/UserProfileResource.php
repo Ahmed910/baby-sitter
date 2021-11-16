@@ -21,7 +21,6 @@ class UserProfileResource extends JsonResource
             'phone' => (string)$this->phone,
             'email' => (string)$this->email,
             'image' => (string)$this->avatar,
-<<<<<<< HEAD
             'qr_code'=>$this->qr_code,
             'test_version' => (string)setting('test_version'),
             'unread_notifications' => $this->unreadnotifications->count(),
@@ -33,8 +32,6 @@ class UserProfileResource extends JsonResource
             'wallet' => (float) $this->wallet,
             'dept_amount' => (float) $this->user_dept_to_app,
             'user_type' => (string)$this->user_type,
-=======
->>>>>>> 2d846db37f40ce2cf1786733c1c52d69cbaec735
 
             'unread_notifications' => $this->unreadnotifications->count(),
 

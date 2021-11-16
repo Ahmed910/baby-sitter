@@ -75,6 +75,18 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::apiResource('store_categories','StoreCategoryController')->only('index','show');
         Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
     });
+
+    Route::namespace('BabySitter')->prefix('baby_sitter')->group(function(){
+        Route::middleware(['auth:api','baby_sitter_middleware'])->group(function(){
+            // Offers
+            Route::apiResource('offers','OfferController');
+            // Rate && Review
+            Route::post('rates','OrderController@SetRate');
+            // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
+        });
+        Route::apiResource('store_categories','StoreCategoryController')->only('index','show');
+        Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
+    });
     // Driver
     Route::namespace('Driver')->prefix('driver')->group(function(){
         Route::middleware(['auth:api','driver_middleware'])->group(function(){

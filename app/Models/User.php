@@ -219,6 +219,12 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+
 
     public function user_services()
     {
@@ -334,13 +340,9 @@ class User extends Authenticatable implements JWTSubject
 
    public function routeNotificationForFcm($notification)
    {
-<<<<<<< HEAD
        if ($this->attributes['user_type'] == 'child_centre') {
            return @$this->devices->last()->device_token;
        }
-=======
-
->>>>>>> 2d846db37f40ce2cf1786733c1c52d69cbaec735
        return $this->devices->pluck('device_token')->toArray();
    }
 
