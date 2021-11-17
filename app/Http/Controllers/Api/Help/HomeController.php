@@ -6,13 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Contact\ContactRequest;
 use App\Http\Requests\Api\Client\UserSearchRequest;
-<<<<<<< HEAD
 use App\Http\Resources\Api\Help\{CategoryResource, ServiceResource};
 use App\Models\{Contact , SearchHistory, Category , User , AppImage, Feature, Service};
-=======
-use App\Http\Resources\Api\Help\{CarTypeResource, CategoryResource};
-use App\Models\{Contact , SearchHistory, Category , User , AppImage, CarType};
->>>>>>> 2d846db37f40ce2cf1786733c1c52d69cbaec735
 use App\Notifications\Contact\ContactNotification;
 
 class HomeController extends Controller

@@ -22,32 +22,19 @@ Route::group(
             Route::resource('manager','ManagerController');
 
             // =====================Location====================================
-              // District
-            Route::resource('district','DistrictController');
+           
 
-               // Selender
-            Route::resource('selender','SelenderController');
 
-               // Available Days
-            Route::resource('available_day','AvailableDayController');
 
-              // Car Type
-            Route::resource('car_type','CarTypeController');
+
 
              // Slider
             Route::resource('slider','SliderController');
 
-             // Main Category
-             Route::resource('main_category','MainCategoryController');
-
-             // First Sub Category
-            Route::resource('first_sub_category','FirstSubCategoryController');
-
-             // Second Sub Category
-             Route::resource('second_sub_category','SecondCategoryController');
-
-            //Favorite Time
-            Route::resource('favorite_time','FavoriteTimeController');
+           // Country
+           Route::resource('country','CountryController');
+           // City
+           Route::resource('city','CityController');
 
             // ======================Setting====================================
             // Notification

@@ -25,7 +25,6 @@ class SignUpRequest extends ApiMasterRequest
      */
     public function rules()
     {
-<<<<<<< HEAD
         $user_type='';
         $car_liecence_image = 'nullable|required_if:user_type,driver|image|mimes:jpeg,jpg,png';
         $certificates = 'nullable|required_if:user_type,babysitter|image|mimes:jpeg,jpg,png';
@@ -38,8 +37,6 @@ class SignUpRequest extends ApiMasterRequest
         if($this->user_type == 'babysitter'){
             $user_type = 'babysitter';
         }
-=======
->>>>>>> 2d846db37f40ce2cf1786733c1c52d69cbaec735
 
         return [
             'name' => 'required|string|between:3,250',
@@ -49,7 +46,6 @@ class SignUpRequest extends ApiMasterRequest
             'gender'   => 'nullable|required_if:user_type,client|in:male,female',
 
             'image'    => 'nullable|image|mimes:jpg,jpeg,png',
-<<<<<<< HEAD
             // 'country_id' => 'nullable|required_if:user_type,driver|required_with:city_id|exists:countries,id',
             'city_id' => 'required|exists:cities,id',
             'user_type' => 'required|in:client,babysitter,childcenter',
@@ -75,16 +71,6 @@ class SignUpRequest extends ApiMasterRequest
             'features.*'=>'nullable|exists:features,id',
             'business_license_image'=>'nullable|required_if:user_type,childcenter|image|mimes:jpg,jpeg,gif,png',
             'services.*.price'=>'nullable|numeric',
-=======
-            'country_id' => 'nullable|required_with:city_id|exists:countries,id',
-            'city_id' => 'nullable|exists:cities,id',
-
-
-
-            'lat' => 'required|numeric',
-            'lng' => 'required|numeric',
-            'location_description' => 'required|string|between:3,250',
->>>>>>> 2d846db37f40ce2cf1786733c1c52d69cbaec735
 
 
         ];
@@ -96,7 +82,6 @@ class SignUpRequest extends ApiMasterRequest
        if (isset($data['phone']) && $data['phone']) {
            $data['phone'] = filter_mobile_number($data['phone']);
        }
-<<<<<<< HEAD
        if (isset($data['identity_number']) && $data['identity_number']) {
            $data['identity_number'] = convertArabicNumber($data['identity_number']);
        }
@@ -117,9 +102,6 @@ class SignUpRequest extends ApiMasterRequest
                $data['file_type'] = 'file';
            }
        }
-=======
-
->>>>>>> 2d846db37f40ce2cf1786733c1c52d69cbaec735
 
 
       if(isset($data['user_type'])){

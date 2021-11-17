@@ -75,13 +75,23 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::apiResource('store_categories','StoreCategoryController')->only('index','show');
         Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
     });
-    // Driver
-    Route::namespace('Driver')->prefix('driver')->group(function(){
-        Route::middleware(['auth:api','driver_middleware'])->group(function(){
-            // Order
-            Route::apiResource('orders','OrderController')->only('index','show');
-            Route::get('live_orders','OrderController@getCurrentOrder');
-            Route::apiResource('offers','OfferController')->only('index','show','store');
+
+    Route::namespace('BabySitter')->prefix('baby_sitter')->group(function(){
+        Route::middleware(['auth:api','baby_sitter_middleware'])->group(function(){
+            // Offers
+            Route::apiResource('offer','OfferController');
+            // Rate && Review
+            Route::post('rates','OrderController@SetRate');
+            // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
+        });
+        Route::apiResource('store_categories','StoreCategoryController')->only('index','show');
+        Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
+    });
+    // Child Center
+    Route::namespace('ChildCenter')->prefix('child_center')->group(function(){
+        Route::middleware(['auth:api','child_center_middleware'])->group(function(){
+            // Offers
+            Route::apiResource('offer','OfferController');
 
             //
             Route::post('reject_orders','OfferController@rejectOrder');
@@ -132,31 +142,15 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         // Contact Us & Complaints   // ->middleware('auth:api')
         Route::post('contact', 'HomeController@contact');
 
+        Route::prefix('client')->group(function(){
+           Route::get('get_sitters','Home');
+        });
+
         // Slider
         Route::get('sliders','SliderController@index');
 
-        // Car Types
-        Route::get('car_types','HelpController@getCarTypes');
-
-        // Selenders
-        Route::get('get_selenders','HelpController@getSelenders');
-
-        // Districts
-        Route::get('districts','HelpController@getDistricts');
-
-         // Available Days
-         Route::get('available_days/{district_id}','HelpController@getAvailableDays');
-
-          // Favorite Times
-          Route::get('favorite_times/{available_day_id}','HelpController@getFavoriteTimes');
-             // Main Categories
-          Route::get('main_categories','HelpController@getMainCategories');
-             // Sub Categories
-          Route::get('sub_categories','HelpController@getSubCategories');
-               // Second Sub Categories
-          Route::get('second_sub_categories','HelpController@getSecondSubCategories');
-          // Cart
-          Route::post('add_to_cart','CartController@addToCart');
+       
+       
 
         // Delete Images
         Route::delete('delete_app_image/{image_id}','HomeController@deleteAppImage')->middleware("auth:api");

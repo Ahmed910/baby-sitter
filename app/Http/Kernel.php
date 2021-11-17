@@ -68,7 +68,8 @@ class Kernel extends HttpKernel
 
         'normal_user' => \App\Http\Middleware\UserMiddleware::class,
         'client_middleware' => \App\Http\Middleware\ClientMiddleware::class,
-        'driver_middleware' => \App\Http\Middleware\DriverMiddleware::class,
+        'baby_sitter_middleware' => \App\Http\Middleware\BabySitterMiddleware::class,
+        'child_center_middleware' => \App\Http\Middleware\ChildCenterMiddleware::class,
 
         'setLocale'   => \App\Http\Middleware\setLocale::class,
 
