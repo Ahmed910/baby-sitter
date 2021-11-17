@@ -21,6 +21,8 @@ return[
         'success_sign_up_for_sitter'=>'Successfully registered',
         'offer_created_successfully'=>'Offer Created Successfully',
         'offer_updated_successfully'=>'Offer Updated Successfully',
+        'updated_successfully'=>'Updated Successfully',
+        'editing_is_not_done_try_again'=>'editing is not done try again',
         'cant_transfer_temp_balance' => "Your current balance is not enough for the transfer (you cannot use your temporary balance for the transfer)",
         'order_hint_if_offer' => "عزيزي الكابتن رجاء العلم إذا تخطت قيمة الرحلة مبلغ :max_price ريال سيتم اضافة المبلغ (:max_price) الى محفظتك والباقي سيتم استلامه نقدا من العميل",
         'order_hint_if_offer_after_accept' => "سوف يتم اضافة مبلغ :driver_wallet_amount ريال الى محفظتك بعد انهاء الرحلة وسيقوم العميل بدفع مبلغ :client_pay_amount ريال",

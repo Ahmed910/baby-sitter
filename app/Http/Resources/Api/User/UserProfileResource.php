@@ -28,17 +28,17 @@ class UserProfileResource extends JsonResource
             'date_of_birth_hijri' => $this->when($this->user_type == 'driver',optional($this->date_of_birth_hijri)->format("Y-m-d")),
             'identity_number' => $this->when($this->user_type == 'driver',$this->identity_number),
             'identity_number_image' => $this->when($this->user_type == 'driver',$this->identity_number_image),
-            'is_payment_showing' => setting('is_payment_showing') == 'enable' ? true : false,
-            'wallet' => (float) $this->wallet,
-            'dept_amount' => (float) $this->user_dept_to_app,
+            'services'=> $this->when($this->user_type !='client',UserServiceResource::collection($this->user_services)),
+            'is_educational'=>(bool)$this->when($this->user_type =='childcenter',optional($this->child_centre)->is_educational),
             'user_type' => (string)$this->user_type,
 
             'unread_notifications' => $this->unreadnotifications->count(),
 
-            'user_type' => (string)$this->user_type,
             'token' => $this->when($this->token,$this->token),
             'country' => optional($this->profile)->country_id ? new CountryResource($this->profile->country) : null,
             'city' => optional($this->profile)->city_id ? new CityResource($this->profile->city) : null,
+            'lat'=>optional($this->profile)->lat,
+            'lng'=>optional($this->profile)->lng,
 
         ];
     }

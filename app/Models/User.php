@@ -286,6 +286,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Role::class);
     }
 
+    public function rateBabySitter()
+    {
+        return $this->belongsToMany(User::class,'rates','client_id','baby_sitter_id')->withPivot('baby_sitter_rate','review','booking_id')->withTimestamps();
+    }
+
+    public function rateClients()
+    {
+        return $this->belongsToMany(User::class,'rates','baby_sitter_id','client_id')->withPivot('baby_sitter_rate','review','booking_id')->withTimestamps();
+    }
+
 
     public function hasPermissions($route, $method = null)
     {

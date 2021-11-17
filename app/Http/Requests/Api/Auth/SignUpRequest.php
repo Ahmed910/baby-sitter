@@ -26,7 +26,7 @@ class SignUpRequest extends ApiMasterRequest
     public function rules()
     {
         $user_type='';
-        $car_liecence_image = 'nullable|required_if:user_type,driver|image|mimes:jpeg,jpg,png';
+       // $car_liecence_image = 'nullable|required_if:user_type,driver|image|mimes:jpeg,jpg,png';
         $certificates = 'nullable|required_if:user_type,babysitter|image|mimes:jpeg,jpg,png';
         if ($this->file_type == 'file') {
             $certificates = 'nullable|required_if:user_type,babysitter|file|mimes:pdf';

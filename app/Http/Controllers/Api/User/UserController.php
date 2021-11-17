@@ -34,6 +34,7 @@ class UserController extends Controller
            $user = auth('api')->user();
 
            $profile_data = ['country_id','city_id','is_infected'];
+           
            if ($user->phone != $request->phone || $user->identity_number != $request->identity_number || $request->date_of_birth_hijri != optional($user->date_of_birth_hijri)->format("Y-m-d") || $request->date_of_birth != optional($user->date_of_birth)->format("Y-m-d")) {
                $update_request_data = ['phone','identity_number','date_of_birth','date_of_birth_hijri'];
                $profile_data = ['country_id','city_id','is_infected'];
@@ -72,10 +73,10 @@ class UserController extends Controller
            $user = auth('api')->user();
            $user->update(array_only($request->validated(),['password']));
            DB::commit();
-           return (new UserProfileResource($user))->additional(['status' => 'success','message'=>"تم التعديل بنجاح"]);
+           return (new UserProfileResource($user))->additional(['status' => 'success','message'=>trans('api.messages.updated_successfully')]);
         }catch(\Exception $e){
             DB::rollback();
-            return response()->json(['status' =>'fail' , 'data' => null ,'message'=>'لم يتم التعديل حاول مرة اخرى'], 401);
+            return response()->json(['status' =>'fail' , 'data' => null ,'message'=>trans('api.messages.editing_is_not_done_try_again')], 401);
         }
 
     }
