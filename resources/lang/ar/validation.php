@@ -78,6 +78,10 @@ $attributes = [
     'end_date'           => 'حقل تاريخ الانتهاء',
     'promo_code'=>'حقل البرمو كود ',
     'discount'=>'حقل الخصم ',
+    'business_register'=>'حقل رقم التسجيل',
+    'price'=>'حقل السعر',
+    'is_educational'=>'حقل تعليمى',
+    'services'=>'حقل الخدمات',
    'photo'=>'حقل صورة العرض',
     // client
     'client_id'             => 'حقل العميل',

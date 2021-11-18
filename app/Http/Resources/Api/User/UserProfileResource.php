@@ -29,7 +29,11 @@ class UserProfileResource extends JsonResource
             'identity_number' => $this->when($this->user_type == 'driver',$this->identity_number),
             'identity_number_image' => $this->when($this->user_type == 'driver',$this->identity_number_image),
             'services'=> $this->when($this->user_type !='client',UserServiceResource::collection($this->user_services)),
-            'is_educational'=>(bool)$this->when($this->user_type =='childcenter',optional($this->child_centre)->is_educational),
+            'is_educational'=>$this->when($this->user_type =='childcenter',(bool)optional($this->child_centre)->is_educational),
+            'price_educational'=>$this->when(($this->user_type =='childcenter' && optional($this->child_centre)->is_educational)==true,(float)optional($this->child_centre)->price),
+            'business_register'=>$this->when($this->user_type =='childcenter',optional($this->child_centre)->business_register),
+            'business_register_image'=>$this->when($this->user_type =='childcenter',optional($this->child_centre)->business_license_image),
+            'bio'=>$this->when($this->user_type =='babysitter',optional($this->profile)->bio),
             'user_type' => (string)$this->user_type,
 
             'unread_notifications' => $this->unreadnotifications->count(),

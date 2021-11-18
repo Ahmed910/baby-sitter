@@ -66,11 +66,11 @@ class SignUpRequest extends ApiMasterRequest
             'is_educational'=>'nullable|required_if:user_type,childcenter|in:0,1',
             'price'=>'nullable|required_if:is_educational,1|numeric',
             'services'=>'nullable|array|required_if:user_type,'.$user_type,
-            'services.*,service_id'=>'nullable|exists:services,id',
+            'services.*.service_id'=>'nullable|exists:services,id',
             'features'=>'nullable|array|required_if:user_type,'.$user_type,
             'features.*'=>'nullable|exists:features,id',
             'business_license_image'=>'nullable|required_if:user_type,childcenter|image|mimes:jpg,jpeg,gif,png',
-            'services.*.price'=>'nullable|numeric',
+            'services.*.price'=>'nullable|required_with:services.*.service_id|numeric',
 
 
         ];
