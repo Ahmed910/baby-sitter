@@ -22,6 +22,8 @@ return[
         'order_hint_if_offer_after_accept' => "سوف يتم اضافة مبلغ :driver_wallet_amount ريال الى محفظتك بعد انهاء الرحلة وسيقوم العميل بدفع مبلغ :client_pay_amount ريال",
         'cant_finish_order_before_received_from_client' => "لايمكنك انهاء الطلب قبل تأكيد استلام الطلب من العميل",
           'offer_created_successfully'=>'تم إنشاء العرض بنجاح',
+          'updated_successfully'=>'تم التعديل بنجاح',
+          'editing_is_not_done_try_again'=>'التعديل لم يتم حاول مرة اخري',
           'offer_updated_successfully'=>'تم تعديل العرض بنجاح',
         'driver_finish_trip' => "تم انهاء الرحلة من قبل الكابتن",
         'driver_finish_order' => "تم انهاء الطلب من قبل الكابتن",

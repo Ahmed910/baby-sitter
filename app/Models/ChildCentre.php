@@ -12,7 +12,9 @@ class ChildCentre extends Model
     {
         parent::boot();
         static::saved(function ($data) {
+
             if (request()->hasFile('business_license_image')) {
+
                 if ($data->media()->where('option', 'business_license_image')->exists()) {
                     $image = AppMedia::where(['app_mediaable_type' => 'App\Models\ChildCentre','app_mediaable_id' => $data->id ,'media_type' => 'image','option' => 'business_license_image'])->first();
                     if ($image) {
@@ -55,4 +57,7 @@ class ChildCentre extends Model
      {
          return $this->morphOne(AppMedia::class,'app_mediaable');
      }
+
+
+
 }

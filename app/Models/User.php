@@ -211,6 +211,15 @@ class User extends Authenticatable implements JWTSubject
         $query->where(['is_active' => 1 , 'is_ban' => 0 , 'is_admin_active_user' => 1]);
     }
 
+    public function scopeNearest($query, $lat, $lng)
+    {
+        $query->where('user_type','childcenter')->whereHas('profile', function ($q) use ($lat, $lng) {
+            $q->nearest($lat, $lng);
+        });
+    }
+
+  
+
 
     // Relations
     public function media()
@@ -229,6 +238,11 @@ class User extends Authenticatable implements JWTSubject
     public function user_services()
     {
         return $this->hasMany(UserService::class,'user_id');
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany(Service::class,'user_services','user_id','service_id')->withPivot('price')->withTimestamps();
     }
 
     public function user_features()
@@ -284,6 +298,16 @@ class User extends Authenticatable implements JWTSubject
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function rateBabySitter()
+    {
+        return $this->belongsToMany(User::class,'rates','client_id','baby_sitter_id')->withPivot('baby_sitter_rate','review','booking_id')->withTimestamps();
+    }
+
+    public function rateClients()
+    {
+        return $this->belongsToMany(User::class,'rates','baby_sitter_id','client_id')->withPivot('baby_sitter_rate','review','booking_id')->withTimestamps();
     }
 
 

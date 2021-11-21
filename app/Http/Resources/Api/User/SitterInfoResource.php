@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Api\Offers;
+namespace App\Http\Resources\Api\User;
 
+use App\Http\Resources\Api\Help\ServiceResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OfferResource extends JsonResource
+class SitterInfoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,11 +15,13 @@ class OfferResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user = auth('api')->user();
+        // $first_offer = 
         return [
             'id'=>$this->id,
-            'offer_photo'=>$this->photo,
-            'status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status)
+            'name'=>$this->name,
+            'avatar'=>$this->avatar,
+            'avg_rate'=> 4,
+            'services'=> UserServiceResource::collection($this->user_services)
         ];
     }
 }

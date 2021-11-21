@@ -142,9 +142,11 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         // Contact Us & Complaints   // ->middleware('auth:api')
         Route::post('contact', 'HomeController@contact');
 
-        // Route::prefix('client')->group(function(){
-        //    Route::get('get_sitters','Home');
-        // });
+        Route::get('get_all_offers','NewHomeController@getAllOffers');
+        Route::get('get_sitters','NewHomeController@getSitters');
+
+        Route::get('get_centers','NewHomeController@getCenters');
+       
 
         // Slider
         Route::get('sliders','SliderController@index');

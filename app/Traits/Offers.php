@@ -25,12 +25,15 @@ trait Offers{
 
     protected function CreateOffer(OfferRequest $request)
     {
-        Offer::create($request->validated()+['user_id'=>auth('api')->id()]);
+        $user = auth('api')->user();
+        
+        Offer::create($request->validated()+['user_id'=>$user->id,'user_type'=>$user->user_type]);
         return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_created_successfully')]);
     }
 
     protected function UpdateOffer(OfferRequest $request,$id)
     {
+        
         $offer = Offer::offeruser()->findOrFail($id);
         $offer->update($request->validated());
         return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_updated_successfully')]);

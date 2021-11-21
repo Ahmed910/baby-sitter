@@ -59,7 +59,7 @@ class AuthController extends Controller
             $user_data = [
                 'verified_code' => $code ,
                 'is_active' => 0 ,
-                'user_type'=>'client',
+                
                 'referral_code' => generate_unique_code(8,'\\App\\Models\\User','referral_code','alpha_numbers','lower')
             ];
 
@@ -259,7 +259,7 @@ class AuthController extends Controller
     protected function sendVerifyCode($user)
     {
         if (setting('use_sms_service') == 'enable') {
-            $message = trans('api.auth.verified_code_is',['code' => $code]);
+            $message = trans('api.auth.verified_code_is',['code' => $user->verified_code]);
             $response = send_sms($user->phone, $message);
 
             if (setting('sms_provider') == 'hisms' && $response['response'] != 3) {

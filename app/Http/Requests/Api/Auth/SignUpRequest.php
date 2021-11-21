@@ -26,7 +26,7 @@ class SignUpRequest extends ApiMasterRequest
     public function rules()
     {
         $user_type='';
-        $car_liecence_image = 'nullable|required_if:user_type,driver|image|mimes:jpeg,jpg,png';
+       // $car_liecence_image = 'nullable|required_if:user_type,driver|image|mimes:jpeg,jpg,png';
         $certificates = 'nullable|required_if:user_type,babysitter|image|mimes:jpeg,jpg,png';
         if ($this->file_type == 'file') {
             $certificates = 'nullable|required_if:user_type,babysitter|file|mimes:pdf';
@@ -54,7 +54,7 @@ class SignUpRequest extends ApiMasterRequest
             // If Driver
 
            // 'identity_number_image' => 'nullable|required_if:user_type,driver|image|mimes:jpg,jpeg,png',
-            'identity_number' => 'nullable|numeric|digits_between:5,25|unique:users,identity_number',
+            'identity_number' => 'required|numeric|digits_between:5,25|unique:users,identity_number',
             'date_of_birth' => 'nullable|date|before:'.date("Y-m-d"),
             'date_of_birth_hijri' => 'nullable|date|date_format:Y-m-d',
 
@@ -66,11 +66,11 @@ class SignUpRequest extends ApiMasterRequest
             'is_educational'=>'nullable|required_if:user_type,childcenter|in:0,1',
             'price'=>'nullable|required_if:is_educational,1|numeric',
             'services'=>'nullable|array|required_if:user_type,'.$user_type,
-            'services.*,service_id'=>'nullable|exists:services,id',
+            'services.*.service_id'=>'nullable|exists:services,id',
             'features'=>'nullable|array|required_if:user_type,'.$user_type,
             'features.*'=>'nullable|exists:features,id',
             'business_license_image'=>'nullable|required_if:user_type,childcenter|image|mimes:jpg,jpeg,gif,png',
-            'services.*.price'=>'nullable|numeric',
+            'services.*.price'=>'nullable|required_with:services.*.service_id|numeric',
 
 
         ];
