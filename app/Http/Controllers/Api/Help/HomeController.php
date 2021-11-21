@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Contact\ContactRequest;
 use App\Http\Requests\Api\Client\UserSearchRequest;
-use App\Http\Resources\Api\Help\{CategoryResource, ServiceResource};
+use App\Http\Resources\Api\Help\{CategoryResource, FeatureResource, ServiceResource};
 use App\Models\{Contact , SearchHistory, Category , User , AppImage, Feature, Service};
 use App\Notifications\Contact\ContactNotification;
 
@@ -65,14 +65,14 @@ class HomeController extends Controller
 
     public function getServices()
     {
-        $services = Service::latest()->paginate(50);
+        $services = Service::latest()->get();
         return ServiceResource::collection($services)->additional(['status'=>'success','message'=>'']);
     }
 
     public function getFeatures()
     {
-        $features = Feature::latest()->paginate(50);
-        return ServiceResource::collection($features)->additional(['status'=>'success','message'=>'']);
+        $features = Feature::latest()->get();
+        return FeatureResource::collection($features)->additional(['status'=>'success','message'=>'']);
     }
 
 
@@ -130,6 +130,6 @@ class HomeController extends Controller
         return response()->json(['status' => 'success','message'=> trans('dashboard.messages.success_delete'),'data' => null]);
     }
 
-  
+
 
 }

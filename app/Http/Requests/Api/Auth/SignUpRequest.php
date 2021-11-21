@@ -54,7 +54,7 @@ class SignUpRequest extends ApiMasterRequest
             // If Driver
 
            // 'identity_number_image' => 'nullable|required_if:user_type,driver|image|mimes:jpg,jpeg,png',
-            'identity_number' => 'nullable|numeric|digits_between:5,25|unique:users,identity_number',
+            'identity_number' => 'required|numeric|digits_between:5,25|unique:users,identity_number',
             'date_of_birth' => 'nullable|date|before:'.date("Y-m-d"),
             'date_of_birth_hijri' => 'nullable|date|date_format:Y-m-d',
 
