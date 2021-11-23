@@ -66,6 +66,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
             //Store Categories
+
             // Neareast Drivers
             Route::get('nearest_drivers/{number_of_drivers?}','LocationController@nearestDrivers');
             // Rate && Review
@@ -83,9 +84,12 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Rate && Review
             Route::post('rates','OrderController@SetRate');
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
+            // get main profile
+            Route::get('get_main_profile','ProfileController@index');
+            Route::apiResource('gallery','GalleryController')->except('show');
+            Route::post('edit_features','FeatureController@editFeaturesForSitter');
         });
-        Route::apiResource('store_categories','StoreCategoryController')->only('index','show');
-        Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
+
     });
     // Child Center
     Route::namespace('ChildCenter')->prefix('child_center')->group(function(){
@@ -98,7 +102,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('change_order_status','OrderController@changeOrderStatus');
             Route::post('change_account_status','DriverController@changeAccountStatus');
 
+            Route::apiResource('gallery','GalleryController')->except('show');
             // Update Driver Location
+            Route::post('edit_features','FeatureController@editFeaturesForCenter');
             Route::post('update_location','LocationController@updateLocation');
 
             // Package
@@ -146,13 +152,13 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::get('get_sitters','NewHomeController@getSitters');
 
         Route::get('get_centers','NewHomeController@getCenters');
-       
+
 
         // Slider
         Route::get('sliders','SliderController@index');
 
-       
-       
+
+
 
         // Delete Images
         Route::delete('delete_app_image/{image_id}','HomeController@deleteAppImage')->middleware("auth:api");
