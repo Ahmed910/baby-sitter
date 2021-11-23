@@ -24,9 +24,10 @@ class AddToGalleryRequest extends ApiMasterRequest
      */
     public function rules()
     {
-  
+
         return [
-            'image'    => 'required|image|mimes:jpg,jpeg,png'
+            'image'    => 'required|array',
+            'image.*'    => 'required|image|mimes:jpg,jpeg,png'
         ];
     }
 }

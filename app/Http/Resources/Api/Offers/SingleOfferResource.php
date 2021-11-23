@@ -17,11 +17,12 @@ class SingleOfferResource extends JsonResource
         return [
             'id'=>$this->id,
             'title'=>$this->title,
-            'start_date'=> $this->start_date->format('d M Y'),
-            'end_date'=> $this->end_date->format('d M Y'),
+            'start_date'=> $this->start_date->format('d M'),
+            'end_date'=> $this->end_date->format('d M'),
             'max_number'=> $this->max_num,
             'promo_code' => $this->promo_code,
             'num_of_used'=> 50,
+            'status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status),
             'discount'=> $this->discount,
             'photo'=>$this->photo
         ];
