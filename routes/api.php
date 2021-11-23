@@ -86,7 +86,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
             // get main profile
             Route::get('get_main_profile','ProfileController@index');
-            Route::apiResource('gallery','GalleryController')->except('show');
+            Route::apiResource('gallery','GalleryController')->except('show','update');
             Route::post('edit_features','FeatureController@editFeaturesForSitter');
         });
 
@@ -102,7 +102,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('change_order_status','OrderController@changeOrderStatus');
             Route::post('change_account_status','DriverController@changeAccountStatus');
 
-            Route::apiResource('gallery','GalleryController')->except('show');
+            Route::apiResource('gallery','GalleryController')->except('show','update');
             // Update Driver Location
             Route::post('edit_features','FeatureController@editFeaturesForCenter');
             Route::post('update_location','LocationController@updateLocation');
@@ -141,6 +141,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::get('get_services','HomeController@getServices');
         // Features
         Route::get('get_features','HomeController@getFeatures');
+        // Days
+        Route::get('get_days','HomeController@getDays');
         // Tax
         Route::get('tax','HomeController@getTax')->middleware('auth:api');
         // Contact

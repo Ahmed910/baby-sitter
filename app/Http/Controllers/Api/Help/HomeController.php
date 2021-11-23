@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Contact\ContactRequest;
 use App\Http\Requests\Api\Client\UserSearchRequest;
-use App\Http\Resources\Api\Help\{CategoryResource, FeatureResource, ServiceResource};
-use App\Models\{Contact , SearchHistory, Category , User , AppImage, Feature, Service};
+use App\Http\Resources\Api\Help\{CategoryResource, DayResource, FeatureResource, ServiceResource};
+use App\Models\{Contact , SearchHistory, Category , User , AppImage, Day, Feature, Service};
 use App\Notifications\Contact\ContactNotification;
 
 class HomeController extends Controller
@@ -73,6 +73,12 @@ class HomeController extends Controller
     {
         $features = Feature::latest()->get();
         return FeatureResource::collection($features)->additional(['status'=>'success','message'=>'']);
+    }
+
+    public function getDays()
+    {
+        $days = Day::get();
+        return DayResource::collection($days)->additional(['status'=>'success','message'=>'']);
     }
 
 
