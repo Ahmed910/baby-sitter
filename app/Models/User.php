@@ -277,6 +277,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(ChildCentre::class);
     }
 
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasManyThrough(Schedule::class,Appointment::class,'user_id','appointment_id');
+    }
+
 
     public function country()
     {
@@ -291,6 +301,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Order::class,'client_id');
     }
+
+
 
 
 
@@ -372,7 +384,7 @@ class User extends Authenticatable implements JWTSubject
 
    public function routeNotificationForFcm($notification)
    {
-       if ($this->attributes['user_type'] == 'child_centre') {
+       if ($this->attributes['user_type'] == 'childcenter') {
            return @$this->devices->last()->device_token;
        }
        return $this->devices->pluck('device_token')->toArray();
