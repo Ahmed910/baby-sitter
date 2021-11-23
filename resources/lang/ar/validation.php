@@ -81,7 +81,12 @@ $attributes = [
     'business_register'=>'حقل رقم التسجيل',
     'price'=>'حقل السعر',
     'is_educational'=>'حقل تعليمى',
+    'business_license_image'=>'حقل صورة رخصة العمل',
+    'days'=>'حقل الايام',
     'services'=>'حقل الخدمات',
+    'from'=>'بداية الفترة',
+    'identity_number'=>'حقل الهوية',
+    'to'=>'نهاية الفترة',
    'photo'=>'حقل صورة العرض',
     // client
     'client_id'             => 'حقل العميل',

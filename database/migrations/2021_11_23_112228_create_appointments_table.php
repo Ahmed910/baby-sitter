@@ -15,7 +15,11 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->
+            $table->uuid('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->dateTime('from')->nullable();
+            $table->dateTime('to')->nullable();
             $table->timestamps();
         });
     }

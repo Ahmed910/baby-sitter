@@ -81,12 +81,13 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::middleware(['auth:api','baby_sitter_middleware'])->group(function(){
             // Offers
             Route::apiResource('offer','OfferController');
+            // Schedules
+            Route::apiResource('schedule','ScheduleController');
             // Rate && Review
             Route::post('rates','OrderController@SetRate');
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
             // get main profile
-            Route::get('get_main_profile','ProfileController@index');
-            Route::apiResource('gallery','GalleryController')->except('show','update');
+            Route::apiResource('gallery','GalleryController')->except('show','update','index');
             Route::post('edit_features','FeatureController@editFeaturesForSitter');
         });
 

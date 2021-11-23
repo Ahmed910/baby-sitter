@@ -12,17 +12,7 @@ class GalleryController extends Controller
 {
 
     use Profile;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $user = auth('api')->user();
-
-        return (new SitterInfoResource($user))->additional(['status'=>'success','message'=>'']);
-    }
+   
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +25,7 @@ class GalleryController extends Controller
         return $this->addToGallery($request);
     }
 
-   
+
 
 
 
