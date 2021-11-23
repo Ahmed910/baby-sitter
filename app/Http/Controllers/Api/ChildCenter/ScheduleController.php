@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Api\ChildCenter;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Schedules\ScheduleRequest;
+use App\Traits\Schedules;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
+
+    use Schedules;
     /**
      * Display a listing of the resource.
      *
@@ -23,9 +27,9 @@ class ScheduleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ScheduleRequest $request)
     {
-        //
+        return $this->createSchedule($request);
     }
 
     /**
@@ -46,9 +50,9 @@ class ScheduleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ScheduleRequest $request, $id)
     {
-        //
+        return $this->updateSchedules($request,$id);
     }
 
     /**

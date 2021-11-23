@@ -15,4 +15,9 @@ class Appointment extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function days()
+    {
+        return $this->belongsToMany(Day::class,'schedules','appointment_id','day_id')->withTimestamps();
+    }
 }

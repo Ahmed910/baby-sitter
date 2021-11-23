@@ -65,6 +65,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('offers/{order_id}','OfferController@offers');
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
+
+            // Kids 
+            Route::apiResource('kid','KidController');
             //Store Categories
 
             // Neareast Drivers
@@ -107,7 +110,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Update Driver Location
             Route::post('edit_features','FeatureController@editFeaturesForCenter');
             Route::post('update_location','LocationController@updateLocation');
-
+            // Schedules
+            Route::apiResource('schedule','ScheduleController');
             // Package
             Route::apiResource('packages','PackageController')->only('store','index');
 

@@ -24,11 +24,21 @@ class ScheduleRequest extends ApiMasterRequest
      */
     public function rules()
     {
-        return [
-            'from'=>'required|date_format:H:i',
-            'to'=>'required|date_format:H:i|after:from',
-            'days'=>'required|array',
-            'days.*'=>'required|exists:days,id'
-        ];
+        if($this->schedule){
+            return [
+                'from'=>'nullable|date_format:H:i',
+                'to'=>'nullable|date_format:H:i|after:from',
+                'days'=>'nullable|array',
+                'days.*'=>'nullable|exists:days,id'
+            ];
+        }else{
+            return [
+                'from'=>'required|date_format:H:i',
+                'to'=>'required|date_format:H:i|after:from',
+                'days'=>'required|array',
+                'days.*'=>'required|exists:days,id'
+            ];
+        }
+
     }
 }
