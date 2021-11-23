@@ -44,6 +44,7 @@ class User extends Authenticatable implements JWTSubject
             }
 
 
+
             if (request()->hasFile('certificates')) {
                 if ($data->media()->where('option' , 'certificates')->exists()) {
                     $image = AppMedia::where(['app_mediaable_type' => 'App\Models\User','app_mediaable_id' => $data->id])->first();
@@ -218,13 +219,18 @@ class User extends Authenticatable implements JWTSubject
         });
     }
 
-  
+
 
 
     // Relations
     public function media()
     {
     	return $this->morphOne(AppMedia::class,'app_mediaable');
+    }
+
+    public function galleries()
+    {
+    	return $this->hasMany(Gallery::class);
     }
 
 
@@ -239,6 +245,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(UserService::class,'user_id');
     }
+
+
 
     public function services()
     {

@@ -26,7 +26,7 @@ trait Offers{
     protected function CreateOffer(OfferRequest $request)
     {
         $user = auth('api')->user();
-        
+
         Offer::create($request->validated()+['user_id'=>$user->id,'user_type'=>$user->user_type]);
         return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_created_successfully')]);
     }

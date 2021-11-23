@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Api\User;
+namespace App\Http\Resources\Api\Babysitters;
 
-use App\Http\Resources\Api\Gallery\GalleryResource;
-use App\Http\Resources\Api\Help\ServiceResource;
+use App\Http\Resources\Api\User\UserFeatureResource;
+use App\Http\Resources\Api\User\UserServiceResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SitterInfoResource extends JsonResource
+class ProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +16,14 @@ class SitterInfoResource extends JsonResource
      */
     public function toArray($request)
     {
-        // $first_offer =
         return [
             'id'=>$this->id,
+            'image'=>$this->avatar,
             'name'=>$this->name,
-            'avatar'=>$this->avatar,
-            'avg_rate'=> 4,
+            'rate_avg'=>4,
             'services'=> UserServiceResource::collection($this->user_services),
-            'features' => UserFeatureResource::collection($this->user_features),
-            'galleries' => GalleryResource::collection($this->galleries)
+            'features'=> UserFeatureResource::collection($this->user_features),
+            
         ];
     }
 }
