@@ -22,6 +22,7 @@ class UserProfileResource extends JsonResource
             'phone' => (string)$this->phone,
             'email' => (string)$this->email,
             'image' => (string)$this->avatar,
+            'rate_avg'=> 4,
             'qr_code'=>$this->qr_code,
             'test_version' => (string)setting('test_version'),
             'unread_notifications' => $this->unreadnotifications->count(),
