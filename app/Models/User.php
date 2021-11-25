@@ -287,6 +287,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasManyThrough(Schedule::class,Appointment::class,'user_id','appointment_id');
     }
 
+    public function sittersForCenter()
+    {
+        return $this->hasMany(BabySitter::class,'center_id');
+    }
+
 
     public function country()
     {

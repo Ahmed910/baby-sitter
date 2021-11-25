@@ -84,6 +84,10 @@ $attributes = [
     'business_license_image'=>'حقل صورة رخصة العمل',
     'days'=>'حقل الايام',
     'kidname'=>'اسم الطفل',
+    'max_num_of_child_care'=>'حقل الحد الاقصى لرعاية الاطفال',
+    'level_experience'=>'حقل مستوي الخبرة',
+    
+    'total_num_of_student'=>'حقل المجموع الكلي للطلاب',
     'health_state'=>'حقل الحالة الصحية',
     'services'=>'حقل الخدمات',
     'from'=>'بداية الفترة',

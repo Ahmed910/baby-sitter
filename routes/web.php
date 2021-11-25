@@ -25,7 +25,7 @@ Route::group(
 		Route::middleware('auth')->group(function () {
 			Route::post('logout',"Auth\LoginController@logout")->name('logout');
 		});
-		Route::view('/',"dashboard.home.index")->name('site.home');
+		Route::view('/',"dashboard.error.404_notauth")->name('site.home');
 		Route::view('terms',"site.terms")->name('site.terms');
 
 });
