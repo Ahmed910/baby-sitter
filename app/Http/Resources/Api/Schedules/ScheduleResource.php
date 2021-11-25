@@ -18,7 +18,7 @@ class ScheduleResource extends JsonResource
         return [
             'id'=>$this->id,
             'day' => (new DayResource($this->day)),
-            'appointment'=> (new AppointmentResource($this->appointment))
+            // 'appointment'=> (new AppointmentResource($this->appointment))
         ];
     }
 }

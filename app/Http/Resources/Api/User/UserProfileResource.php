@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\User;
 use App\Http\Resources\Api\Center\BabySitterCenterResource;
 use App\Http\Resources\Api\Gallery\GalleryResource;
 use App\Http\Resources\Api\Help\{CityResource,CountryResource};
+use App\Http\Resources\Api\Schedules\AppointmentResource;
 use App\Http\Resources\Api\Schedules\ScheduleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -40,6 +41,7 @@ class UserProfileResource extends JsonResource
             'features' => $this->when($this->user_type !='client',UserFeatureResource::collection($this->user_features)),
 
             'schedules' => $this->when($this->user_type !='client',ScheduleResource::collection($this->schedules)),
+            'appointment' => $this->when($this->user_type !='client',new AppointmentResource($this->appointment)),
             'sitters'=> $this->when($this->user_type =='childcenter',BabySitterCenterResource::collection($this->sittersForCenter)),
             'unread_notifications' => $this->unreadnotifications->count(),
 

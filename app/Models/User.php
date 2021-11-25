@@ -277,9 +277,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(ChildCentre::class);
     }
 
-    public function appointments()
+    public function appointment()
     {
-        return $this->hasMany(Appointment::class);
+        return $this->hasOne(Appointment::class);
     }
 
     public function schedules()
