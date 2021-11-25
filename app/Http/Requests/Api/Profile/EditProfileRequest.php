@@ -46,7 +46,7 @@ class EditProfileRequest extends ApiMasterRequest
             'services.*.service_id'=>'nullable|exists:services,id',
             'services.*.price'=>'nullable|required_with:services.*.service_id|numeric',
             'is_educational'=>'nullable|in:0,1',
-            'bio' => 'nullable|string|between:3,250',
+            'bio' => 'nullable',
         ];
     }
 

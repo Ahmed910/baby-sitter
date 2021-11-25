@@ -66,7 +66,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
 
-            // Kids 
+            // Kids
             Route::apiResource('kid','KidController');
             //Store Categories
 
@@ -112,6 +112,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('update_location','LocationController@updateLocation');
             // Schedules
             Route::apiResource('schedule','ScheduleController');
+            //BabySitter
+            Route::apiResource('baby_sitter','BabySitterController');
             // Package
             Route::apiResource('packages','PackageController')->only('store','index');
 
