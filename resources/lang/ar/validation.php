@@ -86,7 +86,7 @@ $attributes = [
     'kidname'=>'اسم الطفل',
     'max_num_of_child_care'=>'حقل الحد الاقصى لرعاية الاطفال',
     'level_experience'=>'حقل مستوي الخبرة',
-    
+    'level_percentage'=>'حقل النسبة المئوية للمستوي',
     'total_num_of_student'=>'حقل المجموع الكلي للطلاب',
     'health_state'=>'حقل الحالة الصحية',
     'services'=>'حقل الخدمات',

@@ -30,6 +30,7 @@ class BabySitterRequest extends ApiMasterRequest
             'bio'=>'nullable',
             'max_num_of_child_care'=>'required|integer',
             'level_experience'=>'required|in:entry_level,intermediate,mid_level,senior',
+            'level_percentage'=>'required|gte:0|lte:100',
             'total_num_of_student'=>'required|integer',
             'image'=>'nullable|image|mimes:jpg,jpeg,gif,png'
         ];
