@@ -19,7 +19,7 @@ class NewHomeController extends Controller
              $q->whereHas('profile',function($q) use($request){
                 $q->where('city_id',$request->city_id);
              });
-        })->where('user_type','babysitter')->get(); 
+        })->where('user_type','babysitter')->get();
 
         return SitterInfoResource::collection($sitters)->additional(['status'=>'success','message'=>'']);
     }
@@ -30,7 +30,7 @@ class NewHomeController extends Controller
             $q->whereHas('profile',function($q) use($request){
                $q->where('city_id',$request->city_id);
             });
-       })->where('user_type','childcenter')->get(); 
+       })->where('user_type','childcenter')->get();
        return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
@@ -40,5 +40,5 @@ class NewHomeController extends Controller
         return OfferResource::collection($offers)->additional(['status'=>'success','message'=>'']);
     }
 
-    
+
 }
