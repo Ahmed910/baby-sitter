@@ -219,6 +219,16 @@ class User extends Authenticatable implements JWTSubject
         });
     }
 
+    public function scopeSitter($query)
+    {
+        $query->where('user_type','babysitter');
+    }
+
+    public function scopeCenter($query)
+    {
+        $query->where('user_type','childcenter');
+    }
+
 
 
 
