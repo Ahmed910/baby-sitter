@@ -15,11 +15,15 @@ class NewHomeController extends Controller
 {
     public function getSitters(CityRequest $request)
     {
+        // dd($request->name);
         $sitters = User::when($request->city_id,function($q) use($request){
              $q->whereHas('profile',function($q) use($request){
                 $q->where('city_id',$request->city_id);
              });
+        })->when($request->name,function($q) use($request){
+            $q->where('name','like',"%{$request->name}%");
         })->where('user_type','babysitter')->get();
+
 
         return SitterInfoResource::collection($sitters)->additional(['status'=>'success','message'=>'']);
     }
@@ -30,7 +34,9 @@ class NewHomeController extends Controller
             $q->whereHas('profile',function($q) use($request){
                $q->where('city_id',$request->city_id);
             });
-       })->where('user_type','childcenter')->get();
+       })->when($request->name,function($q) use($request){
+             $q->where('name','like',"%{$request->name}%");
+          })->where('user_type','childcenter')->get();
        return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
