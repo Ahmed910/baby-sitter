@@ -18,17 +18,14 @@ trait Schedules
 
         try {
 
-            $appointment = auth('api')->user()->appointment()->create(array_except($request->validated(), ['days']));
-            $arr = [];
-            foreach ($request->days as $day) {
-
-                $arr[] = [
-                    'day_id' => $day,
-                    'appointment_id' => $appointment->id
-                ];
+           // $appointment = auth('api')->user()->appointment()->create(array_except($request->validated(), ['days']));
+            $appointment = Appointment::updateOrCreate(
+                ['user_id' => auth('api')->id()],
+                array_except($request->validated()+['user_id' => auth('api')->id()], ['days'])
+            );
+            if(isset($request->days)){
+                $appointment->days()->sync($request->days);
             }
-
-            $appointment->schedules()->createMany($arr);
             DB::commit();
            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.schedules_created_successfully')]);
         } catch (\Exception $e) {
