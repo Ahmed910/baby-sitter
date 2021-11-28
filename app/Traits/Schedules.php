@@ -18,7 +18,7 @@ trait Schedules
 
         try {
 
-            $appointment = auth('api')->user()->appointments()->create(array_except($request->validated(), ['days']));
+            $appointment = auth('api')->user()->appointment()->create(array_except($request->validated(), ['days']));
             $arr = [];
             foreach ($request->days as $day) {
 
@@ -39,7 +39,7 @@ trait Schedules
 
     protected function updateSchedules(ScheduleRequest $request,$id)
     {
-       
+
         DB::beginTransaction();
 
         try {
