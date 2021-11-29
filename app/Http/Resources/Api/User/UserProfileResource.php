@@ -50,6 +50,7 @@ class UserProfileResource extends JsonResource
             'city' => optional($this->profile)->city_id ? new CityResource($this->profile->city) : null,
             'lat'=>optional($this->profile)->lat,
             'lng'=>optional($this->profile)->lng,
+            'location'=>$this->when($this->user_type =='childcenter',optional($this->profile)->location)
 
         ];
     }

@@ -21,6 +21,7 @@ class CenterInfoResource extends JsonResource
             'avatar'=>$this->avatar,
             'avg_rate'=> 4,
             'city'=> new CityResource(optional($this->profile)->city),
+            'location'=> optional($this->profile)->location,
             'lat'=>optional($this->profile)->lat,
             'lng'=>optional($this->profile)->lng,
             'services'=> UserServiceResource::collection($this->user_services),
