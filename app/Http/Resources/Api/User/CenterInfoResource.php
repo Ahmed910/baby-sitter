@@ -26,7 +26,7 @@ class CenterInfoResource extends JsonResource
             'lng'=>optional($this->profile)->lng,
             // 'distance' => $this->distance,
             'services'=> UserServiceResource::collection($this->user_services),
-            'is_educational'=>(bool) optional($this->child_center)->is_educational
+            'is_educational'=>(bool)optional($this->child_centre)->is_educational
         ];
     }
 }

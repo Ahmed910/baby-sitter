@@ -27,6 +27,8 @@ return[
           'baby_sitter_added_successfully'=>'لقد تم إضافة الحاضنة بنجاح',
           'baby_sitter_data_updated_successfully'=>'تم تعديل بيانات الحاضنة بنجاح',
           'sitter_deleted_successfully'=>'تم حذف الحاضنة بنجاح',
+          'added_to_fav'=>'تم الإضافة للمفضلة',
+          'deleted_from_fav'=>'تم الحذف من المفضلة',
           'kid_deleted_successfully'=>'تم حذف الطفل',
           'schedules_updated_successfully'=>'تم تعديل المواعيد بنجاح',
           'schedules_created_successfully'=>'تم إضافة المواعيد بنجاح',

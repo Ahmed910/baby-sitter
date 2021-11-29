@@ -17,7 +17,7 @@ class KidController extends Controller
      */
     public function index()
     {
-        $kids = Kid::get();
+        $kids = Kid::where('client_id',auth('api')->id())->get();
         return KidResource::collection($kids)->additional(['status'=>'success','message'=>'']);
     }
 
