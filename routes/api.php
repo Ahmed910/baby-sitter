@@ -164,9 +164,6 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
 
         Route::get('get_nearest_centers','NewHomeController@getNearestCenters');
 
-        Route::get('filter_sitters','NewHomeController@filterSitters');
-
-        Route::get('filter_centers','NewHomeController@filterCenters');
         // Slider
         Route::get('sliders','SliderController@index');
 

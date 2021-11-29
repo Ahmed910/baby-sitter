@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 class NewHomeController extends Controller
 {
-    public function getSitters(CityRequest $request)
+    public function getSitters(FilterSittersRequest $request)
     {
         // dd($request->name);
         $sitters = User::when($request->city_id,function($q) use($request){
@@ -25,13 +25,21 @@ class NewHomeController extends Controller
              });
         })->when($request->name,function($q) use($request){
             $q->where('name','like',"%{$request->name}%");
-        })->where('user_type','babysitter')->get();
+        })->
+        when($request->lowest_price && $request->high_price,function($q) use($request){
+            $q->whereHas('user_services',function($query) use($request){
+                $query->whereBetween('price',[$request->lowest_price,$request->high_price]);
+            });
+        })->when($request->high_rate && $request->high_rate == true,function($q)use($request){
+            $q->orderByDesc('rate_avg');
+        })->sitter()->get();
+
 
 
         return SitterInfoResource::collection($sitters)->additional(['status'=>'success','message'=>'']);
     }
 
-    public function getCenters(CityRequest $request)
+    public function getCenters(FilterCentersRequest $request)
     {
         $centers = User::when($request->city_id,function($q) use($request){
             $q->whereHas('profile',function($q) use($request){
@@ -39,7 +47,22 @@ class NewHomeController extends Controller
             });
        })->when($request->name,function($q) use($request){
              $q->where('name','like',"%{$request->name}%");
-          })->where('user_type','childcenter')->get();
+          })->
+          when($request->lowest_price && $request->high_price,function($q) use($request){
+            $q->whereHas('user_services',function($query) use($request){
+                $query->whereBetween('price',[$request->lowest_price,$request->high_price]);
+            });
+        })->when($request->high_rate && $request->high_rate == true,function($q)use($request){
+           $q->orderByDesc('rate_avg');
+        })->when($request->is_educational && $request->is_educational == true,function($q)use($request){
+           $q->whereHas('child_centre',function($query) use($request){
+               $query->where('is_educational',1);
+           });
+          })->when(( $request->lat && $request->lng ),function($q) use($request){
+
+              $q->nearest($request->lat,$request->lng);
+          })->center()
+          ->get();
        return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
@@ -54,44 +77,10 @@ class NewHomeController extends Controller
         $centers = User::when($request->lat && $request->lng, function ($q) use ($request) {
             $q->nearest($request->lat, $request->lng);
     })->get();
-        // dd($centers);
+
         return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
-    public function filterSitters(FilterSittersRequest $request)
-    {
-            //  dd($request->high_rate == true);
-         $sitters = User::when($request->lowest_price && $request->high_price,function($q) use($request){
-             $q->whereHas('user_services',function($query) use($request){
-                 $query->whereBetween('price',[$request->lowest_price,$request->high_price]);
-             });
-         })->when($request->high_rate && $request->high_rate == true,function($q)use($request){
-             $q->orderByDesc('rate_avg');
-         })->sitter()->get();
-         return SitterInfoResource::collection($sitters)->additional(['status'=>'success','message'=>'']);
-    }
-
-
-    public function filterCenters(FilterCentersRequest $request)
-    {
-            //  dd($request->high_rate == true);
-         $centers = User::when($request->lowest_price && $request->high_price,function($q) use($request){
-             $q->whereHas('user_services',function($query) use($request){
-                 $query->whereBetween('price',[$request->lowest_price,$request->high_price]);
-             });
-         })->when($request->high_rate && $request->high_rate == true,function($q)use($request){
-            $q->orderByDesc('rate_avg');
-         })->when($request->is_educational && $request->is_educational == true,function($q)use($request){
-            $q->whereHas('child_centre',function($query) use($request){
-                $query->where('is_educational',1);
-            });
-           })->when(($request->nearest && $request->nearest == true && $request->lat && $request->lng ),function($q) use($request){
-
-               $q->nearest($request->lat,$request->lng);
-           })
-         ->center()->get();
-         return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
-    }
-
+    
 
 }

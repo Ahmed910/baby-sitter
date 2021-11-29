@@ -25,6 +25,8 @@ class FilterSittersRequest extends ApiMasterRequest
     public function rules()
     {
         return [
+            'city_id'=>'nullable|exists:cities,id',
+            'name'=>'nullable|string',
             'lowest_price' => 'nullable|numeric|gt:0',
             'high_price'  => 'nullable|numeric|gt:lowest_price',
             'high_rate'   => 'nullable|in:on'
