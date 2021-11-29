@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Help\CityRequest;
 use App\Http\Requests\Api\Help\FilterCentersRequest;
 use App\Http\Requests\Api\Help\FilterSittersRequest;
 use App\Http\Requests\Api\Help\NearestCentersRequest;
+use App\Http\Resources\Api\Babysitters\BabySitterResource;
 use App\Http\Resources\Api\Offers\OfferResource;
 use App\Http\Resources\Api\User\CenterInfoResource;
 use App\Http\Resources\Api\User\SitterInfoResource;
@@ -66,6 +67,17 @@ class NewHomeController extends Controller
        return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
+
+    public function getSitterDetails($sitter_id)
+    {
+        $sitter = User::sitter()->findOrFail($sitter_id);
+        return (new BabySitterResource($sitter))->additional(['status'=>'success','message'=>'']);
+    }
+
+    public function getCenterDetails($center_id)
+    {
+        $center = User::center()->findOrFail($center_id);
+    }
     public function getAllOffers()
     {
         $offers = Offer::latest()->get();
@@ -81,6 +93,6 @@ class NewHomeController extends Controller
         return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
-    
+
 
 }

@@ -160,6 +160,10 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::get('get_all_offers','NewHomeController@getAllOffers');
         Route::get('get_sitters','NewHomeController@getSitters');
 
+        Route::get('get_sitter_details/{sitter_id}','NewHomeController@getSitterDetails');
+
+        Route::get('get_center_details/{center_id}','NewHomeController@getCenterDetails');
+
         Route::get('get_centers','NewHomeController@getCenters');
 
         Route::get('get_nearest_centers','NewHomeController@getNearestCenters');
