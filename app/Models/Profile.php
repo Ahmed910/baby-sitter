@@ -37,6 +37,7 @@ class Profile extends Model
 
     public function scopeNearest($query, $lat, $lng, $qr = null)
     {
+        
         $lat = (float)$lat;
         $lng = (float)$lng;
         $space_search_by = (float)(convertArabicNumber(setting('search_distance')) ? convertArabicNumber(setting('search_distance')) : 8);
