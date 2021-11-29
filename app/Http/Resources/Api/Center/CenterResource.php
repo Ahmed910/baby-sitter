@@ -54,6 +54,7 @@ class CenterResource extends JsonResource
             'schedules' => ScheduleResource::collection($this->schedules),
             'appointment' => new AppointmentResource($this->appointment),
             'sitters'=> BabySitterCenterResource::collection($this->sittersForCenter),
+            'reviews' => $reviews
         ];
     }
 }
