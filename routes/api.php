@@ -66,6 +66,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
 
+            // favorites
+            Route::post('toggle_favorites/{user_id}','FavoriteController@toggleFavorites');
+
             // Kids
             Route::apiResource('kid','KidController');
             //Store Categories
