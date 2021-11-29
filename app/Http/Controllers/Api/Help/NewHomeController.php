@@ -51,7 +51,10 @@ class NewHomeController extends Controller
 
     public function getNearestCenters(NearestCentersRequest $request)
     {
-        $centers = User::nearest($request->lat,$request->lng)->get();
+        $centers = User::when($request->lat && $request->lng, function ($q) use ($request) {
+            $q->nearest($request->lat, $request->lng);
+    })->get();
+        // dd($centers);
         return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
     }
 
@@ -83,7 +86,7 @@ class NewHomeController extends Controller
                 $query->where('is_educational',1);
             });
            })->when(($request->nearest && $request->nearest == true && $request->lat && $request->lng ),function($q) use($request){
-               
+
                $q->nearest($request->lat,$request->lng);
            })
          ->center()->get();
