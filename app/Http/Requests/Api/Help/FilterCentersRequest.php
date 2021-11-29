@@ -29,7 +29,10 @@ class FilterCentersRequest extends ApiMasterRequest
             'lowest_price' => 'nullable|numeric|gt:0',
             'high_price'  => 'nullable|numeric|gt:lowest_price',
             'high_rate'   => 'nullable|in:on',
-            'is_educational' => 'nullable|in:on'
+            'is_educational' => 'nullable|in:on',
+            'lat' => 'nullable|numeric',
+            'lng' => 'nullable|numeric',
+            'nearest'=> 'nullable|in:on'
         ];
     }
 }

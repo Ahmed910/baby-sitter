@@ -63,7 +63,7 @@ class NewHomeController extends Controller
                  $query->whereBetween('price',[$request->lowest_price,$request->high_price]);
              });
          })->when($request->high_rate && $request->high_rate == true,function($q)use($request){
-             $q->whereBetween('rate_avg',[3,5]);
+             $q->orderByDesc('rate_avg');
          })->sitter()->get();
          return SitterInfoResource::collection($sitters)->additional(['status'=>'success','message'=>'']);
     }
@@ -77,11 +77,14 @@ class NewHomeController extends Controller
                  $query->whereBetween('price',[$request->lowest_price,$request->high_price]);
              });
          })->when($request->high_rate && $request->high_rate == true,function($q)use($request){
-             $q->whereBetween('rate_avg',[3,5]);
+            $q->orderByDesc('rate_avg');
          })->when($request->is_educational && $request->is_educational == true,function($q)use($request){
             $q->whereHas('child_centre',function($query) use($request){
                 $query->where('is_educational',1);
             });
+           })->when(($request->nearest && $request->nearest == true && $request->lat && $request->lng ),function($q) use($request){
+               
+               $q->nearest($request->lat,$request->lng);
            })
          ->center()->get();
          return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
