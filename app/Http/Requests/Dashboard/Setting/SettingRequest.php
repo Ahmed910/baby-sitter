@@ -67,6 +67,8 @@ class SettingRequest extends FormRequest
           'project_name' => "required",
           'desc_ar' => "nullable|string|between:3,100000",
           'desc_en' => "nullable|string|between:3,100000",
+          'meta_ar' => "nullable|string|between:3,100000",
+          'meta_en' => "nullable|string|between:3,100000",
           'policy_ar' => "nullable|string|between:3,100000",
           'policy_en' => "nullable|string|between:3,100000",
           'terms_ar' => "nullable|string|between:3,100000",

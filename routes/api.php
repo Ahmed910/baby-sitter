@@ -71,6 +71,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
 
             Route::get('favorites','FavoriteController@getFavorites');
 
+            Route::get('delete_user_from_favorites/{fav_id}','FavoriteController@deleteUserFromFavorites');
+
             // Kids
             Route::apiResource('kid','KidController');
             //Store Categories
@@ -93,6 +95,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::apiResource('schedule','ScheduleController');
             // Rate && Review
             Route::post('rates','OrderController@SetRate');
+
+
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
             // get main profile
             Route::apiResource('gallery','GalleryController')->except('show','update','index');
@@ -155,6 +159,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::get('get_features','HomeController@getFeatures');
         // Days
         Route::get('get_days','HomeController@getDays');
+
+        // get faqs
+        Route::get('get_faqs','FaqController@getFaqs');
         // Tax
         Route::get('tax','HomeController@getTax')->middleware('auth:api');
         // Contact

@@ -31,4 +31,11 @@ class FavoriteController extends Controller
         $favorites = Favorite::where('client_id',auth('api')->id())->get();
         return FavoriteResource::collection($favorites)->additional(['status'=>'success','message'=>'']);
     }
+
+    public function deleteUserFromFavorites($fav_id)
+    {
+        $favorite = Favorite::findOrFail($fav_id);
+        $favorite->delete();
+        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.deleted_from_fav')]);
+    }
 }
