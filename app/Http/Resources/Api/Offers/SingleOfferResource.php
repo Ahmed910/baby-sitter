@@ -17,8 +17,8 @@ class SingleOfferResource extends JsonResource
         return [
             'id'=>$this->id,
             'title'=>$this->title,
-            'start_date'=> $this->start_date->format('d M'),
-            'end_date'=> $this->end_date->format('d M'),
+            'start_date'=> $this->start_date,
+            'end_date'=> $this->end_date,
             'max_number'=> $this->max_num,
             'promo_code' => $this->promo_code,
             'num_of_used'=> 50,
