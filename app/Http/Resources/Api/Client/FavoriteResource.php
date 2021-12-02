@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\Client;
 
 use App\Http\Resources\Api\Help\CityResource;
+use App\Http\Resources\Api\User\UserServiceResource;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +22,9 @@ class FavoriteResource extends JsonResource
             'id'=>$this->id,
             'name'=>$user->name,
             'avatar'=>$user->avatar,
+            'sitter_id'=>$this->user_id,
+            'services'=> UserServiceResource::collection($user->user_services),
+            'is_fav'       => isfav($this->user_id),
             'city' => $this->when($user->user_type =='childcenter',optional($user->profile)->city_id ? new CityResource($user->profile->city) : null),
             'lat'=>$this->when($user->user_type =='childcenter',optional($user->profile)->lat),
             'lng'=>$this->when($user->user_type =='childcenter',optional($user->profile)->lng),

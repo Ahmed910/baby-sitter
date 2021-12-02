@@ -42,7 +42,8 @@ class BabySitterResource extends JsonResource
             'rate_avg' => $this->rate_avg,
             'features' => UserFeatureResource::collection($this->user_features),
             'galleries' => GalleryResource::collection($this->galleries),
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'is_fav'       => isfav($this->id),
 
         ];
     }

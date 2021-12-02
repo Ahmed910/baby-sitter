@@ -103,6 +103,14 @@ function generate_unique_code($length, $model, $col = 'code', $type = 'numbers' 
     return $generate_random_code;
 }
 
+function isfav($user_id)
+{
+    $is_fav=\DB::table('favorites')
+        ->where(['client_id'=>auth('api')->id(),'user_id'=>$user_id])->first();
+
+     return $is_fav ? true : false ;
+}
+
 
 // Get Drivers
 function getOtherDrivers($order , $notified_drivers , $number_of_drivers = 0)
