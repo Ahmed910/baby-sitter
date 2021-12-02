@@ -19,6 +19,7 @@ class FavoriteResource extends JsonResource
     {
         $user = User::findOrFail($this->user_id);
         return [
+            
             'id'=>$this->id,
             'name'=>$user->name,
             'avatar'=>$user->avatar,
