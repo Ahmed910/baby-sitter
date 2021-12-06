@@ -5,12 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderMonth extends Model
+class Wallet extends Model
 {
     protected $guarded = ['created_at','updated_at'];
-
-    public function month_days()
-    {
-        return $this->hasMany(OrderMonthDay::class,'order_month_id');
-    }
 }

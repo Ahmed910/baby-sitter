@@ -65,7 +65,7 @@ class SignUpRequest extends ApiMasterRequest
             'business_register'=>'nullable|required_if:user_type,childcenter|string',
 
             'is_educational'=>'nullable|required_if:user_type,childcenter|in:0,1',
-            'price'=>'nullable|required_if:is_educational,1|numeric',
+            // 'price'=>'nullable|required_if:is_educational,1|numeric',
             'services'=>'nullable|array|required_if:user_type,'.$user_type,
             'services.*.service_id'=>'nullable|exists:services,id',
             'features'=>'nullable|array|required_if:user_type,'.$user_type,

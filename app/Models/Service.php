@@ -12,4 +12,9 @@ class Service extends Model implements TranslatableContract
     use Translatable;
     protected $guarded = ['created_at','updated_at'];
     public $translatedAttributes = ['name'];
+
+    public function user_services()
+    {
+        return $this->hasMany(UserService::class,'service_id');
+    }
 }

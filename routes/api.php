@@ -59,6 +59,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::middleware(['auth:api','client_middleware'])->group(function(){
             // Orders
             Route::apiResource('orders','OrderController')->only('index','show','store');
+            Route::get('get_orders','OrderController@getOrders');
             Route::post('change_order_status','OrderController@changeOrderStatus');
             Route::post('received_orders','OrderController@ClientRecieveOrder');
             // Offers
@@ -73,6 +74,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
 
             Route::get('delete_user_from_favorites/{fav_id}','FavoriteController@deleteUserFromFavorites');
 
+            //Order
+            Route::post('create_order_for_sitter','OrderController@createOrderForSitter');
+            Route::post('create_order_for_center','OrderController@createOrderForCenter');
             // Kids
             Route::apiResource('kid','KidController');
             //Store Categories

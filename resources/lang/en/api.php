@@ -31,6 +31,7 @@ return[
         'sitter_deleted_successfully'=>'sitter deleted successfully',
         'added_to_fav'=>'added to favorite',
         'deleted_from_fav'=>'deleted from favorite',
+        'order_created_successfully'=>'order created successfully',
         'baby_sitter_data_updated_successfully'=>'baby sitter data updated successfully',
         'kid_deleted_successfully'=>'kid deleted successfully',
         'kid_added_successfully'=>'kid added successfully',

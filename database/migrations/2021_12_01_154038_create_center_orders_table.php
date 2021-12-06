@@ -18,13 +18,13 @@ class CreateCenterOrdersTable extends Migration
             $table->uuid('client_id')->nullable();
             $table->foreign('client_id')->references('id')->on('users')->onDelete('set null');
 
-            $table->uuid('baby_sitter_id')->nullable();
+            $table->unsignedBigInteger('baby_sitter_id')->nullable();
             $table->foreign('baby_sitter_id')->references('id')->on('baby_sitters')->onDelete('set null');
 
             $table->uuid('center_id')->nullable();
             $table->foreign('center_id')->references('id')->on('users')->onDelete('set null');
 
-            $table->unsignedBigInteger('service_id');
+            $table->unsignedBigInteger('service_id')->nullable();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('set null');
 
             $table->longText('comment')->nullable();

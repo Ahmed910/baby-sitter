@@ -21,7 +21,7 @@ class CreateSitterOrdersTable extends Migration
             $table->uuid('sitter_id')->nullable();
             $table->foreign('sitter_id')->references('id')->on('users')->onDelete('set null');
 
-            $table->unsignedBigInteger('service_id');
+            $table->unsignedBigInteger('service_id')->nullable();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('set null');
 
             $table->longText('comment')->nullable();
