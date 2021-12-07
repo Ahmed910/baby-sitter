@@ -9,5 +9,8 @@ class OrderKid extends Model
 {
     protected $guarded = ['created_at','updated_at'];
 
-    
+    public function kid()
+    {
+        return $this->belongsTo(Kid::class,'kid_id');
+    }
 }

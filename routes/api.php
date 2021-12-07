@@ -31,6 +31,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::post('reset_password', "AuthController@resetPassword");
         Route::post('update_location', "UserController@updateUserLocation");
 
+        Route::post('check_for_phone_and_email','AuthController@checkForPhoneAndEmail');
+
         Route::group(['middleware' => 'auth:api'], function () {
             // Logout
             Route::post('logout', 'AuthController@logout');
@@ -58,10 +60,10 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
     Route::namespace('Client')->prefix('client')->group(function(){
         Route::middleware(['auth:api','client_middleware'])->group(function(){
             // Orders
-            Route::apiResource('orders','OrderController')->only('index','show','store');
-            Route::get('get_orders','OrderController@getOrders');
-            Route::post('change_order_status','OrderController@changeOrderStatus');
-            Route::post('received_orders','OrderController@ClientRecieveOrder');
+            // Route::apiResource('orders','OrderController')->only('index','show','store');
+            // Route::get('get_orders','OrderController@getOrders');
+            // Route::post('change_order_status','OrderController@changeOrderStatus');
+            // Route::post('received_orders','OrderController@ClientRecieveOrder');
             // Offers
             Route::get('offers/{order_id}','OfferController@offers');
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
@@ -77,6 +79,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             //Order
             Route::post('create_order_for_sitter','OrderController@createOrderForSitter');
             Route::post('create_order_for_center','OrderController@createOrderForCenter');
+            Route::get('get_orders','OrderController@getOrders');
+            Route::get('get_sitter_order_details/{sitter_order_id}','OrderController@getSitterOrderDetails');
+            Route::get('get_center_order_details/{center_order_id}','OrderController@getCenterOrderDetails');
             // Kids
             Route::apiResource('kid','KidController');
             //Store Categories

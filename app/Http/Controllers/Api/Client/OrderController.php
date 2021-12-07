@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\OrderSitterRequest;
 use App\Http\Requests\Api\ChildCenter\OrderCenterRequest;
 use App\Http\Resources\Api\Client\Order\OrderResource;
+use App\Http\Resources\Api\Client\Order\SingleCenterResource;
+use App\Http\Resources\Api\Client\Order\SingleSitterOrderResource;
+use App\Models\CenterOrder;
 use App\Models\MainOrder;
+use App\Models\SitterOrder;
 use App\Traits\Order;
 use Illuminate\Http\Request;
 
@@ -40,6 +44,17 @@ class OrderController extends Controller
         $data['previous_orders'] = OrderResource::collection($previous_orders);
 
         return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
+    }
+
+    public function getSitterOrderDetails($sitter_order_id)
+    {
+        $sitter_order = SitterOrder::where('client_id',auth('api')->id())->findOrFail($sitter_order_id);
+        return (new SingleSitterOrderResource($sitter_order))->additional(['status'=>'success','message'=>'']);
+    }
+    public function getCenterOrderDetails($center_order_id)
+    {
+        $center_order = CenterOrder::where('client_id',auth('api')->id())->findOrFail($center_order_id);
+        return (new SingleCenterResource($center_order))->additional(['status'=>'success','message'=>'']);
     }
 
 

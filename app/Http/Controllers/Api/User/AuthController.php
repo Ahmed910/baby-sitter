@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\{ LogoutRequest ,LoginRequest ,SendRequest ,CheckRequest ,ChangeRequest ,SignUpRequest, CodeApiRequest ,DriverRegisterSecondStepRequest};
+use App\Http\Requests\Api\User\CheckUserDataRequest;
 use App\Notifications\Auth\{VerifyApiMail,ResetPassword};
 use App\Notifications\General\{GeneralNotification};
 use App\Models\ { User , Device ,Package , GeneralInviteCode};
@@ -59,7 +60,7 @@ class AuthController extends Controller
             $user_data = [
                 'verified_code' => $code ,
                 'is_active' => 0 ,
-                
+
                 'referral_code' => generate_unique_code(8,'\\App\\Models\\User','referral_code','alpha_numbers','lower')
             ];
 
@@ -95,6 +96,13 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail','data'=> null ,'message'=> "لم يتم التسجيل حاول مرة أخرى"] ,422);
         }
     }
+
+    // public function checkForPhoneAndEmail(CheckUserDataRequest $request)
+    // {
+    //     $user = User::where('phone',$request->phone)->orWhere('email',$request->email)->first();
+    //     if()
+
+    // }
 
 
 

@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources\Api\Client\Order;
 
+use App\Http\Resources\Api\Client\KidResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HourOrderResource extends JsonResource
+class OrderKidsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +15,9 @@ class HourOrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        // dd($request);
         return [
             'id'=>$this->id,
-             'start_time'=>$this->start_time,
-             'end_time'=>$this->end_time,
-             'date'=>$this->when(isset($request->sitter_order_id),$this->date)
+            'kid'=>new KidResource($this->kid)
         ];
     }
 }

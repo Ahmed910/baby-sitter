@@ -33,6 +33,10 @@ class CenterOrder extends Model
     {
         return $this->belongsTo(User::class,'center_id');
     }
+    public function baby_sitter()
+    {
+        return $this->belongsTo(BabySitter::class,'baby_sitter_id');
+    }
     public function service()
     {
         return $this->belongsTo(Service::class,'service_id');
