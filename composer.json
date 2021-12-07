@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "apility/laravel-fcm": "^1.4",
         "astrotomic/laravel-translatable": "^11.9",
+        "benwilkins/laravel-fcm-notification": "^4.0",
         "doctrine/dbal": "^3.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",

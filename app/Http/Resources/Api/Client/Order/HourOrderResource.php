@@ -19,7 +19,7 @@ class HourOrderResource extends JsonResource
             'id'=>$this->id,
              'start_time'=>$this->start_time,
              'end_time'=>$this->end_time,
-             'date'=>$this->when(isset($request->sitter_order_id),$this->date)
+             'date'=>$this->when(isset($request->order_id),$this->date)
         ];
     }
 }

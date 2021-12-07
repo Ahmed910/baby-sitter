@@ -361,6 +361,8 @@ return [
 
     'admin_accept_title' => "admin accept title ",
     'admin_accept_body' => "admin accept body( :body )",
+    'client_cancel_order_title'=>'order canceled successfully',
+    'client_cancel_order_body'=>'order has been canceled by :body',
 
     'admin_refuse_body' => "admin refuse body ( :body ) ",
     'admin_finish_title' => "admin finish title",

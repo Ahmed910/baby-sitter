@@ -25,8 +25,20 @@ class AdminMiddleware
 
         if (auth()->check() && auth()->user()->user_type == 'superadmin')
         {
+               $current_lang = request()->segment(1);
+                 $user_locale = auth()->user()->current_lang;
+                if($current_lang != $user_locale)
+                {
+                   auth()->user()->update(['current_lang'=>$current_lang]);
+                }
             return $next($request);
         }elseif (auth()->check() && auth()->user()->role()->exists() && auth()->user()->user_type == 'admin'){
+            $current_lang = request()->segment(1);
+            $user_locale = auth()->user()->current_lang;
+           if($current_lang != $user_locale)
+           {
+              auth()->user()->update(['current_lang'=>$current_lang]);
+           }
             if (auth()->user()->hasPermissions(str_before(str_after($request->route()->getName() , '.') , '.') , $request->route()->getActionMethod()) || in_array($request->route()->getName(),$public_routes)){
                 return $next($request);
             }elseif (auth()->user()->hasPermissions(str_before(str_after($request->route()->getName() , '.') , '.') , 'update') && ($request->route()->getActionMethod() == 'index' || $request->route()->getActionMethod() == 'edit')){

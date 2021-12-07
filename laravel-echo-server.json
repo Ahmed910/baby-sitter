@@ -1,10 +1,10 @@
 {
-	"authHost": "http://localhost/ma7ta_mobile/public",
+	"authHost": "http://localhost/babysitters/public",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [
 		{
-			"appId": "a4bdef1fb8809fb7",
-			"key": "7f1b299c2fa728d3a62da07d9b99ff5e"
+			"appId": "47756bb30d8a470c",
+			"key": "365cd80cf05ac7d4acd0e5a1193ff2c7"
 		}
 	],
 	"database": "redis",
@@ -29,9 +29,9 @@
 		"redis": true
 	},
 	"apiOriginAllow": {
-		"allowCors": false,
+		"allowCors": true,
 		"allowOrigin": "",
-		"allowMethods": "",
-		"allowHeaders": ""
+		"allowMethods": "GET, POST",
+		"allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
 	}
 }

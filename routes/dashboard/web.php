@@ -22,7 +22,7 @@ Route::group(
             Route::resource('manager','ManagerController');
 
             // =====================Location====================================
-           
+
 
 
 
@@ -35,6 +35,9 @@ Route::group(
            Route::resource('country','CountryController');
            // City
            Route::resource('city','CityController');
+
+            // Order
+            Route::resource('orders','OrderController');
 
             // ======================Setting====================================
             // Notification

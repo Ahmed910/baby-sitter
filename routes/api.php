@@ -80,8 +80,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('create_order_for_sitter','OrderController@createOrderForSitter');
             Route::post('create_order_for_center','OrderController@createOrderForCenter');
             Route::get('get_orders','OrderController@getOrders');
-            Route::get('get_sitter_order_details/{sitter_order_id}','OrderController@getSitterOrderDetails');
-            Route::get('get_center_order_details/{center_order_id}','OrderController@getCenterOrderDetails');
+            Route::get('get_sitter_order_details/{order_id}','OrderController@getSitterOrderDetails');
+            Route::get('get_center_order_details/{order_id}','OrderController@getCenterOrderDetails');
+            Route::get('cancel_order/{order_id}','OrderController@cancelOrder');
             // Kids
             Route::apiResource('kid','KidController');
             //Store Categories

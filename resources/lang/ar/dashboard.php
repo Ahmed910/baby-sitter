@@ -634,6 +634,8 @@ return [
     'new_refund_order_title' => "طلب استرجاع جديد ",
     'new_refund_order_body' => "لديك طلب استرجاع جديد  من :body",
     'client_add_ad_title' => "اعلان جديد",
+    'client_cancel_order_title'=>'تم إلغاء الحجز',
+    'client_cancel_order_body'=>'تم إلغاء طلب الحجز من قبل :body',
     'client_add_ad_body' => "قام :client بإضافة اعلان جديد في انتظار الموافقة",
   ],
   'ar' => [

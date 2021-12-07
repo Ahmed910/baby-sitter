@@ -49,6 +49,18 @@
     @include('dashboard.layout.scripts')
     @yield('notify')
     <div class="model"></div>
+
+    <script>
+        window.Data = {!! json_encode([
+             'user_id' => auth()->check() ? auth()->id() : null,
+             'unread_notifications' => auth()->user()->unreadNotifications,
+
+         ]) !!};
+
+
+     </script>
+
+     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 <!-- END: Body-->
 

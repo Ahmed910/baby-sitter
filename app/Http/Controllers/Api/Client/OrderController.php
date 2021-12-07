@@ -11,8 +11,11 @@ use App\Http\Resources\Api\Client\Order\SingleSitterOrderResource;
 use App\Models\CenterOrder;
 use App\Models\MainOrder;
 use App\Models\SitterOrder;
+use App\Models\User;
+use App\Notifications\Orders\CancelOrderNotification;
 use App\Traits\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
@@ -46,15 +49,43 @@ class OrderController extends Controller
         return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
     }
 
-    public function getSitterOrderDetails($sitter_order_id)
+    public function getSitterOrderDetails($order_id)
     {
-        $sitter_order = SitterOrder::where('client_id',auth('api')->id())->findOrFail($sitter_order_id);
-        return (new SingleSitterOrderResource($sitter_order))->additional(['status'=>'success','message'=>'']);
+        $sitter_order = MainOrder::findOrFail($order_id)->sitter_order;
+        if (isset($sitter_order) && $sitter_order) {
+            return (new SingleSitterOrderResource($sitter_order))->additional(['status'=>'success','message'=>'']);
+        }
+        return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.id_not_found')],404);
     }
-    public function getCenterOrderDetails($center_order_id)
+    public function getCenterOrderDetails($order_id)
     {
-        $center_order = CenterOrder::where('client_id',auth('api')->id())->findOrFail($center_order_id);
-        return (new SingleCenterResource($center_order))->additional(['status'=>'success','message'=>'']);
+        $center_order = MainOrder::findOrFail($order_id)->center_order;
+        if(isset($center_order) && $center_order){
+            return (new SingleCenterResource($center_order))->additional(['status'=>'success','message'=>'']);
+        }
+        return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.id_not_found')],404);
+       // $center_order = CenterOrder::where('client_id',auth('api')->id())->findOrFail($center_order_id);
+
+    }
+
+    public function cancelOrder($order_id)
+    {
+        $main_order = MainOrder::findOrFail($order_id);
+        if($main_order->to == 'sitter')
+        {
+            $main_order->sitter_order()->update(['status'=>'canceled']);
+            $user = $main_order->sitter;
+
+        }else{
+            $main_order->center_order()->update(['status'=>'canceled']);
+            $user = $main_order->center;
+        }
+        // dd(gettype($main_order));
+            $user->notify(new CancelOrderNotification($main_order,['database']));
+
+            $admins = User::whereIn('user_type',['superadmin','admin'])->get();
+            Notification::send($admins, new CancelOrderNotification($main_order,['database','broadcast']));
+            return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_canceled')]);
     }
 
 

@@ -11,22 +11,19 @@
 |
 */
 
+use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('ma7ta_mobile-notification.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('babysitters-notification.{id}', function ($user, $id) {
+    return $user->id === $id;
 });
 
-Broadcast::channel('ma7ta_mobile-chat.{chat_id}', function ($user, $chat_id) {
+Broadcast::channel('babysitters-chat.{chat_id}', function ($user, $chat_id) {
     return \App\Models\Chat::find($chat_id) ? true : false;
 });
 
-Broadcast::channel('ma7ta_mobile-update-location.driver', function ($user) {
-    return true;
-    // return \App\Models\User::where('user_type','driver')->find($driver_id);
-});
 // Broadcast::channel('ma7ta_mobile-update-location_driver_test', TestChannel::class);
 
-Broadcast::channel('ma7ta_mobile-online', function ($user) {
+Broadcast::channel('babysitters-online', function ($user) {
     return [
         'id' => $user->id,
         'fullname' => $user->fullname,
@@ -35,7 +32,3 @@ Broadcast::channel('ma7ta_mobile-online', function ($user) {
         ];
 });
 
-Broadcast::channel('ma7ta_mobile-share-link.{uuid}', function ($user,$uuid) {
-    $order = \App\Models\Order::whereIn('order_status',['shipped','start_trip'])->where(['share_link_uuid' => $uuid])->first();
-    return ! is_null($order);
-});
