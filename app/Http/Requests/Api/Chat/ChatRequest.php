@@ -36,7 +36,7 @@ class ChatRequest extends ApiMasterRequest
             'message_type' => 'required|in:text,image,order,location,file,sound',
             'message' => $message,
             'receiver_id' => 'required|exists:users,id,deleted_at,NULL',
-            'order_id' => 'required|exists:orders,id,deleted_at,NULL',
+            'order_id' => 'required|exists:main_orders,id',
         ];
     }
 }

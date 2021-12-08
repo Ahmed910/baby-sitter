@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Chat , User , Message , Order};
+use App\Models\{Chat , MainOrder, User , Message , Order};
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\Chat\{ChatRequest};
 use App\Events\Chat\{ChatEvent , MessageIsSeenEvent};
@@ -38,11 +38,11 @@ class ChatController extends Controller
 
     public function show($order_id,$receiver_id)
     {
-        $order = Order::where(function ($q) {
-            $q->where('client_id',auth('api')->id())->orWhere('driver_id',auth('api')->id());
+        $order = MainOrder::where(function ($q) {
+            $q->where('client_id',auth('api')->id())->orWhere('sitter_id',auth('api')->id());
         })->findOrFail($order_id);
 
-        $driver = User::whereIn('user_type',['client','driver'])->findOrFail($receiver_id);
+        $driver = User::whereIn('user_type',['client','babysitter'])->findOrFail($receiver_id);
 
         $chat = Chat::where(function($q)use($receiver_id){
             $q->where(['sender_id' => auth('api')->id() , 'receiver_id' => $receiver_id])->orWhere(['receiver_id' => auth('api')->id(), 'sender_id' => $receiver_id]);
@@ -61,13 +61,13 @@ class ChatController extends Controller
 
     public function store(ChatRequest $request)
     {
-        $order = Order::where(function ($q) {
-            $q->where('client_id',auth('api')->id())->orWhere('driver_id',auth('api')->id());
-        })->findOrFail($request->order_id);
+        // $order = MainOrder::where(function ($q) {
+        //     $q->where('client_id',auth('api')->id())->orWhere('sitter_id',auth('api')->id());
+        // })->findOrFail($request->order_id);
 
-        if ($order->finished_at || in_array($order->order_status,['client_cancel','admin_cancel','driver_cancel'])) {
-            return response()->json(['status' => 'fail' , 'message' => trans('api.messages.cant_open_this_chat'),'data' => null],404);
-        }
+        // if ($order->finished_at || $order->sitter_order->status == 'canceled') {
+        //     return response()->json(['status' => 'fail' , 'message' => trans('api.messages.cant_open_this_chat'),'data' => null],404);
+        // }
 
         $chat = Chat::where(function($q)use($request){
             $q->where(['sender_id' => auth('api')->id() , 'receiver_id' => $request->receiver_id])->orWhere(['receiver_id' => auth('api')->id(), 'sender_id' => $request->receiver_id]);
@@ -90,13 +90,11 @@ class ChatController extends Controller
            'notify_type' => 'new_chat' ,
            'chat_id' => $chat->id,
            'order_id' => $chat->order_id,
-           'start_location' => $chat->order->start_location_data,
-           'end_location' => $chat->order->end_location_data,
            'sender_id' => $chat->sender_id,
            'receiver_name' => $chat->sender->name,
            'receiver_data' => [
                'id' => $chat->sender_id,
-               'fullname' => $chat->sender->fullname,
+               'fullname' => $chat->sender->name,
                'phone' => $chat->sender->phone,
                'avatar' => $chat->sender->avatar,
            ],

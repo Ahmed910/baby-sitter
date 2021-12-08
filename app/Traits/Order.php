@@ -9,6 +9,7 @@ use App\Classes\OrderMonthSitter;
 use App\Http\Requests\Api\BabySitter\OrderSitterRequest;
 use App\Http\Requests\Api\ChildCenter\OrderCenterRequest;
 use App\Models\CenterOrder;
+use App\Models\Chat;
 use App\Models\MainOrder;
 use App\Models\Service;
 use App\Models\SitterOrder;
@@ -37,6 +38,9 @@ trait Order
     protected function SitterOrder(OrderSitterRequest $request)
     {
 
+        if($request->pay_type == 'credit' && $request->check_order == 'test'){
+            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.payment_has_been_successfully')],200);
+        }
         if($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet){
             return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
@@ -64,8 +68,9 @@ trait Order
              if ($request->pay_type == 'wallet') {
                  $this->updateWalletBalance($request->sitter_id, $request->price);
              }
+             $chat = Chat::create(['sender_id' => auth('api')->id() ,'order_id' => $main_order->id ,'receiver_id' => $main_order->sitter_id,'last_message'=>'']);
             DB::commit();
-            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.order_created_successfully')]);
+            return response()->json(['data'=>null,'status'=>'success','chat_id'=>$chat->id,'message'=>trans('api.messages.order_created_successfully')]);
             // all good
         } catch (\Exception $e) {
             DB::rollback();
@@ -76,6 +81,9 @@ trait Order
 
     protected function CenterOrder(OrderCenterRequest $request)
     {
+        if($request->pay_type == 'credit' && $request->check_order == 'test'){
+            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.payment_has_been_successfully')],200);
+        }
         if($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet){
             return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }

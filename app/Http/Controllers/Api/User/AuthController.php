@@ -23,26 +23,9 @@ class AuthController extends Controller
       */
      public function __construct()
      {
-         $this->middleware('auth:api', ['except' => ['login','signup','driverRegisterSecondStep','confirm','sendCode','checkCode','resetPassword']]);
+         $this->middleware('auth:api', ['except' => ['login','signup','confirm','sendCode','checkCode','resetPassword']]);
      }
-     // SignUp
-    public function driverRegisterSecondStep(DriverRegisterSecondStepRequest $request)
-    {
-        $driver = User::where(['user_type' => 'driver','register_complete_step' => 1])->findOrFail($request->user_id);
 
-        $car_date = ['brand_id','car_model_id' ,'car_type_id' ,'car_licence_image','car_form_image','car_front_image' ,'car_back_image','car_insurance_image' , 'license_serial_number','plate_number','plate_letter_right','plate_letter_middle' , 'plate_letter_left' ,'plate_numbers_only', 'manufacture_year', 'plate_type', 'car_color'];
-
-        $driver_type = @$driver->country->is_for_goods_only ? 'delivery' : 'all';
-
-        $driver->car()->create(array_only($request->validated(),$car_date));
-
-        $driver->driver()->create(['is_available' => 1 , 'driver_type' => $driver_type]);
-        $driver->update(['register_complete_step' => 2]);
-
-        $this->sendVerifyCode($driver);
-
-        return response()->json(['status' => 'success','data'=> null ,'message'=> trans('api.messages.success_sign_up'),'dev_message' => $driver->code]);
-    }
 
     public function signup(SignUpRequest $request)
     {

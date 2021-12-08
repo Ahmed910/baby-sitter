@@ -51,7 +51,7 @@ class OrderController extends Controller
 
     public function getSitterOrderDetails($order_id)
     {
-        $sitter_order = MainOrder::findOrFail($order_id)->sitter_order;
+        $sitter_order = MainOrder::where('client_id',auth('api')->id())->findOrFail($order_id)->sitter_order;
         if (isset($sitter_order) && $sitter_order) {
             return (new SingleSitterOrderResource($sitter_order))->additional(['status'=>'success','message'=>'']);
         }
@@ -59,7 +59,7 @@ class OrderController extends Controller
     }
     public function getCenterOrderDetails($order_id)
     {
-        $center_order = MainOrder::findOrFail($order_id)->center_order;
+        $center_order = MainOrder::where('client_id',auth('api')->id())->findOrFail($order_id)->center_order;
         if(isset($center_order) && $center_order){
             return (new SingleCenterResource($center_order))->additional(['status'=>'success','message'=>'']);
         }
@@ -70,14 +70,18 @@ class OrderController extends Controller
 
     public function cancelOrder($order_id)
     {
-        $main_order = MainOrder::findOrFail($order_id);
+        $main_order = MainOrder::where('client_id',auth('api')->id())->findOrFail($order_id);
         if($main_order->to == 'sitter')
         {
-            $main_order->sitter_order()->update(['status'=>'canceled']);
+           // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+            $sitter_order=SitterOrder::whereIn('status',['pending','waiting'])->findOrFail($main_order->sitter_order->id);
+            $sitter_order->update(['status'=>'canceled']);
             $user = $main_order->sitter;
 
         }else{
-            $main_order->center_order()->update(['status'=>'canceled']);
+            //$main_order->center_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+            $center_order=CenterOrder::whereIn('status',['pending','waiting'])->findOrFail($main_order->center_order->id);
+            $center_order->update(['status'=>'canceled']);
             $user = $main_order->center;
         }
         // dd(gettype($main_order));

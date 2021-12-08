@@ -41,10 +41,10 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('profile', 'UserController@store');
             Route::post('edit_password', 'UserController@editPassword');
 
-            // Chat
-            Route::get('chats/{order_id}/{receiver_id}','ChatController@show');
-            Route::apiResource('chats','ChatController')->only('index','store');
-            Route::put('chats/{chat_id}/message_is_seen','ChatController@messageIsSeen');
+                       // Chat
+            Route::get('chat/{order_id}/{receiver_id}', 'ChatController@show');
+            Route::apiResource('chat', 'ChatController')->only('index', 'store', 'destroy');
+            Route::put('chat/{chat_id}/message_is_seen', 'ChatController@messageIsSeen');
             // Notification
             Route::apiResource('notifications','NotificationController')->only('index','show','destroy');
 
@@ -104,8 +104,17 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Schedules
             Route::apiResource('schedule','ScheduleController');
             // Rate && Review
-            Route::post('rates','OrderController@SetRate');
-
+            // Route::post('rates','OrderController@SetRate');
+            // Orders
+            Route::get('get_orders','OrderController@getOrders');
+            Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
+            Route::get('accept_order/{order_id}','OrderController@acceptOrder');
+            Route::get('reject_order/{order_id}','OrderController@rejectOrder');
+            Route::get('cancel_order/{order_id}','OrderController@cancelOrder');
+            Route::post('check_otp_validity','OrderController@checkOtpValidity');
+            Route::get('send_otp/{order_id}','OrderController@sendOTP');
+            Route::get('deliver_childern/{order_id}','OrderController@deliverChildern');
+            Route::get('get_customer_profile/{customer_id}','OrderController@getOrderDetails')->name('sitter_order.customer_profile');
 
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
             // get main profile

@@ -23,8 +23,14 @@ return[
         'cant_finish_order_before_received_from_client' => "لايمكنك انهاء الطلب قبل تأكيد استلام الطلب من العميل",
           'offer_created_successfully'=>'تم إنشاء العرض بنجاح',
           'updated_successfully'=>'تم التعديل بنجاح',
+          'otp_has_been_sent'=>'تم إرسال الرقم التأكيدى',
+          'otp_is_not_valid'=>'الرقم التأكيدى غير صحيح',
+          'otp_is_valid'=>'الرقم التأكيدى صحيح',
           'update_gallery'=>'تم التعديل الصورة',
           'order_canceled'=>'تم الغاء الطلب بنجاح',
+          'payment_has_been_successfully'=>'تم الدفع بنجاح',
+          'order_has_been_accepted'=>'تم الموافقة على طلب الحجز',
+          'order_has_been_rejected'=>'تم رفض طلب الحجز',
           'baby_sitter_added_successfully'=>'لقد تم إضافة الحاضنة بنجاح',
           'baby_sitter_data_updated_successfully'=>'تم تعديل بيانات الحاضنة بنجاح',
           'sitter_deleted_successfully'=>'تم حذف الحاضنة بنجاح',
@@ -52,7 +58,7 @@ return[
         'driver_cancel_order' => "تم الغاء الرحلة من قبل الكابتن",
         'client_cancel_order' => "تم لغاء  الرحلة من قبل العميل",
         'admin_cancel_order' => "تم الغاء الرحلة من قبل الادارة",
-       
+
         'ur_wallet_less_than_budget_plus_addition' => "برجاء شحن المحفظة بمبلغ الرحلة إضافة إلى سعر التفاوض (:min_wallet_order_amount)",
         'wallet_is_soon' => "جاري العمل على الدفع من المحفظة رجاء اختيار طريقة أخرى للدفع حاليا",
         'cant_open_this_chat' => "لايمكن التفاعل على طلب منتهي او تم الغاؤة",

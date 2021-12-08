@@ -20,7 +20,14 @@ class SingleSitterOrderResource extends JsonResource
         return [
             'id'=>$this->id,
             'status'=> $this->status,
-            'sitter_name'=>optional($this->sitter)->name,
+            'sitter_name'=>$this->when(auth('api')->user()->user_type == 'client',optional($this->sitter)->name),
+            'customer_data'=>$this->when(auth('api')->user()->user_type == 'babysitter',[
+                'customer_id'=>optional($this->client)->id,
+                'customer_name'=>optional($this->client)->name,
+                'type'=>'GET',
+                'url' => route('sitter_order.customer_profile',['customer_id'=>optional($this->client)->id])
+            ]),
+            'qr_code'=>$this->when(auth('api')->user()->user_type == 'babysitter',$this->qrCode),
             'service'=> new ServiceResource($this->service),
             'hour'=> $this->when($this->service->service_type == 'hour',new HourOrderResource($this->hours)),
             'month'=> $this->when($this->service->service_type == 'month',new MonthOrderResource($this->months)),

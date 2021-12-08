@@ -636,6 +636,10 @@ return [
     'client_add_ad_title' => "اعلان جديد",
     'client_cancel_order_title'=>'تم إلغاء الحجز',
     'client_cancel_order_body'=>'تم إلغاء طلب الحجز من قبل :body',
+    'order_has_been_accepted_title'=>'تم الموافقة على طلب الحجز',
+    'order_has_been_accepted_body'=>'تم الموافقة على طلب الحجز من قبل :body',
+    'order_has_been_rejected_title'=>'تم رفض الطلب',
+    'order_has_been_rejected_body'=>'تم رفض الطلب من قبل :body',
     'client_add_ad_body' => "قام :client بإضافة اعلان جديد في انتظار الموافقة",
   ],
   'ar' => [

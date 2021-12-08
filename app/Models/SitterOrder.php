@@ -25,6 +25,16 @@ class SitterOrder extends Model
     }
 
 
+    public function getQrCodeAttribute()
+    {
+
+        if (isset($this->attributes['qr_code']) && $this->attributes['qr_code']) {
+            return asset('storage/images/sitter_order') . '/' . $this->attributes['qr_code'];
+        } else {
+            return '';
+        }
+
+    }
 
     public function kids()
     {
@@ -40,7 +50,7 @@ class SitterOrder extends Model
     {
         return $this->morphOne(OrderMonth::class, 'order_monthsable');
     }
-   
+
     public function client()
     {
         return $this->belongsTo(User::class,'client_id');

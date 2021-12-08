@@ -95,6 +95,7 @@ $attributes = [
     'end_time'=>'حقل إلى ساعة',
     'center_id'=>'حقل المركز',
     'pay_type'=>'حقل نوع الدفع',
+    'otp_code'=>'حقل الرقم التأكيدى',
     'baby_sitter_id'=>'حقل الحاضنة التابعة للمركز',
     'total_num_of_student'=>'حقل المجموع الكلي للطلاب',
     'health_state'=>'حقل الحالة الصحية',

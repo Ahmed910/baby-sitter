@@ -22,13 +22,13 @@ class MessagesResource extends JsonResource
             'message_sender' => $this->sender_id,
             'sender_data' => [
                 'id' => $this->sender_id,
-                'fullname' => $this->sender->fullname,
+                'fullname' => $this->sender->name,
                 'phone' => $this->sender->phone,
                 'image' => $this->sender->avatar,
             ],
             'receiver_data' => [
                 'id' => $this->receiver_id,
-                'fullname' => optional($this->receiver)->fullname,
+                'fullname' => optional($this->receiver)->name,
                 'phone' => optional($this->receiver)->phone,
                 'image' => optional($this->receiver)->avatar,
             ],
