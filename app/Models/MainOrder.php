@@ -30,4 +30,8 @@ class MainOrder extends Model
     {
         return $this->belongsTo(User::class,'center_id');
     }
+    public function chat()
+    {
+		return $this->hasOne(Chat::class,'order_id');
+	}
 }

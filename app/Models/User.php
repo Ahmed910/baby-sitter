@@ -243,6 +243,11 @@ class User extends Authenticatable implements JWTSubject
     	return $this->hasMany(Gallery::class);
     }
 
+    public function rates()
+    {
+        return $this->hasMany(Rate::class,'to');
+    }
+
 
     public function offers()
     {

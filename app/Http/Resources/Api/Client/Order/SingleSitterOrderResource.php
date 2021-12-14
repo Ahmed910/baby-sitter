@@ -4,6 +4,8 @@ namespace App\Http\Resources\Api\Client\Order;
 
 use App\Http\Resources\Api\Client\KidResource;
 use App\Http\Resources\Api\Help\ServiceResource;
+use App\Http\Resources\Api\User\RateForSpecificOrderResource;
+use App\Models\Rate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SingleSitterOrderResource extends JsonResource
@@ -16,17 +18,24 @@ class SingleSitterOrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        // dd($this->kids);
+
+
         return [
+
             'id'=>$this->id,
             'status'=> $this->status,
             'sitter_name'=>$this->when(auth('api')->user()->user_type == 'client',optional($this->sitter)->name),
             'customer_data'=>$this->when(auth('api')->user()->user_type == 'babysitter',[
                 'customer_id'=>optional($this->client)->id,
                 'customer_name'=>optional($this->client)->name,
+                'api_info'=>[
                 'type'=>'GET',
-                'url' => route('sitter_order.customer_profile',['customer_id'=>optional($this->client)->id])
+                'params'=>'user_id',
+                'headers'=>['token'=>'Bearer token','accept'=>'application/json'],
+                'url' => route('order.customer_profile',['customer_id'=>optional($this->client)->id])
+                ]
             ]),
+            //'baby_sitter_name'=>$this->when(auth('api')->user()->user_type == 'childcenter',optional($this->baby_sitter)->name),
             'qr_code'=>$this->when(auth('api')->user()->user_type == 'babysitter',$this->qrCode),
             'service'=> new ServiceResource($this->service),
             'hour'=> $this->when($this->service->service_type == 'hour',new HourOrderResource($this->hours)),
@@ -38,6 +47,7 @@ class SingleSitterOrderResource extends JsonResource
             'kids'=> OrderKidsResource::collection($this->kids),
             'comment'=> $this->comment,
             'total_price'=> (float)$this->price,
+            
             'created_at'=>$this->created_at
         ];
     }

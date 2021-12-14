@@ -41,7 +41,13 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('profile', 'UserController@store');
             Route::post('edit_password', 'UserController@editPassword');
 
-                       // Chat
+            // Rate
+            Route::apiResource('rate','RateController');
+            Route::get('get_rate_for_me_on_order/{order_id}','RateController@getRateForMeOnOrder');
+
+            // customer rates
+            Route::get('get_customer_profile/{customer_id}','CustomerController@getCustomerProfile')->name('order.customer_profile');
+            // Chat
             Route::get('chat/{order_id}/{receiver_id}', 'ChatController@show');
             Route::apiResource('chat', 'ChatController')->only('index', 'store', 'destroy');
             Route::put('chat/{chat_id}/message_is_seen', 'ChatController@messageIsSeen');
@@ -59,11 +65,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
     // Client
     Route::namespace('Client')->prefix('client')->group(function(){
         Route::middleware(['auth:api','client_middleware'])->group(function(){
-            // Orders
-            // Route::apiResource('orders','OrderController')->only('index','show','store');
-            // Route::get('get_orders','OrderController@getOrders');
-            // Route::post('change_order_status','OrderController@changeOrderStatus');
-            // Route::post('received_orders','OrderController@ClientRecieveOrder');
+
             // Offers
             Route::get('offers/{order_id}','OfferController@offers');
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
@@ -80,18 +82,13 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('create_order_for_sitter','OrderController@createOrderForSitter');
             Route::post('create_order_for_center','OrderController@createOrderForCenter');
             Route::get('get_orders','OrderController@getOrders');
-            Route::get('get_sitter_order_details/{order_id}','OrderController@getSitterOrderDetails');
-            Route::get('get_center_order_details/{order_id}','OrderController@getCenterOrderDetails');
+            Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
+            // Route::get('get_center_order_details/{order_id}','OrderController@getCenterOrderDetails');
             Route::get('cancel_order/{order_id}','OrderController@cancelOrder');
             // Kids
             Route::apiResource('kid','KidController');
-            //Store Categories
 
-            // Neareast Drivers
-            Route::get('nearest_drivers/{number_of_drivers?}','LocationController@nearestDrivers');
-            // Rate && Review
-            Route::post('rates','OrderController@SetRate');
-            // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
+
         });
         Route::apiResource('store_categories','StoreCategoryController')->only('index','show');
         Route::apiResource('product_categories','ProductCategoryController')->only('index','show');
@@ -111,10 +108,11 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('accept_order/{order_id}','OrderController@acceptOrder');
             Route::get('reject_order/{order_id}','OrderController@rejectOrder');
             Route::get('cancel_order/{order_id}','OrderController@cancelOrder');
-            Route::post('check_otp_validity','OrderController@checkOtpValidity');
-            Route::get('send_otp/{order_id}','OrderController@sendOTP');
-            Route::get('deliver_childern/{order_id}','OrderController@deliverChildern');
-            Route::get('get_customer_profile/{customer_id}','OrderController@getOrderDetails')->name('sitter_order.customer_profile');
+            Route::post('check_otp_validity_and_recieve_childern','OrderController@checkOtpValidityAndRecieveChildern');
+            Route::get('send_otp_to_recieve_childern/{order_id}','OrderController@sendOTPToReceiveChildern');
+            Route::post('check_otp_validity_and_deliver_childern','OrderController@checkOtpValidityAndDeliverChildern');
+            Route::get('send_otp_to_deliver_childern/{order_id}','OrderController@sendOTPToDeliverChildern');
+
 
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
             // get main profile
@@ -129,11 +127,19 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Offers
             Route::apiResource('offer','OfferController');
 
-            //
-            Route::post('reject_orders','OfferController@rejectOrder');
-            Route::post('change_order_status','OrderController@changeOrderStatus');
-            Route::post('change_account_status','DriverController@changeAccountStatus');
+            // //
+            // Route::post('reject_orders','OfferController@rejectOrder');
+            // Route::post('change_order_status','OrderController@changeOrderStatus');
+            // Route::post('change_account_status','DriverController@changeAccountStatus');
 
+            // Order
+            Route::get('get_orders','OrderController@getOrders');
+            Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
+            Route::get('accept_order/{order_id}','OrderController@acceptOrder');
+            Route::get('reject_order/{order_id}','OrderController@rejectOrder');
+            Route::get('cancel_order/{order_id}','OrderController@cancelOrder');
+            Route::get('active_order/{order_id}','OrderController@activeOrder');
+            Route::get('complete_order/{order_id}','OrderController@completeOrder');
             Route::apiResource('gallery','GalleryController')->except('show','update');
             // Update Driver Location
             Route::post('edit_features','FeatureController@editFeaturesForCenter');
@@ -199,6 +205,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
 
         Route::get('get_nearest_centers','NewHomeController@getNearestCenters');
 
+        Route::get('get_sitter_info_for_center/{sitter_id}','NewHomeController@getSitterInfoForCenter');
         // Slider
         Route::get('sliders','SliderController@index');
 

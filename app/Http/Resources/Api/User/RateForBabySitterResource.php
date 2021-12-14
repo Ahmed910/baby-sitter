@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api\BabySitter\Order;
+namespace App\Http\Resources\Api\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderResource extends JsonResource
+class RateForBabySitterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,12 @@ class OrderResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'type'=>$this->to,
-            'client_order'=> new SitterOrderResource(optional($this->sitter_order)) ,
+            'user_data'=>[
+                'id'=>$this->toBabySitter->id,
+                'name'=>$this->toBabySitter->name
+            ],
+            'rate'=>$this->rate,
+            'review'=>$this->review
         ];
     }
 }

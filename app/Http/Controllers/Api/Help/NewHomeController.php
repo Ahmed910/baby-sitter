@@ -11,7 +11,9 @@ use App\Http\Resources\Api\Babysitters\BabySitterResource;
 use App\Http\Resources\Api\Center\CenterResource;
 use App\Http\Resources\Api\Offers\OfferResource;
 use App\Http\Resources\Api\User\CenterInfoResource;
+use App\Http\Resources\Api\User\SitterForCenterResource;
 use App\Http\Resources\Api\User\SitterInfoResource;
+use App\Models\BabySitter;
 use App\Models\Offer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -93,6 +95,13 @@ class NewHomeController extends Controller
     })->get();
 
         return CenterInfoResource::collection($centers)->additional(['status'=>'success','message'=>'']);
+    }
+
+
+    public function getSitterInfoForCenter($sitter_id)
+    {
+        $baby_sitter = BabySitter::findOrFail($sitter_id);
+        return (new SitterForCenterResource($baby_sitter))->additional(['status'=>'success','message'=>'']);
     }
 
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources\Api\User;
 
-use App\Http\Resources\Api\Help\CityResource;
+use App\Models\Rate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CenterInfoResource extends JsonResource
+class CustomerRateResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,18 +15,17 @@ class CenterInfoResource extends JsonResource
      */
     public function toArray($request)
     {
+        // $rates = Rate::where('to',$this->id)->get();
+        // dd($rates);
         return [
             'id'=>$this->id,
-            'name'=>$this->name,
             'avatar'=>$this->avatar,
-            'avg_rate'=> $this->rate_avg,
-            'city'=> new CityResource(optional($this->profile)->city),
-            'location'=> optional($this->profile)->location,
+            'name'=>$this->name,
+            'phone'=>$this->phone,
+            'city'=>$this->CityName,
             'lat'=>optional($this->profile)->lat,
             'lng'=>optional($this->profile)->lng,
-            // 'distance' => $this->distance,
-            'services'=> UserServiceResource::collection($this->user_services),
-            'is_educational'=>(bool)optional($this->child_centre)->is_educational
+            'rates'=> RateFromUserResource::collection($this->rates)
         ];
     }
 }

@@ -6,8 +6,10 @@ use App\Http\Resources\Api\Gallery\GalleryResource;
 use App\Http\Resources\Api\Help\CityResource;
 use App\Http\Resources\Api\Schedules\AppointmentResource;
 use App\Http\Resources\Api\Schedules\ScheduleResource;
+use App\Http\Resources\Api\User\RateFromUserResource;
 use App\Http\Resources\Api\User\UserFeatureResource;
 use App\Http\Resources\Api\User\UserServiceResource;
+use App\Models\Rate;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CenterResource extends JsonResource
@@ -20,28 +22,13 @@ class CenterResource extends JsonResource
      */
     public function toArray($request)
     {
+        $reviews = Rate::where('to',$this->id)->get();
 
-        $reviews = [
-            [
-                'id'=>'2aw-23e-ews-2e33',
-                'avatar'=>asset('dashboardAssets/images/backgrounds/avatar.jpg'),
-                'name'=> 'ahmed',
-                'review'=>'very good',
-                'center_rate'=> 4
-            ],
-            [
-                'id'=>'2aw-23e-ews-2ew3',
-                'avatar'=>asset('dashboardAssets/images/backgrounds/avatar.jpg'),
-                'name'=> 'mohamed',
-                'review'=>'very good',
-                'center_rate'=> 3
-            ]
-            ];
         return [
             'id'=>$this->id,
             'name'=>$this->name,
             'avatar'=>$this->avatar,
-            'avg_rate'=> 4,
+            'avg_rate'=> $this->rate_avg,
             'city'=> new CityResource(optional($this->profile)->city),
             'location'=> optional($this->profile)->location,
             'lat'=>optional($this->profile)->lat,
@@ -54,7 +41,7 @@ class CenterResource extends JsonResource
             'schedules' => ScheduleResource::collection($this->schedules),
             'appointment' => new AppointmentResource($this->appointment),
             'sitters'=> BabySitterCenterResource::collection($this->sittersForCenter),
-            'reviews' => $reviews
+            'reviews' => RateFromUserResource::collection($reviews)
         ];
     }
 }

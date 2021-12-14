@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SitterInfoResource extends JsonResource
+class RateForSpecificOrderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +14,16 @@ class SitterInfoResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
-            'id'=>$this->id,
-            'name'=>$this->name,
-            'avatar'=>$this->avatar,
-            'avg_rate'=> $this->rate_avg,
-            'services'=> UserServiceResource::collection($this->user_services),
+            'id' => $this->id,
+            'user_data' => [
+                'id' => optional($this->toUser)->id,
+                'name' => optional($this->toUser)->name,
+                'avatar' => optional($this->toUser)->avatar,
+            ],
+            'rate'=>$this->rate,
+            'review'=>$this->review
         ];
     }
 }
