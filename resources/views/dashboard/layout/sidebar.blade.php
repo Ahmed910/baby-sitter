@@ -39,6 +39,168 @@
                </li>
              @endif
 
+             @if (auth()->user()->hasPermissions('client'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-center" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.client.clients') !!}">
+                         {!! trans('dashboard.client.clients') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.client.index' || request()->route()->getName() == 'dashboard.client.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.client.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.client.clients') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+                     @if (auth()->user()->hasPermissions('client','store'))
+                     <li class="{{ request()->route()->getName() == 'dashboard.client.create' || request()->route()->getName() == 'dashboard.client.edit' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.client.create') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.client.add_client') !!}">
+                                 {!! trans('dashboard.general.add_new') !!}
+                             </span>
+                         </a>
+                     </li>
+                     @endif
+                 </ul>
+             </li>
+             @endif
+
+             @if (auth()->user()->hasPermissions('sitter'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-center" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.sitter.sitters') !!}">
+                         {!! trans('dashboard.sitter.sitters') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.sitter.index' || request()->route()->getName() == 'dashboard.sitter.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.sitter.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.sitter.sitters') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                     @if (auth()->user()->hasPermissions('sitter','store'))
+                     <li class="{{ request()->route()->getName() == 'dashboard.sitter.create' || request()->route()->getName() == 'dashboard.sitter.edit' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.sitter.create') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.sitter.add_sitter') !!}">
+                                 {!! trans('dashboard.general.add_new') !!}
+                             </span>
+                         </a>
+                     </li>
+                     @endif
+                 </ul>
+             </li>
+             @endif
+
+             @if (auth()->user()->hasPermissions('feature'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-center" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.feature.features') !!}">
+                         {!! trans('dashboard.feature.features') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.feature.index' || request()->route()->getName() == 'dashboard.feature.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.feature.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.feature.features') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                     @if (auth()->user()->hasPermissions('feature','store'))
+                     <li class="{{ request()->route()->getName() == 'dashboard.feature.create' || request()->route()->getName() == 'dashboard.feature.edit' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.feature.create') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.feature.add_feature') !!}">
+                                 {!! trans('dashboard.general.add_new') !!}
+                             </span>
+                         </a>
+                     </li>
+                     @endif
+                 </ul>
+             </li>
+             @endif
+
+
+             @if (auth()->user()->hasPermissions('center'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-center" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.center.centers') !!}">
+                         {!! trans('dashboard.center.centers') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.center.index' || request()->route()->getName() == 'dashboard.center.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.center.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.center.centers') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                     @if (auth()->user()->hasPermissions('center','store'))
+                     <li class="{{ request()->route()->getName() == 'dashboard.center.create' || request()->route()->getName() == 'dashboard.center.edit' ? 'active' : '' }}">
+                         <a class="d-flex align-items-center" href="{!! route('dashboard.center.create') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.center.add_center') !!}">
+                                 {!! trans('dashboard.general.add_new') !!}
+                             </span>
+                         </a>
+                     </li>
+                     @endif
+                 </ul>
+             </li>
+             @endif
+
+
+             @if (auth()->user()->hasPermissions('sitter_worker'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-sitter_worker" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.sitter_worker.sitter_workers') !!}">
+                         {!! trans('dashboard.sitter_worker.sitter_workers') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.sitter_worker.index' || request()->route()->getName() == 'dashboard.sitter_worker.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-sitter_worker" href="{!! route('dashboard.sitter_worker.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.sitter_worker.sitter_workers') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                     @if (auth()->user()->hasPermissions('sitter_worker','store'))
+                     <li class="{{ request()->route()->getName() == 'dashboard.sitter_worker.create' || request()->route()->getName() == 'dashboard.sitter_worker.edit' ? 'active' : '' }}">
+                         <a class="d-flex align-items-sitter_worker" href="{!! route('dashboard.sitter_worker.create') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.sitter_worker.add_sitter_worker') !!}">
+                                 {!! trans('dashboard.general.add_new') !!}
+                             </span>
+                         </a>
+                     </li>
+                     @endif
+                 </ul>
+             </li>
+             @endif
+
+
 
             {{-- Admins --}}
             @if (auth()->user()->hasPermissions('manager'))

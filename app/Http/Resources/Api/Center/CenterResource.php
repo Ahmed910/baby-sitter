@@ -22,7 +22,7 @@ class CenterResource extends JsonResource
      */
     public function toArray($request)
     {
-        $reviews = Rate::where('to',$this->id)->get();
+        $reviews = Rate::where('to_center',$this->id)->get();
 
         return [
             'id'=>$this->id,

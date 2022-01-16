@@ -17,6 +17,19 @@ Route::group(
             // Role
             Route::resource('role','RoleController');
 
+            // Client
+            Route::resource('client','ClientController');
+
+             // Sitter
+             Route::resource('sitter','SitterController');
+
+              // feature
+            Route::resource('feature','FeatureController');
+            // Center
+            Route::resource('center','CenterController');
+
+            // sitter_worker
+            Route::resource('sitter_worker','SitterWorkerController');
             // ====================HR===========================================
             // Manager
             Route::resource('manager','ManagerController');

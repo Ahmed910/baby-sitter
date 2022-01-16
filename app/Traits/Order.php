@@ -25,7 +25,7 @@ trait Order
     private OrderMonthSitter $month_sitter;
     private OrderHourSitter $hour_sitter;
 
-    public function __construct(OrderMonthCenter $month_center,OrderHourCenter $hour_center,OrderMonthSitter $month_sitter,OrderHourSitter $hour_sitter)
+    public function __construct(OrderMonthCenter $month_center, OrderHourCenter $hour_center, OrderMonthSitter $month_sitter, OrderHourSitter $hour_sitter)
     {
         $this->month_center = $month_center;
         $this->hour_center = $hour_center;
@@ -38,100 +38,103 @@ trait Order
     protected function SitterOrder(OrderSitterRequest $request)
     {
 
-        if($request->pay_type == 'credit' && $request->check_order == 'test'){
-            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.payment_has_been_successfully')],200);
+        if ($request->pay_type == 'credit' && $request->check_order == 'test') {
+            return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.payment_has_been_successfully')], 200);
         }
-        if($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet){
-            return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.your_wallet_does_not_have_enough_balance')]);
+        if ($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet) {
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
-        $order_data = ['pay_type','sitter_id','service_id','lat','lng','location','transaction_id','price'];
+        $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price'];
         DB::beginTransaction();
 
         try {
-             $service = Service::findOrFail($request->service_id);
-             $main_order = MainOrder::create(['client_id'=>auth('api')->id(),'sitter_id'=>$request->sitter_id,'to'=>'sitter']);
-             if($service->service_type == 'hour'){
+            $service = Service::findOrFail($request->service_id);
+            $main_order = MainOrder::create(['client_id' => auth('api')->id(), 'sitter_id' => $request->sitter_id, 'to' => 'sitter']);
+            if ($service->service_type == 'hour') {
                 //   $price = $this->calculatePricePerHour($service,$request);
 
-                  $order = SitterOrder::create(array_only($request->validated(),$order_data)+['client_id'=>auth('api')->id(),'main_order_id'=>$main_order->id]);
-                  $this->hour_sitter->saveOrderByHourService(array_only($request->validated(), ['date','start_time','end_time']),$order);
-             }else{
+                $order = SitterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
+                $this->hour_sitter->saveOrderByHourService(array_only($request->validated(), ['date', 'start_time', 'end_time']), $order);
+            } else {
 
 
                 //   $price = $this->calculatePricePerMonth($service,$request);
 
-                  $order = SitterOrder::create(array_only($request->validated(),$order_data)+['client_id'=>auth('api')->id(),'main_order_id'=>$main_order->id]);
-                  $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date','end_date']),$order,$request->schedules);
-             }
+                $order = SitterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
+                $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date']), $order, $request->schedules);
+            }
 
-             $order->kids()->createMany($this->getKids($request->kids,'SitterOrder',$order->id));
-             if ($request->pay_type == 'wallet') {
-                 $this->updateWalletBalance($request->sitter_id, $request->price);
-             }
-             $chat = Chat::create(['sender_id' => auth('api')->id() ,'order_id' => $main_order->id ,'receiver_id' => $main_order->sitter_id,'last_message'=>'']);
+            $order->kids()->createMany($this->getKids($request->kids, 'SitterOrder', $order->id));
+            if ($request->pay_type == 'wallet') {
+                $this->withdrawFromWallet($order->price, auth('api')->id());
+            }
+            $chat = Chat::create(['sender_id' => auth('api')->id(), 'order_id' => $main_order->id, 'receiver_id' => $main_order->sitter_id, 'last_message' => '']);
             DB::commit();
-            return response()->json(['data'=>null,'status'=>'success','chat_id'=>$chat->id,'message'=>trans('api.messages.order_created_successfully')]);
+            return response()->json(['data' => null, 'status' => 'success', 'chat_id' => $chat->id, 'message' => trans('api.messages.order_created_successfully')]);
             // all good
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.there_is_an_error_try_again')],400);
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
         }
-
     }
 
     protected function CenterOrder(OrderCenterRequest $request)
     {
-        if($request->pay_type == 'credit' && $request->check_order == 'test'){
-            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.payment_has_been_successfully')],200);
+        if ($request->pay_type == 'credit' && $request->check_order == 'test') {
+            return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.payment_has_been_successfully')], 200);
         }
-        if($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet){
-            return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.your_wallet_does_not_have_enough_balance')]);
+        if ($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet) {
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
-        $order_data = ['pay_type','center_id','baby_sitter_id','service_id','transaction_id','price'];
+        $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price'];
         DB::beginTransaction();
 
         try {
 
 
-             $service = Service::findOrFail($request->service_id);
-             $main_order = MainOrder::create(['client_id'=>auth('api')->id(),'center_id'=>$request->center_id,'to'=>'center']);
-             if($service->service_type == 'hour')
-             {
+            $service = Service::findOrFail($request->service_id);
+            $main_order = MainOrder::create(['client_id' => auth('api')->id(), 'center_id' => $request->center_id, 'to' => 'center']);
+            if ($service->service_type == 'hour') {
                 // $price = $this->calculatePricePerHour($service,$request);
-                $order = CenterOrder::create(array_only($request->validated(),$order_data)+['client_id'=>auth('api')->id(),'main_order_id'=>$main_order->id]);
-                $this->hour_center->saveOrderByHourService(array_only($request->validated(), ['date','start_time','end_time']),$order);
-
-             }else{
+                $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
+                $this->hour_center->saveOrderByHourService(array_only($request->validated(), ['date', 'start_time', 'end_time']), $order);
+            } else {
                 // $price = $this->calculatePricePerMonth($service,$request);
 
-                $order = CenterOrder::create(array_only($request->validated(),$order_data)+['client_id'=>auth('api')->id(),'main_order_id'=>$main_order->id]);
-                $this->month_center->saveOrderByMonthService(array_only($request->validated(), ['start_date','end_date']),$order,$request->schedules);
-             }
+                $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
+                $this->month_center->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date']), $order, $request->schedules);
+            }
 
-             $order->kids()->createMany($this->getKids($request->kids,'CenterOrder',$order->id));
-             if($request->pay_type == 'wallet'){
-                $this->updateWalletBalance($request->center_id,$request->price);
-             }
+            $order->kids()->createMany($this->getKids($request->kids, 'CenterOrder', $order->id));
+            if ($request->pay_type == 'wallet') {
+                $this->withdrawFromWallet($order->price, auth('api')->id());
+            }
 
             DB::commit();
-            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.order_created_successfully')]);
+            return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_created_successfully')]);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.there_is_an_error_try_again')],400);
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
         }
-
     }
 
 
 
-    private function updateWalletBalance($provider_id,$price)
+    protected function withdrawFromWallet($price, $user_id)
     {
-        $client = User::findOrFail(auth('api')->id());
-        $updated_wallet_for_client = $client->wallet - $price;
-        $provider = User::findOrFail($provider_id);
-        $updated_wallet_for_provider = $provider->wallet + $price;
-        $client->update(['wallet'=>$updated_wallet_for_client]);
-        $provider->update(['wallet'=>$updated_wallet_for_provider]);
+        $user = User::findOrFail($user_id);
+        $updated_wallet_for_user = $user->wallet - $price;
+        $user->update(['wallet' => $updated_wallet_for_user]);
+        // $provider = User::findOrFail($provider_id);
+        // $updated_wallet_for_provider = $provider->wallet + $price;
+        // $provider->update(['wallet'=>$updated_wallet_for_provider]);
+    }
+
+    protected function chargeWallet($price, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+        $updated_wallet_for_user = $user->wallet + $price;
+        $user->update(['wallet' => $updated_wallet_for_user]);
     }
 
     // private function calculatePricePerHour($service,$request)
@@ -159,20 +162,18 @@ trait Order
     //      return $price;
     // }
 
-    private function getKids($kids,$model,$orderId)
+    private function getKids($kids, $model, $orderId)
     {
 
         $data = [];
-        foreach($kids as $kid){
-            $data[]=[
+        foreach ($kids as $kid) {
+            $data[] = [
                 'kid_id' => $kid,
-                'order_kidsable_type'=>"App/Models/{$model}",
-                'order_kidsable_id'=>$orderId
+                'order_kidsable_type' => "App/Models/{$model}",
+                'order_kidsable_id' => $orderId
             ];
         }
 
         return $data;
     }
-
-
 }

@@ -26,8 +26,11 @@ class RateRequest extends ApiMasterRequest
     {
         return [
             'order_id'=>'required|exists:main_orders,id',
-            'to'=>'nullable|exists:users,id',
-            'to_baby_sitter'=>'nullable|exists:baby_sitters,id',
+            'type'=>'required|in:sitter,sitter_worker,center,client',
+            'to'=>'nullable|required_if:type,sitter|exists:users,id',
+            'to_client'=>'nullable|required_if:type,client|exists:users,id',
+            'to_center'=>'nullable|required_if:type,center|exists:users,id',
+            'to_baby_sitter'=>'nullable|required_if:type,sitter_worker|exists:baby_sitters,id',
             'rate' => 'required|numeric|gte:0|lte:5',
             'review' => 'nullable|string|between:2,1000',
         ];

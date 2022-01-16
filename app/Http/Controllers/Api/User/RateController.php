@@ -22,7 +22,7 @@ class RateController extends Controller
      */
     public function index()
     {
-        //
+        // $reviews = Rate::where('to')->get();
     }
 
     /**
@@ -42,28 +42,52 @@ class RateController extends Controller
         }else{
             $center_order = CenterOrder::where('status','completed')->findOrFail(optional($order->center_order)->id);
         }
-        if(isset($request->to) && $request->to){
+        if(isset($request->to) && $request->to && $request->type=='sitter'){
 
             Rate::updateOrCreate(
                 ['order_id' => $order->id, 'from'=>auth('api')->id(),'to'=>$request->to],
                 ['order_id' => $order->id, 'from'=>auth('api')->id(),
-                'to'=>$request->to,'rate'=>$request->rate,
+                'to'=>$request->to,'rate'=>$request->rate,'type'=>$request->type,
                 'review'=>$request->review]
             );
 
             $rate_avg = Rate::where('to',$request->to)->avg('rate');
 
             User::findOrFail($request->to)->update(['rate_avg'=>$rate_avg]);
-        }elseif(isset($request->to_baby_sitter) && $request->to_baby_sitter){
+        } elseif(isset($request->to_center) && $request->to_center && $request->type=='center'){
+
+            Rate::updateOrCreate(
+                ['order_id' => $order->id, 'from'=>auth('api')->id(),'to_center'=>$request->to_center],
+                ['order_id' => $order->id, 'from'=>auth('api')->id(),
+                'to_center'=>$request->to_center,'rate'=>$request->rate,'type'=>$request->type,
+                'review'=>$request->review]
+            );
+
+            $rate_avg = Rate::where('to_center',$request->to_center)->avg('rate');
+
+            User::findOrFail($request->to_center)->update(['rate_avg'=>$rate_avg]);
+        }
+        elseif(isset($request->to_baby_sitter) && $request->to_baby_sitter && $request->type=='sitter_worker'){
             Rate::updateOrCreate(
                 ['order_id' => $order->id, 'from'=>auth('api')->id(),'to_baby_sitter'=>$request->to_baby_sitter],
                 ['order_id' => $order->id, 'from'=>auth('api')->id(),
-                'to_baby_sitter'=>$request->to_baby_sitter,'rate'=>$request->rate,
+                'to_baby_sitter'=>$request->to_baby_sitter,'rate'=>$request->rate,'type'=>$request->type,
                 'review'=>$request->review]
             );
 
             $rate_avg = Rate::where('to_baby_sitter',$request->to_baby_sitter)->avg('rate');
             BabySitter::findOrFail($request->to_baby_sitter)->update(['rate_avg'=>$rate_avg]);
+        }
+        elseif(isset($request->to_client) && $request->to_client && $request->type=='client'){
+            Rate::updateOrCreate(
+                ['order_id' => $order->id, 'from'=>auth('api')->id(),'to_baby_sitter'=>$request->to_baby_sitter],
+                ['order_id' => $order->id, 'from'=>auth('api')->id(),
+                'to_baby_sitter'=>$request->to_baby_sitter,'rate'=>$request->rate,'type'=>$request->type,
+                'review'=>$request->review]
+            );
+
+            $rate_avg = Rate::where('to_client',$request->to_client)->avg('rate');
+            User::findOrFail($request->to_client)->update(['rate_avg'=>$rate_avg]);
         }
 
         return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.successfully_evaluated')]);

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFinishedAtColumnToMainOrders extends Migration
+class AddTypeToRatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddFinishedAtColumnToMainOrders extends Migration
      */
     public function up()
     {
-        Schema::table('main_orders', function (Blueprint $table) {
-            $table->timestamp('finished_at')->nullable()->after('to');
+        Schema::table('rates', function (Blueprint $table) {
+            $table->string('type')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddFinishedAtColumnToMainOrders extends Migration
      */
     public function down()
     {
-        Schema::table('main_orders', function (Blueprint $table) {
-            $table->dropColumn('finished_at');
+        Schema::table('rates', function (Blueprint $table) {
+            $table->dropColumn('type');
         });
     }
 }

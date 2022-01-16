@@ -1,6 +1,7 @@
 var token = document.head.querySelector('meta[name="csrf-token"]').content;
 
 function deleteItem(itemId,route) {
+
       $("#modal_default").modal('show');
       $('#item').attr('item-id',itemId);
       $('#item').attr('route',route);
@@ -17,6 +18,7 @@ function deleteItem(itemId,route) {
         data:{_token:token},
         success:function(data){
             if (data['value'] == 1) {
+                console.log('ahmedmohamed');
               $("."+newId).fadeOut('slow',function(){
                 $(this).remove();
               });

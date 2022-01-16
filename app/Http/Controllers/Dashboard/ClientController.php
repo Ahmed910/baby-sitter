@@ -29,13 +29,13 @@ class ClientController extends Controller
         })->latest();
         $client_count = $query->count();
         $client_side_cols = [
-            'id','image','fullname','email','phone','created_at'
+            'id','image','name','email','phone','created_at'
         ];
         if (request()->ajax()) {
             $keyword = $request->search['value'];
             $clients = $query->when($keyword,function($q)use($keyword){
                 $q->where(function($q)use($keyword){
-                    $q->where('fullname',"LIKE","%{$keyword}%")->orWhere('email',"LIKE","%{$keyword}%")->orWhere('phone',"LIKE","%{$keyword}%");
+                    $q->where('name',"LIKE","%{$keyword}%")->orWhere('email',"LIKE","%{$keyword}%")->orWhere('phone',"LIKE","%{$keyword}%");
                 });
             });
 
@@ -106,11 +106,11 @@ class ClientController extends Controller
              $client = User::where('user_type','client')->findOrFail($id);
              $data['client'] = $client;
              $data['orders'] = $client->clientOrders()->latest()->paginate(30);
-             $data['points'] = $client->userPoints()->latest()->paginate(30);
+
 
              $data['other_clients'] = User::where('user_type','client')->where('id',"<>",$client->id)->inRandomOrder()->take(5)->get();
-             $data['wallet_transfers'] = MoneyTransfer::where('transfer_to_id',$client->id)->orWhere('transfer_from_id',$client->id)->latest()->paginate(30);
-             $data['wallet_transactions'] = WalletTransaction::where('user_id',$client->id)->orWhere('added_by_id',$client->id)->latest()->paginate(30);
+            //  $data['wallet_transfers'] = MoneyTransfer::where('transfer_to_id',$client->id)->orWhere('transfer_from_id',$client->id)->latest()->paginate(30);
+            //  $data['wallet_transactions'] = WalletTransaction::where('user_id',$client->id)->orWhere('added_by_id',$client->id)->latest()->paginate(30);
              $data['total_clients'] = User::where('user_type','client')->count();
              return view('dashboard.client.show',$data);
          }

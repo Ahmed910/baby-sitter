@@ -15,11 +15,13 @@ use App\Notifications\Orders\ActiveOrderNotification;
 use App\Notifications\Orders\CancelOrderNotification;
 use App\Notifications\Orders\CompleteOrderNotification;
 use App\Notifications\Orders\RejectOrderNotification;
+use App\Traits\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
+    use Order;
     public $order;
     public function __construct(OrderStatuses $order)
     {
@@ -58,6 +60,7 @@ class OrderController extends Controller
 
         $center_order = CenterOrder::where('status','pending')->findOrFail(optional($order->center_order)->id);
         $center_order->update(['status'=>'waiting']);
+        $this->chargeWallet($center_order->price,$center_order->center_id);
         $order->refresh();
     //   dd($center_order);
         $order->client->notify(new AcceptOrderNotification($order,['database']));
@@ -73,6 +76,7 @@ class OrderController extends Controller
 
         $center_order = CenterOrder::where('status','pending')->findOrFail(optional($order->center_order)->id);
         $center_order->update(['status'=>'rejected']);
+        $this->chargeWallet($center_order->price,$center_order->client_id);
         $order->client->notify(new RejectOrderNotification($order,['database']));
 
         $admins = User::whereIn('user_type',['superadmin','admin'])->get();
@@ -87,7 +91,7 @@ class OrderController extends Controller
            // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
             $center_order=CenterOrder::where('status','waiting')->findOrFail($main_order->center_order->id);
             $center_order->update(['status'=>'canceled']);
-
+            $this->chargeWallet($center_order->price,$center_order->client_id);
             $main_order->client->notify(new CancelOrderNotification($main_order,['database']));
 
             $admins = User::whereIn('user_type',['superadmin','admin'])->get();

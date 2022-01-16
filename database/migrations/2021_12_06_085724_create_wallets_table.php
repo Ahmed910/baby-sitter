@@ -24,11 +24,11 @@ class CreateWalletsTable extends Migration
             $table->uuid('transferd_by')->nullable();
             $table->foreign('transferd_by')->references('id')->on('users')->onDelete('set null');
             $table->string('status')->default('pending');
-            $table->string('account_name')->nullable();
-            $table->string('bank_name')->nullable();
-            $table->string('account_number')->nullable();
-            $table->string('iban_number')->nullable();
+            $table->unsignedBigInteger('wallet_withdraw_id')->nullable();
+            $table->foreign('wallet_withdraw_id')->references('id')->on('wallet_withdraws')->onDelete('cascade');
+            $table->string('transaction_id')->nullable();
             $table->text('message_refused')->nullable();
+            $table->string('transaction_type')->nullable();
             $table->timestamps();
         });
     }

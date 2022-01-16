@@ -65,6 +65,16 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="font-medium-1 col-md-2">{!! trans('dashboard.setting.app_profit_percentage') !!}</label>
+                                    <div class="col-md-10">
+                                        {!! Form::text('app_profit_percentage', setting('app_profit_percentage') ? setting('app_profit_percentage'):old('app_profit_percentage'), ['class'=>'form-control','placeholder'=>trans('dashboard.setting.app_profit_percentage')]) !!}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="row">
                                     <label class="font-medium-1 col-md-2">{!! trans('dashboard.general.logo') !!}</label>

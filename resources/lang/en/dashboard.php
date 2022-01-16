@@ -9,13 +9,35 @@ return [
   'chart' => [
     'charts' => "charts",
   ],
+  'sitter'=>[
+    'sitter'=>'sitter',
+    'sitters'=>'sitters',
+    'add_sitter'=>'add sitter',
+    'certificates'=>'certificates',
+    'edit_sitter'=>'edit sitter info',
+    'hour'=>'price per hour',
+    'month'=>'price per month',
+],
 
+'sitter_worker'=>[
+    'max_num_of_child_care'=>'max num of child care',
+    'level_experience'=>'level experience',
+    'total_num_of_student'=>'total num of student',
+    'sitter_worker'=>'sitter worker',
+    'sitter_workers'=>'sitter workers',
+    'add_sitter_worker'=>'add sitter worker',
+    'edit_sitter_worker'=>'edit sitter worker',
+    'center'=>'center',
+    'level_percentage'=>'level percentage'
+],
 
   'user' => [
     'user' => 'user',
     'users' => 'users',
     'add_user' => 'add user',
     'edit_user' => 'edit user',
+    'service_type'=>'service type',
+    'features'=>'features',
     'account' => 'account',
     'phone'=>'phone',
     'age'=>'age',
@@ -373,6 +395,7 @@ return [
     'order_has_been_active_title'=>'order has been active',
     'order_has_been_active_body'=>'order has been activated by :body',
     'order_has_been_completed_title'=>'order has been completed',
+
     'order_has_been_completed_body'=>'order has been completed and finished by :body',
     'sitter_has_been_deliver_childern_body'=>'sitter :body has been delivered childern to client',
 
@@ -484,7 +507,7 @@ return [
     'collection_amount' => 'collection amount',
     'test_version' => 'test version',
     'main_setting' => 'main setting',
-
+    'app_profit_percentage'=>'app profit percentage',
     'sms_setting' => 'SMS setting',
     'use_sms_service' => 'use sms service',
     'payment_service_enable' => 'payment servic enable',

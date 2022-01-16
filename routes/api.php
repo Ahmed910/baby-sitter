@@ -55,11 +55,12 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::apiResource('notifications','NotificationController')->only('index','show','destroy');
 
             // Wallet
-            Route::apiResource('wallet_transfers','WalletTransfersController')->only('index','show','store');
-            Route::get('wallet','WalletController@index');
-            Route::get('my_ibans','WalletController@getIbans');
-            Route::post('charge_wallet','WalletController@chargeWallet');
-            Route::post('withdrawal_wallet','WalletController@withdrawalWallet');
+            // Route::apiResource('wallet_transfers','WalletTransfersController')->only('index','show','store');
+            // Route::get('wallet','WalletController@index');
+            // Route::get('my_ibans','WalletController@getIbans');
+            Route::post('charge_or_withdraw_wallet','WalletController@withdrawOrChargeWallet');
+            Route::get('get_transactions','WalletController@getTransactions');
+           // Route::post('withdrawal_wallet','WalletController@withdrawalWallet');
         });
     });
     // Client
@@ -101,6 +102,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Schedules
             Route::apiResource('schedule','ScheduleController');
             // Rate && Review
+            Route::get('get_rates_for_sitter','RateSitterController@getRatesForSitter');
             // Route::post('rates','OrderController@SetRate');
             // Orders
             Route::get('get_orders','OrderController@getOrders');
@@ -112,7 +114,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('send_otp_to_recieve_childern/{order_id}','OrderController@sendOTPToReceiveChildern');
             Route::post('check_otp_validity_and_deliver_childern','OrderController@checkOtpValidityAndDeliverChildern');
             Route::get('send_otp_to_deliver_childern/{order_id}','OrderController@sendOTPToDeliverChildern');
-
+            Route::post('resend_otp','OrderController@resendOTP');
 
             // Route::get('rates/{consultant_id}','ConsultantController@getReviews');
             // get main profile
@@ -131,7 +133,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Route::post('reject_orders','OfferController@rejectOrder');
             // Route::post('change_order_status','OrderController@changeOrderStatus');
             // Route::post('change_account_status','DriverController@changeAccountStatus');
-
+            // Rate && Review
+            Route::get('get_rates_for_center','RateCenterController@getRatesForCenter');
             // Order
             Route::get('get_orders','OrderController@getOrders');
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\BabySitter;
 use App\Classes\OrderStatuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\Order\OTPRequest;
+use App\Http\Requests\Api\BabySitter\Order\ResendOTPRequest;
 use App\Http\Resources\Api\Client\Order\OrderResource;
 use App\Http\Resources\Api\Client\Order\SingleOrderResource;
 use App\Http\Resources\Api\Client\Order\SingleSitterOrderResource;
@@ -14,13 +15,14 @@ use App\Models\User;
 use App\Notifications\Orders\AcceptOrderNotification;
 use App\Notifications\Orders\CancelOrderNotification;
 use App\Notifications\Orders\RejectOrderNotification;
+use App\Traits\Order;
 use App\Traits\OTP;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
-    use OTP;
+    use OTP,Order;
     public $order;
     public function __construct(OrderStatuses $order)
     {
@@ -73,6 +75,7 @@ class OrderController extends Controller
            // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
             $sitter_order=SitterOrder::where('status','waiting')->findOrFail($main_order->sitter_order->id);
             $sitter_order->update(['status'=>'canceled']);
+            $this->chargeWallet($sitter_order->price,$sitter_order->client_id);
             $main_order->refresh();
             $main_order->client->notify(new CancelOrderNotification($main_order,['database']));
 
@@ -87,6 +90,7 @@ class OrderController extends Controller
 
         $sitter_order = SitterOrder::where('status','pending')->findOrFail(optional($order->sitter_order)->id);
         $sitter_order->update(['status'=>'rejected']);
+        $this->chargeWallet($sitter_order->price,$sitter_order->client_id);
         $order->refresh();
         $order->client->notify(new RejectOrderNotification($order,['database']));
 
@@ -109,19 +113,33 @@ class OrderController extends Controller
         return $this->sendOTP($order_id,'with_the_child');
     }
 
+    public function resendOTP(ResendOTPRequest $request)
+    {
+        $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($request->order_id);
+        $sitter_order = SitterOrder::findOrFail(optional($order->sitter_order)->id);
+        $otp = 1111;
+        if (setting('use_sms_service') == 'enable') {
+            $otp = mt_rand(1111, 9999); //generate_unique_code(4,'\\App\\Models\\User','verified_code');
+        }
+        $sitter_order->update(['otp_code' => $otp]);
+        $this->sendVerifyOTP($order);
+
+        return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.otp_has_been_sent')]);
+    }
+
     public function checkOtpValidityAndDeliverChildern(OTPRequest $request)
     {
         return $this->checkOtpValidity($request,'with_the_child','completed');
     }
 
-    protected function sendVerifyOTP($user)
+    protected function sendVerifyOTP($order)
     {
         if (setting('use_sms_service') == 'enable') {
-            $message = trans('api.auth.verified_code_is',['code' => $user->verified_code]);
-            $response = send_sms($user->phone, $message);
+            $message = trans('api.auth.otp_code_is',['otp' => $order->otp]);
+            $response = send_sms(optional($order->sitter)->phone, $message);
 
             if (setting('sms_provider') == 'hisms' && $response['response'] != 3) {
-                $user->forceDelete();
+                // $user->forceDelete();
                 $sms_response = $response['result'];
                 return response()->json(['status' => 'fail','data'=> null ,'message'=> "لم يتم حفظ رجاء التحقق من البيانات ( ".$sms_response." )" ], 422);
             }

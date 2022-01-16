@@ -28,23 +28,27 @@ class ClientRequest extends FormRequest
 
         if ($client) {
             $password = 'nullable|min:6|confirmed';
+            $city = 'nullable|exists:cities,id';
+        }else{
+            $city = 'required|exists:cities,id';
         }
 
         return [
-            'fullname' => 'required|string|between:2,100',
+            'name' => 'required|string|between:2,100',
             'email' => 'required|email|unique:users,email,' . $client,
             'phone' => 'required|numeric|digits_between:5,20|starts_with:9665,05|unique:users,phone,' . $client,
             'whatsapp' => 'nullable|numeric|digits_between:5,20|unique:users,whatsapp,' . $client,
-            // 'identity_number' => 'required|numeric|unique:users,identity_number,' . $client,
+            'identity_number' => 'required|numeric|unique:users,identity_number,' . $client,
             'password' => $password,
             'image'    => 'nullable|image|mimes:jpeg,jpg,png,gif',
             'cover' => 'nullable|image|mimes:jpeg,jpg,png,gif',
             'gender' => 'nullable|in:male,female',
+
             'is_active' => 'nullable|in:1,0',
             'is_ban' => 'nullable|in:1,0',
             'ban_reason' => 'nullable|string|between:3,10000',
             'country_id' => 'nullable|exists:countries,id',
-            'city_id' => 'nullable|exists:cities,id',
+            'city_id' => $city,
         ];
     }
 

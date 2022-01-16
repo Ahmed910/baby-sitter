@@ -255,7 +255,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-
     public function user_services()
     {
         return $this->hasMany(UserService::class,'user_id');
@@ -319,7 +318,7 @@ class User extends Authenticatable implements JWTSubject
     // =====================Client Orders==================
     public function clientOrders()
     {
-        return $this->hasMany(Order::class,'client_id');
+        return $this->hasMany(MainOrder::class,'client_id');
     }
 
 

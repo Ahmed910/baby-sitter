@@ -65,14 +65,17 @@ class OrderController extends Controller
             // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
             $sitter_order = SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id);
             $sitter_order->update(['status' => 'canceled']);
+            $this->chargeWallet($sitter_order->price,$sitter_order->client_id);
             $user = $main_order->sitter;
         } else {
             //$main_order->center_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
             $center_order = CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
             $center_order->update(['status' => 'canceled']);
+            $this->chargeWallet($center_order->price,$center_order->client_id);
             $user = $main_order->center;
         }
         // dd(gettype($main_order));
+
         $user->notify(new CancelOrderNotification($main_order, ['database']));
 
         $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();

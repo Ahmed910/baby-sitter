@@ -27,5 +27,13 @@ class Rate extends Model
     {
        return $this->belongsTo(BabySitter::class,'to_baby_sitter');
     }
+    public function toClient()
+    {
+       return $this->belongsTo(User::class,'to_client');
+    }
+    public function toCenter()
+    {
+       return $this->belongsTo(User::class,'to_center');
+    }
 
 }
