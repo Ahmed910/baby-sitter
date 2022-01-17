@@ -10,6 +10,7 @@ return[
         'sign_with_active' => "successfully registered",
         'you_already_have_password' => 'you already have password',
         'you_should_add_password' => 'you should add password',
+        'the_max_num_for_offer_has_been_used'=>'The max number for offer has been used',
 
         'user_not_found' => 'The phone number is incorrect or the account is not activated',
         'code_true' => 'The entered code is correct',

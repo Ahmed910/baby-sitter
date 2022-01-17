@@ -45,11 +45,14 @@ trait Order
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
         $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price'];
+        $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'sitter_id' => $request->sitter_id, 'to' => 'sitter'];
+        $financials = $this->getAppProfit($request->price_after_offer);
+        
         DB::beginTransaction();
 
         try {
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create(['client_id' => auth('api')->id(), 'sitter_id' => $request->sitter_id, 'to' => 'sitter']);
+            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
             if ($service->service_type == 'hour') {
                 //   $price = $this->calculatePricePerHour($service,$request);
 
@@ -135,6 +138,15 @@ trait Order
         $user = User::findOrFail($user_id);
         $updated_wallet_for_user = $user->wallet + $price;
         $user->update(['wallet' => $updated_wallet_for_user]);
+    }
+
+    private function getAppProfit($totol_price_for_order)
+    {
+        $financial = [];
+        $financial['app_profit_percentage'] = (double)setting('app_profit_percentage');
+        $financial['app_profit'] = $totol_price_for_order * ($financial['app_profit_percentage']/100);
+        $financial['final_price'] = $totol_price_for_order - $financial['app_profit'];
+        return $financial;
     }
 
     // private function calculatePricePerHour($service,$request)

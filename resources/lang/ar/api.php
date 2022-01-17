@@ -23,6 +23,7 @@ return[
         'order_hint_if_offer_after_accept' => "سوف يتم اضافة مبلغ :driver_wallet_amount ريال الى محفظتك بعد انهاء الرحلة وسيقوم العميل بدفع مبلغ :client_pay_amount ريال",
         'cant_finish_order_before_received_from_client' => "لايمكنك انهاء الطلب قبل تأكيد استلام الطلب من العميل",
           'offer_created_successfully'=>'تم إنشاء العرض بنجاح',
+          'the_max_num_for_offer_has_been_used'=>'لقد تم استخدام الحد الاقصي لهذا العرض',
           'request_has_been_sent'=>'تم إرسال الطلب',
           'your_balance_in_wallet_is_insufficiant'=>'رصيدك فى المحفظة اقل من المبلغ المطلوب',
           'updated_successfully'=>'تم التعديل بنجاح',

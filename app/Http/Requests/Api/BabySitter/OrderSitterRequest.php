@@ -45,7 +45,9 @@ class OrderSitterRequest extends ApiMasterRequest
             'pay_type'=>'required|in:credit,wallet',
             'check_order'=>'required|in:test,live',
             'transaction_id'=>'nullable|required_if:check_order,live|required_if:pay_type,credit',
-            'price'=>'required|numeric'
+            'price_before_offer'=>'required|numeric',
+            'price_after_offer'=>'required|numeric',
+            'discount'=>'required|numeric',
         ];
 
         $data = $this->getServiceType($data,$this->service_type);

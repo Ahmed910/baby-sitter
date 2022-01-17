@@ -71,6 +71,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('offers/{order_id}','OfferController@offers');
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
+            Route::post('apply_offer','OfferController@applyOffer');
 
             // favorites
             Route::post('toggle_favorites/{user_id}','FavoriteController@toggleFavorites');
