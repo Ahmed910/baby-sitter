@@ -41,7 +41,7 @@ class SingleCenterResource extends JsonResource
             'days_in_month'=> $this->when($this->service->service_type == 'month' ,isset($this->months) ? OrderDaysInMonthResource::collection($this->months->month_days):null),
             'kids'=> OrderKidsResource::collection($this->kids),
             'comment'=> $this->comment,
-            'total_price'=> (float)$this->price,
+            
            // 'rate'=>$this->when($this->status == 'completed',new RateForSpecificOrderResource($rate)),
             'created_at'=>$this->created_at
         ];

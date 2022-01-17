@@ -23,6 +23,7 @@ class SingleOrderResource extends JsonResource
         return [
             'id'=>$this->id,
             'type'=>$this->to,
+            'total_price'=> (float)$this->price_after_offer,
             'chat_id'=>$this->when(isset($this->sitter_order),optional($this->chat)->id),
             'sitter_rate'=>$this->when(isset($this->sitter_order) && optional($this->sitter_order)->status == 'completed',new RateForSpecificOrderResource(Rate::where(['from'=>auth('api')->id(),'order_id'=>$this->id])->where('to','<>',null)->first())),
             'center_rate'=>$this->when(isset($this->center_order) && optional($this->center_order)->status == 'completed',new RateForSpecificOrderResource(Rate::where(['from'=>auth('api')->id(),'order_id'=>$this->id])->where('to_center','<>',null)->first())),

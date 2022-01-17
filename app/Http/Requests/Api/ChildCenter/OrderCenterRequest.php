@@ -34,12 +34,14 @@ class OrderCenterRequest extends ApiMasterRequest
             'kid.*'=>'required|exists:kids,id',
             'comment'=>'nullable|between:3,10000',
             'transaction_id'=>'required',
-            'price'=>'required|numeric',
+            // 'price'=>'required|numeric',
             'check_order'=>'required|in:test,live',
 
             'pay_type'=>'required|in:credit,wallet',
             'transaction_id'=>'nullable|required_if:check_order,live|required_if:pay_type,credit',
-
+            'price_before_offer'=>'required|numeric',
+            'price_after_offer'=>'required|numeric',
+            'discount'=>'required|numeric',
         ];
 
         $data = $this->getServiceType($data,$this->service_type);

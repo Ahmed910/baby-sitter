@@ -47,7 +47,7 @@ trait Order
         $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price'];
         $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'sitter_id' => $request->sitter_id, 'to' => 'sitter'];
         $financials = $this->getAppProfit($request->price_after_offer);
-        
+
         DB::beginTransaction();
 
         try {
@@ -90,13 +90,15 @@ trait Order
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
         $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price'];
+        $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'center_id' => $request->center_id, 'to' => 'center'];
+        $financials = $this->getAppProfit($request->price_after_offer);
         DB::beginTransaction();
 
         try {
 
 
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create(['client_id' => auth('api')->id(), 'center_id' => $request->center_id, 'to' => 'center']);
+            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
             if ($service->service_type == 'hour') {
                 // $price = $this->calculatePricePerHour($service,$request);
                 $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
