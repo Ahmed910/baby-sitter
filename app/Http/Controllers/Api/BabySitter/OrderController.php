@@ -75,7 +75,9 @@ class OrderController extends Controller
            // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
             $sitter_order=SitterOrder::where('status','waiting')->findOrFail($main_order->sitter_order->id);
             $sitter_order->update(['status'=>'canceled']);
-            $this->chargeWallet($sitter_order->price,$sitter_order->client_id);
+            if($sitter_order->pay_type == 'wallet'){
+                $this->chargeWallet($main_order->price_after_offer,$sitter_order->client_id);
+            }
             $main_order->refresh();
             $main_order->client->notify(new CancelOrderNotification($main_order,['database']));
 
@@ -90,7 +92,10 @@ class OrderController extends Controller
 
         $sitter_order = SitterOrder::where('status','pending')->findOrFail(optional($order->sitter_order)->id);
         $sitter_order->update(['status'=>'rejected']);
-        $this->chargeWallet($sitter_order->price,$sitter_order->client_id);
+        if($sitter_order->pay_type == 'wallet')
+        {
+            $this->chargeWallet($order->price_after_offer,$sitter_order->client_id);
+        }
         $order->refresh();
         $order->client->notify(new RejectOrderNotification($order,['database']));
 

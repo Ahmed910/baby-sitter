@@ -35,7 +35,7 @@ class OrderCenterRequest extends ApiMasterRequest
             'comment'=>'nullable|between:3,10000',
             'transaction_id'=>'required',
             // 'price'=>'required|numeric',
-            'check_order'=>'required|in:test,live',
+            'check_order'=>'required_if:pay_type,credit|in:test,live',
 
             'pay_type'=>'required|in:credit,wallet',
             'transaction_id'=>'nullable|required_if:check_order,live|required_if:pay_type,credit',

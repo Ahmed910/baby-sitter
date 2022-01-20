@@ -52,7 +52,7 @@ trait Order
 
         try {
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
+            $main_order = MainOrder::create($main_order_data);
             if ($service->service_type == 'hour') {
                 //   $price = $this->calculatePricePerHour($service,$request);
 
@@ -69,7 +69,8 @@ trait Order
 
             $order->kids()->createMany($this->getKids($request->kids, 'SitterOrder', $order->id));
             if ($request->pay_type == 'wallet') {
-                $this->withdrawFromWallet($order->price, auth('api')->id());
+
+                $this->withdrawFromWallet($main_order->price_after_offer, auth('api')->id());
             }
             $chat = Chat::create(['sender_id' => auth('api')->id(), 'order_id' => $main_order->id, 'receiver_id' => $main_order->sitter_id, 'last_message' => '']);
             DB::commit();
@@ -91,14 +92,14 @@ trait Order
         }
         $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price'];
         $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'center_id' => $request->center_id, 'to' => 'center'];
-        $financials = $this->getAppProfit($request->price_after_offer);
+        
         DB::beginTransaction();
 
         try {
 
 
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
+            $main_order = MainOrder::create($main_order_data);
             if ($service->service_type == 'hour') {
                 // $price = $this->calculatePricePerHour($service,$request);
                 $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
@@ -112,7 +113,8 @@ trait Order
 
             $order->kids()->createMany($this->getKids($request->kids, 'CenterOrder', $order->id));
             if ($request->pay_type == 'wallet') {
-                $this->withdrawFromWallet($order->price, auth('api')->id());
+                // dd('aas');
+                $this->withdrawFromWallet($order->price_after_offer, auth('api')->id());
             }
 
             DB::commit();
@@ -142,14 +144,7 @@ trait Order
         $user->update(['wallet' => $updated_wallet_for_user]);
     }
 
-    private function getAppProfit($totol_price_for_order)
-    {
-        $financial = [];
-        $financial['app_profit_percentage'] = (double)setting('app_profit_percentage');
-        $financial['app_profit'] = $totol_price_for_order * ($financial['app_profit_percentage']/100);
-        $financial['final_price'] = $totol_price_for_order - $financial['app_profit'];
-        return $financial;
-    }
+
 
     // private function calculatePricePerHour($service,$request)
     // {

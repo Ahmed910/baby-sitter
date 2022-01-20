@@ -30,6 +30,17 @@ Route::group(
 
             // sitter_worker
             Route::resource('sitter_worker','SitterWorkerController');
+
+            // transfer requests
+            Route::resource('transfer_request','TransferRequestController')->only('index','show');
+            Route::get('transfer_request/accept/{id}','TransferRequestController@accept')->name('transfer_request.accept');
+            Route::get('transfer_request/reject/{id}','TransferRequestController@reject')->name('transfer_request.reject');
+
+             // orders
+             Route::resource('orders','OrderController')->only('index','show');
+
+             // Financial Statistics
+            Route::resource('financial_statistics','FinancialController');
             // ====================HR===========================================
             // Manager
             Route::resource('manager','ManagerController');

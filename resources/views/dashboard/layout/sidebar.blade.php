@@ -201,6 +201,62 @@
              @endif
 
 
+             @if (auth()->user()->hasPermissions('transfer_request'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-transfer_request" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.transfer_request.transfer_requests') !!}">
+                         {!! trans('dashboard.transfer_request.transfer_requests') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.transfer_request.index' || request()->route()->getName() == 'dashboard.transfer_request.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-transfer_request" href="{!! route('dashboard.transfer_request.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.transfer_request.transfer_requests') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                 </ul>
+             </li>
+             @endif
+
+             @if (auth()->user()->hasPermissions('orders'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-transfer_request" href="#">
+                     <i data-feather='users'></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.order.orders') !!}">
+                         {!! trans('dashboard.order.orders') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.orders.index' || request()->route()->getName() == 'dashboard.orders.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-transfer_request" href="{!! route('dashboard.orders.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.orders.orders') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                 </ul>
+             </li>
+             @endif
+
+             @if (auth()->user()->hasPermissions('orders'))
+             <li class="{{ request()->route()->getName() == 'dashboard.financial_statistics.index' ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{!! route('dashboard.financial_statistics.index') !!}">
+                    <i class="far fa-analytics"></i>
+                    <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.general.financial_statistics') !!}">
+                        {!! trans('dashboard.general.financial_statistics') !!}
+                    </span>
+                </a>
+            </li>
+            @endif
+
+
 
             {{-- Admins --}}
             @if (auth()->user()->hasPermissions('manager'))

@@ -20,6 +20,7 @@ class SitterOrderResource extends JsonResource
             'status'=>$this->status,
             'sitter'=> new SitterResource($this->sitter),
             'service'=>new ServiceResource($this->service),
+            'service_type'=>optional($this->service)->service_type,
             'month'=> $this->when($this->service->service_type == 'month',new MonthOrderResource($this->months)),
             'hour'=> $this->when($this->service->service_type == 'hour',new HourOrderResource($this->hours))
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class MainOrder extends Model
 {
@@ -26,11 +27,17 @@ class MainOrder extends Model
     {
         return $this->belongsTo(User::class,'sitter_id');
     }
+
     public function center()
     {
         return $this->belongsTo(User::class,'center_id');
     }
+    public function baby_sitter()
+    {
+        return $this->hasOneThrough(BabySitter::class,CenterOrder::class,'main_order_id','center_id');
+    }
     public function chat()
+
     {
 		return $this->hasOne(Chat::class,'order_id');
 	}

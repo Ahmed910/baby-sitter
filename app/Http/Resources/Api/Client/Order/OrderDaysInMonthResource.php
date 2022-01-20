@@ -18,8 +18,8 @@ class OrderDaysInMonthResource extends JsonResource
         return [
             'id'=>$this->id,
             'day'=>new DayResource($this->day),
-            'start_time'=>$this->start_time,
-            'end_time'=>$this->end_time
+            'start_time'=>$this->start_time->format('g:i A'),
+            'end_time'=>$this->end_time->format('g:i A')
         ];
     }
 }

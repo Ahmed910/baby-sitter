@@ -7,6 +7,7 @@ use App\Http\Requests\Api\BabySitter\Order\ResendOTPRequest;
 use App\Models\MainOrder;
 use App\Models\SitterOrder;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Notifications\Orders\DeliverChildernNotification;
 use App\Notifications\Orders\RecieveChildernNotification;
 use Illuminate\Support\Facades\Notification;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Notification;
 trait OTP
 {
 
-    use Order;
+    use Order,AppProfit;
 
     public function sendOTP($order_id, $status)
     {
@@ -47,7 +48,15 @@ trait OTP
                 $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
                 Notification::send($admins, new RecieveChildernNotification($order, ['database', 'broadcast']));
             } else {
-                $this->chargeWallet($sitter_order->price,$sitter_order->sitter_id);
+                if($sitter_order->pay_type == 'wallet'){
+
+                    $sitter = User::findOrFail($sitter_order->sitter_id);
+                    $wallet_before = $sitter->wallet;
+                    $this->chargeWallet($order->final_price,$sitter_order->sitter_id);
+                    Wallet::create(['amount'=>$order->final_price,'wallet_before'=>$wallet_before,'wallet_after'=>$sitter->wallet,'user_id'=>$order->sitter_id,'transferd_by'=>$order->client_id,'order_id'=>$order->id]);
+                }
+                $financials = $this->getAppProfit($order->price_after_offer);
+                $order->update($financials);
                 $order->client->notify(new DeliverChildernNotification($order, ['database']));
 
                 $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
@@ -57,4 +66,6 @@ trait OTP
         }
         return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.otp_is_not_valid')], 400);
     }
+
+
 }

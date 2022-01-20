@@ -38,16 +38,17 @@ class SingleSitterOrderResource extends JsonResource
             //'baby_sitter_name'=>$this->when(auth('api')->user()->user_type == 'childcenter',optional($this->baby_sitter)->name),
             'qr_code'=>$this->when(auth('api')->user()->user_type == 'babysitter',$this->qrCode),
             'service'=> new ServiceResource($this->service),
-            'hour'=> $this->when($this->service->service_type == 'hour',new HourOrderResource($this->hours)),
-            'month'=> $this->when($this->service->service_type == 'month',new MonthOrderResource($this->months)),
-            'days_in_month'=> $this->when($this->service->service_type == 'month' ,isset($this->months) ? OrderDaysInMonthResource::collection($this->months->month_days):null),
+            'service_type'=>optional($this->service)->service_type,
+            'hour'=> $this->when(optional($this->service)->service_type == 'hour',new HourOrderResource($this->hours)),
+            'month'=> $this->when(optional($this->service)->service_type == 'month',new MonthOrderResource($this->months)),
+            'days_in_month'=> $this->when(optional($this->service)->service_type == 'month' ,isset($this->months) ? OrderDaysInMonthResource::collection($this->months->month_days):null),
             'customer_location'=> $this->location,
             'lat'=>$this->lat,
             'lng'=> $this->lng,
             'kids'=> OrderKidsResource::collection($this->kids),
             'comment'=> $this->comment,
             'total_price'=> (float)$this->price,
-            
+
             'created_at'=>$this->created_at
         ];
     }

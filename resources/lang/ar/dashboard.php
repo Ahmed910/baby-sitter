@@ -299,6 +299,31 @@ return [
       'center'=>'المركز',
       'level_percentage'=>'المستوي بالنسبة المئوية'
   ],
+  'transfer_request'=>[
+      'transfer_request'=>'طلب تحويل',
+      'transfer_requests'=>'طلبات التحويل',
+      'amount'=>'المبلغ المراد تحويله',
+      'transfer_request_data'=>'تفاصيل طلب التحويل',
+      'user_name'=>'اسم المستخدم',
+
+      'bank_account_data'=>[
+          'account_name'=>'اسم الحساب',
+          'bank_name'=>'اسم البنك',
+          'account_number'=>'رقم الحساب',
+          'iban_number'=>'رقم الايبان'
+      ],
+      'status'=>[
+          'status'=>'حالة الطلب',
+          'accept'=>'قبول',
+          'reject'=>'رفض',
+          'pending'=>'قيد الإنتظار',
+          'accepted'=>'تم القبول',
+          'rejected'=>'تم الرفض',
+      ],
+
+  ],
+
+
   'center'=>[
     'center'=>'مركز رعاية',
     'centers'=>'مراكز رعاية',
@@ -885,6 +910,7 @@ return [
     'previous' => 'السابق',
     'coordinates' => 'الموقع على الخريطة',
     'locales' => 'اللغة',
+    'financial_statistics'=>'التقارير المالية',
     'main_data' => 'البيانات الاساسية',
     'website' => 'الموقع الرئيسي',
     'optional' => 'اختياري',
@@ -972,6 +998,8 @@ return [
   ],
   'messages' => [
       'success_add' => 'تمت الاضافة بنجاح',
+      'success_transfer' => 'تمت التحويل بنجاح',
+      'reject_transfer'=>'تم رفض طلب التحويل',
       'success_send' => 'تم الارسال بنجاح',
       'success_update' => 'تم التعديل بنجاح',
       'success_delete'=>'تم الحذف بنجاح',
@@ -1246,6 +1274,7 @@ return [
            'admin_finish' => 'تم تسليم الطلب',
        ],
    ],
+
    'order_type' => 'نوع الطلب',
    'order_types' => [
        'trip' => 'طلب مشوار',
@@ -1302,6 +1331,60 @@ return [
          'refused' => 'رفض التحويل',
      ],
  ],
+
+ 'order'=>[
+    'orders'=>'طلبات الحجز',
+    'order'=>'طلب حجز',
+    'type'=>'نوع المرسل إليه طلب',
+    'from'=>'من',
+    'to'=>'إلى',
+    'sitter'=>'حاضنة',
+    'center'=>'مركز',
+    'service_type'=>'نوع الخدمة',
+    'client_location'=>'موقع العميل',
+    'financials'=>[
+        'financials'=>'ماليات الطلب',
+        'app_profit_percentage'=>'نسبة ربح التطبيق',
+        'app_profit'=>'قيمة ربح التطبيق',
+        'price_before_offer'=>'سعر الطلب قبل تطبيق الكوبون',
+        'price_after_offer'=>'سعر الطلب بعد تطبيق الكوبون',
+        'provider_profit'=>'ربح مقدم الخدمة'
+    ],
+
+    'kids'=>[
+        'kids_info'=>'الاطفال',
+        'name'=>'اسم الطفل',
+        'age'=>'عمر الطفل',
+        'kid_number'=>'بيانات الطفل رقم :kid_number'
+    ],
+    'schedules'=>[
+        'schedules'=>'المواعيد',
+        'day'=>'اليوم',
+        'hour'=>'خدمة بالساعة',
+        'month'=>'خدمة شهرية',
+        'start_time'=>'بداية الوقت',
+        'end_time'=>'نهاية الوقت',
+        'start_date'=>'بداية الفترة',
+        'end_date'=>'نهاية الفترة',
+        'from'=>'من',
+        'to'=>'إلى',
+        'schedules_during_month'=>'المواعيد خلال الشهر'
+    ],
+
+    'order_data'=>'تفاصيل الطلب',
+    'status'=>[
+        'status'=>'حالة الطلب',
+        'pending'=>'قيد الإنتظار',
+        'accepted'=>'تم القبول',
+        'rejected'=>'تم الرفض',
+        'canceled'=>'تم الإلغاء',
+        'waiting'=>'قيد التنفيذ',
+        'with_the_child'=>'لديها طفل',
+        'finished'=>'تم إنهاء الطلب',
+        'active'=>'مفعل',
+        'completed'=>'تم إكتمال الطلب'
+    ]
+],
 
  'currency' => [
      'rs' => 'ر.س'

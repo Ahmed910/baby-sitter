@@ -16,8 +16,8 @@ class MonthOrderResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'start_date'=>$this->start_date,
-            'end_date'=>$this->end_date
+            'start_date'=>$this->start_date->toFormattedDateString(),
+            'end_date'=>$this->end_date->toFormattedDateString()
         ];
     }
 }

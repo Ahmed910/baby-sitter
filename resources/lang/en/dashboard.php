@@ -582,6 +582,7 @@ return [
     'previous' => 'previous',
     'coordinates' => 'coordinates',
     'locales' => 'locales',
+    'financial_statistics'=>'financial statistics',
     'courses'=>'courses',
    'incubation'=>'incubation data',
     'there_is_no_e-mail_yet'=>'There is no e-mail yet',
@@ -670,8 +671,33 @@ return [
     'reset_values' => 'reset values',
   ],
 
+  'transfer_request'=>[
+    'transfer_request'=>'transfer request',
+    'transfer_requests'=>'transfer requests',
+    'amount'=>'amount',
+    'transfer_request_data'=>'transfer request details',
+
+    'user_name'=>'user name',
+    'bank_account_data'=>[
+        'account_name'=>'account name',
+        'bank_name'=>'ban name',
+        'account_number'=>'account number',
+        'iban_number'=>'iban number'
+    ],
+    'status'=>[
+        'status'=>'status',
+        'accept'=>'accept',
+        'reject'=>'reject',
+        'pending'=>'pending',
+        'accepted'=>'accepted',
+        'rejected'=>'rejected',
+    ],
+
+],
   'messages' => [
       'success_add' => 'تمت الاضافة بنجاح',
+      'success_transfer' => 'success transfer',
+      'reject_transfer'=>'transfer request has been rejected',
       'success_send' => 'تم الارسال بنجاح',
       'success_update' => 'تم التعديل بنجاح',
       'success_refused' => 'تم الالغاء بنجاح',
@@ -747,6 +773,60 @@ return [
     'add_favorite_time' => 'add favorite time',
     'edit_favorite_time' => 'edit favorite time',
   ],
+
+  'order'=>[
+    'orders'=>'orders',
+    'order'=>'order',
+    'type'=>'type',
+    'from'=>'from',
+    'to'=>'to',
+    'sitter'=>'sitter',
+    'center'=>'center',
+    'service_type'=>'service type',
+    'client_location'=>'client location',
+    'financials'=>[
+        'financials'=>'financials',
+        'app_profit_percentage'=>'app profit percentage',
+        'app_profit'=>'app profit',
+        'price_before_offer'=>'price before offer',
+        'price_after_offer'=>'price after offer',
+        'provider_profit'=>'provider profit'
+    ],
+
+    'kids'=>[
+        'kids_info'=>'kids info',
+        'name'=>'kid name',
+        'age'=>'kid age',
+        'kid_number'=>'kid number :kid_number'
+    ],
+    'schedules'=>[
+        'schedules'=>'schedules',
+        'day'=>'day',
+        'hour'=>'hour',
+        'month'=>'monthly service',
+        'start_time'=>'start time',
+        'end_time'=>'end time',
+        'start_date'=>'start date',
+        'end_date'=>'end date',
+        'from'=>'from',
+        'to'=>'to',
+        'schedules_during_month'=>'schedules during month'
+    ],
+
+    'order_data'=>'order details',
+    'status'=>[
+        'status'=>'status',
+        'pending'=>'pending',
+        'accepted'=>'accepted',
+        'rejected'=>'rejected',
+        'canceled'=>'canceled',
+        'waiting'=>'waiting',
+        'with_the_child'=>'with the child',
+        'finished'=>'finished',
+        'active'=>'active',
+        'completed'=>'completed'
+    ]
+],
 
   'car_type' => [
     'car_type' => 'car type',
