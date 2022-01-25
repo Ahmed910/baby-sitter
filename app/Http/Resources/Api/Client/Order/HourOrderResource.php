@@ -16,10 +16,12 @@ class HourOrderResource extends JsonResource
     {
         // dd($request);
         return [
-            'id'=>$this->id,
-             'start_time'=>$this->start_time->format('g:i A'),
-             'end_time'=>$this->end_time->format('g:i A'),
-             'date'=>$this->when(isset($request->order_id),$this->date->toFormattedDateString())
+            'id' => $this->id,
+            //  'start_time'=>$this->start_time->format('g:i A'),
+            //  'end_time'=>$this->end_time->format('g:i A'),
+            'start' => $this->start_time->format('g:i A'),
+            'end' => $this->end_time->format('g:i A'),
+            'date' => $this->when(isset($request->order_id), $this->date->toFormattedDateString())
         ];
     }
 }

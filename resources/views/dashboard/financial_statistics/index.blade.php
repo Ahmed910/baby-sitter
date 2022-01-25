@@ -1,5 +1,6 @@
 @extends('dashboard.layout.layout')
 @include('dashboard.financial_statistics.styles')
+
 @section('content')
     <!-- Dashboard Analytics Start -->
     <section id="dashboard-analytics">
@@ -57,6 +58,8 @@
                             <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_month_profits_bookings') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_month_profits_bookings ."$" }}</h4>
                         </div>
+
+
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.subscription.show',$most_subscriptionss->first()->id)}}">{{ $most_subscriptionss->first()->name }}</a></h6>
                         <p class="mb-0">{!! trans('dashboard.report.most_subscriptions') !!}</p>  --}}
                     </div>
@@ -86,6 +89,178 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fa fa-heart text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.today_profits_for_sitter_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $today_profits_for_sitter_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fa fa-fire text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_week_profits_for_sitter_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $current_week_profits_for_sitter_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fal fa-coin text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_month_profits_for_sitter_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $current_month_profits_for_sitter_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fas fa-sack-dollar text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_year_profits_for_sitter_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $current_year_profits_for_sitter_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fa fa-heart text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.today_profits_for_center_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $today_profits_for_center_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fa fa-fire text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_week_profits_for_center_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $current_week_profits_for_center_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fal fa-coin text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_month_profits_for_center_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $current_month_profits_for_center_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-sm-6 col-12">
+                <div class="card" style="min-height: 230px">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="fas fa-sack-dollar text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_year_profits_for_center_orders') !!}</h6>
+                            <h4 class="text-bold-700 mt-1">{{ $current_year_profits_for_center_orders ."$" }}</h4>
+                        </div>
+                        {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
+                        <p class="mb-0">{!! trans('dashboard.report.best_sales_provider') !!}</p>  --}}
+                    </div>
+                    <div class="card-content">
+                        <div id="line-area-chart-2"></div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     {{--  <div class="content-body">
                 <!-- Statistics card section start -->

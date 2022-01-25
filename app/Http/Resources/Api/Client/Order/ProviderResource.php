@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api\Client\Order;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MonthOrderResource extends JsonResource
+class ProviderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,9 @@ class MonthOrderResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'start' => $this->start_date->toFormattedDateString(),
-            'end' => $this->end_date->toFormattedDateString(),
-            'date' => null
+            'id'=>$this->id,
+            'avatar'=>$this->avatar,
+            'name'=>$this->name
         ];
     }
 }

@@ -337,55 +337,38 @@ function filter_mobile_number($mob_num)
  * @param  array $fcmData
  * @param  array $userIds
  */
-function pushFcmNotes($fcmData, $userIds,$model = '\\App\\Models\\Device')
-{
-  $send_process = [];
-  $fail_process = [];
 
-  if (is_array($userIds) && !empty($userIds)) {
-      $number_of_drivers = null;
-    if ($model == '\\App\\Models\\Driver') {
-         $model = '\\App\\Models\\Device';
-         // $number_of_drivers = 1;
-    }
-    $devices = $model::whereIn('user_id',$userIds)/*->distinct('device_token')*/->latest()->when($number_of_drivers,function ($q) use($number_of_drivers) {
-        $q->take($number_of_drivers);
-    })->get();
-    $ios_devices =array_filter($devices->where('type','ios')->pluck('device_token')->toArray());
-    $android_devices = array_filter($devices->where('type','android')->pluck('device_token')->toArray());
+function pushFcmNotes($fcmData, $devices) {
 
-    $optionBuilder = new OptionsBuilder();
-    $optionBuilder->setTimeToLive(60*20);
+    $send_process = [];
+    $fail_process = [];
+    $devices = $devices->pluck('device_token')->toArray();
 
-    $notificationBuilder = new PayloadNotificationBuilder($fcmData['title']);
-    $notificationBuilder->setBody($fcmData['body'])
-    ->setSound('default');
+    if($devices){
 
-    $dataBuilder = new PayloadDataBuilder();
-    $dataBuilder->addData($fcmData);
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60*20);
 
-    $option       = $optionBuilder->build();
-    $data         = $dataBuilder->build();
-    if (count($ios_devices)) {
+        $notificationBuilder = new PayloadNotificationBuilder($fcmData['title']);
+        $notificationBuilder->setBody($fcmData['body'])
+            ->setSound('default');
+
+        // dd('ahmed');
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData($fcmData);
+
+        $option       = $optionBuilder->build();
         $notification = $notificationBuilder->build();
+        $data         = $dataBuilder->build();
+
         // You must change it to get your tokens
-        $downstreamResponse = FCM::sendTo($ios_devices, $option, $notification, $data);
+        $downstreamResponse = FCM::sendTo($devices, $option, $notification, $data);
+
         Device::whereIn('device_token',$downstreamResponse->tokensToDelete()+array_keys($downstreamResponse->tokensWithError()))->delete();
-        // return $downstreamResponse;
-        $send_process[] = $downstreamResponse->numberSuccess();
-     }
-     if (count($android_devices)) {
-         $notification = null;
-         // You must change it to get your tokens
-         $downstreamResponse = FCM::sendTo($android_devices, $option, $notification, $data);
-         Device::whereIn('device_token',$downstreamResponse->tokensToDelete()+array_keys($downstreamResponse->tokensWithError()))->delete();
-         // return $downstreamResponse;
-         $send_process[] = $downstreamResponse->numberSuccess();
-         // code...
-     }
-     return count($send_process);
-  }
-  return "No Users";
+
+        return $downstreamResponse->numberSuccess();
+    }
+    return 0;
 }
 
 // HISMS

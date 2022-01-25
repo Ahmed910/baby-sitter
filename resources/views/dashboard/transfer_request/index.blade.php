@@ -8,7 +8,7 @@
             {!! $transfer_requests->links() !!}
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-custom table table-hover-animation" data-title="{{ trans('dashboard.transfer_request.transfer_requests') }}">
+            <table class="table table-hover-animation" data-title="{{ trans('dashboard.transfer_request.transfer_requests') }}">
                 <thead>
                     <tr class="text-center">
                         <th>#</th>

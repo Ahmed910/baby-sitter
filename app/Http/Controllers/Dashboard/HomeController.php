@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\{City , Country , User , Driver};
+use App\Models\{City , Country , User , Driver, MainOrder};
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -18,21 +18,30 @@ class HomeController extends Controller
     {
         if (!request()->ajax()) {
             //statistics
-            // $data['countries'] = Country::latest()->get();
-            // $data['cities'] = City::latest()->get();
+            $data['countries_count'] = Country::count();
+            $data['cities_count'] = City::count();
 
             $data['managers_count'] = User::where('user_type' , 'admin')->latest()->count();
 
             $clients = \DB::table('users')->where('user_type' , 'client')->get();
             $data['clients_count'] = $clients->count();
             $data['clients_is_ban_count'] = $clients->where('is_ban',1)->count();
-            $data['clients_is_active_count'] = $clients->where('is_active',0)->count();
+            $data['clients_is_deactive_count'] = $clients->where('is_active',0)->count();
 
-            $drivers = \DB::table('users')->where('user_type' , 'driver')->get();
-            $data['drivers_count'] = $drivers->count();
-            $data['drivers_is_active_count'] = $drivers->where('is_active',0)->count();
-            $data['drivers_is_ban_count'] = $drivers->where('is_ban',1)->count();
+            $baby_sitters = \DB::table('users')->where('user_type' , 'babysitter')->get();
+            $data['baby_sitters_count'] = $baby_sitters->count();
+            $data['baby_sitters_is_deactive_count'] = $baby_sitters->where('is_active',0)->count();
+            $data['baby_sitters_is_ban_count'] = $baby_sitters->where('is_ban',1)->count();
 
+            $child_center = \DB::table('users')->where('user_type' , 'childcenter')->get();
+            $data['child_center_count'] = $child_center->count();
+            $data['child_center_is_deactive_count'] = $child_center->where('is_active',0)->count();
+            $data['child_center_is_ban_count'] = $child_center->where('is_ban',1)->count();
+
+
+            $booking_query = MainOrder::latest()->get();
+            $data['bookings'] = $booking_query;
+            $data['bookings_count'] = $booking_query->count();
 
 
             $from_date = now()->subMonths(11)->format('Y-m-d');
@@ -71,7 +80,7 @@ class HomeController extends Controller
             })->groupBy(function ($date) {
                 return \Carbon\Carbon::parse($date->created_at)->format('Y-m');
             });
-            $driver_analytics = $drivers->when($request->from_date || $request->to_date,function($collection)use($from_date,$to_date){
+            $driver_analytics = $baby_sitters->when($request->from_date || $request->to_date,function($collection)use($from_date,$to_date){
                 if ($from_date && $to_date) {
                     return $collection->filter(function($item)use($from_date,$to_date){
                             if ($item->created_at->format("Y-m-d") <= $to_date && $item->created_at->format("Y-m-d") >= $from_date) {

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 class MainOrder extends Model
 {
     protected $guarded = ['created_at','updated_at'];
+    protected $dates = ['finished_at'];
 
     public function sitter_order()
     {

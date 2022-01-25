@@ -286,6 +286,11 @@ return [
       'hour'=>'السعر بالساعة',
       'month'=>'السعر بالشهر',
       'edit_sitter'=>'تعديل بيانات حاضنة',
+      'sitters_count'=>'عدد الحاضنات',
+      'baby_sitters_is_active_count'=>'عدد الحاضنات المفعلين',
+      'baby_sitters_is_ban_count'=>'عدد الحاضنات المحظورين',
+      'bookings_count'=>'عدد طلبات الحجز'
+
   ],
 
   'sitter_worker'=>[
@@ -333,6 +338,9 @@ return [
     'name'=>'اسم المركز',
     'is_educational'=>'تعليمي',
     'yes'=>'نعم',
+    'child_center_count'=>'عدد مراكز الرعاية',
+    'banned_centers'=>'المراكز المحظورة',
+    'deactive_centers'=>'المراكز غير المفعلة',
     'no'=>'لا',
     'center_location'=>'موقع المركز',
     'business_register'=>'سجل العمل',
@@ -682,6 +690,8 @@ return [
     'notification' => 'التنبيه',
     'notifications' => 'التنبيهات',
     'add_notification' => 'إضافة تنبية',
+    'order_has_been_created_title'=>'تم إنشاء طلب حجز',
+    'order_has_been_created_body'=>'تم إنشاء طلب حجز من قبل :body',
     'send_notification' => 'إرسال تنبية',
     'last_notifications' => 'آخر التنبيهات',
     'no_notifications' => 'لاتوجد تنبيهات',
@@ -905,6 +915,20 @@ return [
     'closed' => 'مغلق',
     'open' => 'متاح',
     'typing' => 'يكتب ...'
+  ],
+  'financial_statistics'=>[
+      'today_profits_bookings'=>'ارباح التطبيق خلال يوم',
+      'current_week_profits_bookings'=>'ارباح التطبيق خلال اسبوع',
+      'current_month_profits_bookings'=>'ارباح التطبيق خلال شهر',
+      'current_year_profits_bookings'=>'ارباح التطبيق خلال عام',
+      'today_profits_for_sitter_orders'=>'ارباح التطبيق من طلبات الحاضنات خلال يوم',
+      'current_week_profits_for_sitter_orders'=>'ارباح التطبيق من طلبات الحاضنات خلال اسبوع',
+      'current_month_profits_for_sitter_orders'=>'ارباح التطبيق من طلبات الحاضنات خلال شهر',
+      'current_year_profits_for_sitter_orders'=>'ارباح التطبيق من طلبات الحاضنات خلال عام',
+      'today_profits_for_center_orders'=>'ارباح التطبيق من طلبات المراكز خلال يوم',
+      'current_week_profits_for_center_orders'=>'ارباح التطبيق من طلبات المراكز خلال اسبوع',
+      'current_month_profits_for_center_orders'=>'ارباح التطبيق من طلبات المراكز خلال شهر',
+      'current_year_profits_for_center_orders'=>'ارباح التطبيق من طلبات المراكز خلال عام',
   ],
   'general' => [
     'previous' => 'السابق',

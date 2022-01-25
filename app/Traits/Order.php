@@ -8,14 +8,17 @@ use App\Classes\OrderMonthCenter;
 use App\Classes\OrderMonthSitter;
 use App\Http\Requests\Api\BabySitter\OrderSitterRequest;
 use App\Http\Requests\Api\ChildCenter\OrderCenterRequest;
+use App\Http\Resources\Api\Notification\SenderResource;
 use App\Models\CenterOrder;
 use App\Models\Chat;
 use App\Models\MainOrder;
 use App\Models\Service;
 use App\Models\SitterOrder;
 use App\Models\User;
+use App\Notifications\Orders\CreateOrderNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 trait Order
 {
@@ -44,6 +47,7 @@ trait Order
         if ($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet) {
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
+        $sitter = User::findOrFail($request->sitter_id);
         $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price'];
         $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'sitter_id' => $request->sitter_id, 'to' => 'sitter'];
         $financials = $this->getAppProfit($request->price_after_offer);
@@ -52,7 +56,7 @@ trait Order
 
         try {
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create($main_order_data);
+            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
             if ($service->service_type == 'hour') {
                 //   $price = $this->calculatePricePerHour($service,$request);
 
@@ -74,6 +78,16 @@ trait Order
             }
             $chat = Chat::create(['sender_id' => auth('api')->id(), 'order_id' => $main_order->id, 'receiver_id' => $main_order->sitter_id, 'last_message' => '']);
             DB::commit();
+            $fcm_notes = [
+                'title'=>['dashboard.notification.order_has_been_created_title'],
+                 'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                 'sender_data' => new SenderResource(auth('api')->user())
+              ];
+            $sitter->notify(new CreateOrderNotification($main_order, ['database']));
+
+            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+            Notification::send($admins, new CreateOrderNotification($main_order, ['database', 'broadcast']));
+            pushFcmNotes($fcm_notes,$sitter->devices);
             return response()->json(['data' => null, 'status' => 'success', 'chat_id' => $chat->id, 'message' => trans('api.messages.order_created_successfully')]);
             // all good
         } catch (\Exception $e) {
@@ -92,14 +106,15 @@ trait Order
         }
         $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price'];
         $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'center_id' => $request->center_id, 'to' => 'center'];
-        
+        $financials = $this->getAppProfit($request->price_after_offer);
+        $center = User::findOrFail($request->center_id);
         DB::beginTransaction();
 
         try {
 
 
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create($main_order_data);
+            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
             if ($service->service_type == 'hour') {
                 // $price = $this->calculatePricePerHour($service,$request);
                 $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
@@ -118,6 +133,16 @@ trait Order
             }
 
             DB::commit();
+            $fcm_notes = [
+                'title'=>['dashboard.notification.order_has_been_created_title'],
+                 'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                 'sender_data' => new SenderResource(auth('api')->user())
+              ];
+            $center->notify(new CreateOrderNotification($main_order, ['database']));
+
+            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+            Notification::send($admins, new CreateOrderNotification($main_order, ['database', 'broadcast']));
+            pushFcmNotes($fcm_notes,$center->devices);
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_created_successfully')]);
         } catch (\Exception $e) {
             DB::rollback();
@@ -142,6 +167,15 @@ trait Order
         $user = User::findOrFail($user_id);
         $updated_wallet_for_user = $user->wallet + $price;
         $user->update(['wallet' => $updated_wallet_for_user]);
+    }
+
+    private function getAppProfit($totol_price_for_order)
+    {
+        $financial = [];
+        $financial['app_profit_percentage'] = (double)setting('app_profit_percentage');
+        $financial['app_profit'] = $totol_price_for_order * ($financial['app_profit_percentage']/100);
+        $financial['final_price'] = $totol_price_for_order - $financial['app_profit'];
+        return $financial;
     }
 
 

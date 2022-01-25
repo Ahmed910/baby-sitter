@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "apility/laravel-fcm": "^1.4",
+        "hilalalmansour/laravel-fcm": "^1.4",
         "astrotomic/laravel-translatable": "^11.9",
         "benwilkins/laravel-fcm-notification": "^4.0",
         "doctrine/dbal": "^3.1",

@@ -373,6 +373,8 @@ return [
 
   'notification' => [
     'notification' => 'notification',
+    'order_has_been_created_title'=>'order has been created',
+    'order_has_been_created_body'=>'order has been created by :body',
     'notifications' => 'notifications',
     'add_notification' => 'add notification',
     'send_notification' => 'send notification',

@@ -8,7 +8,7 @@
             {!! $orders->links() !!}
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-custom table table-hover-animation" data-title="{{ trans('dashboard.order.orders') }}">
+            <table class="table table-hover-animation" data-title="{{ trans('dashboard.order.orders') }}">
                 <thead>
                     <tr class="text-center">
                         <th>#</th>

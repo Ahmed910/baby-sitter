@@ -20,7 +20,7 @@ class OrderResource extends JsonResource
        return [
             'id'=>$this->id,
             'type'=>$this->to,
-           
+
             'sitter_order'=> $this->when(isset($this->sitter_order),new SitterOrderResource(optional($this->sitter_order))) ,
             'center_order' => $this->when(isset($this->center_order),new CenterOrderResource(optional($this->center_order))) ,
         ];

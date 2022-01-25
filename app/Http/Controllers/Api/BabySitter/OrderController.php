@@ -9,6 +9,7 @@ use App\Http\Requests\Api\BabySitter\Order\ResendOTPRequest;
 use App\Http\Resources\Api\Client\Order\OrderResource;
 use App\Http\Resources\Api\Client\Order\SingleOrderResource;
 use App\Http\Resources\Api\Client\Order\SingleSitterOrderResource;
+use App\Http\Resources\Api\Notification\SenderResource;
 use App\Models\MainOrder;
 use App\Models\SitterOrder;
 use App\Models\User;
@@ -61,10 +62,16 @@ class OrderController extends Controller
         $sitter_order = SitterOrder::where('status','pending')->findOrFail(optional($order->sitter_order)->id);
         $sitter_order->update(['status'=>'waiting']);
         $order->refresh();
+        $fcm_notes = [
+            'title'=>['dashboard.notification.order_has_been_accepted_title'],
+            'body'=> ['dashboard.notification.order_has_been_accepted_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'sender_data' => new SenderResource(auth('api')->user())
+        ];
         $order->client->notify(new AcceptOrderNotification($order,['database']));
 
         $admins = User::whereIn('user_type',['superadmin','admin'])->get();
         Notification::send($admins, new AcceptOrderNotification($order,['database','broadcast']));
+        pushFcmNotes($fcm_notes,optional($order->client)->devices);
         return (new SingleOrderResource($order))->additional(['status'=>'success','message'=>'']);
     }
 
@@ -79,10 +86,16 @@ class OrderController extends Controller
                 $this->chargeWallet($main_order->price_after_offer,$sitter_order->client_id);
             }
             $main_order->refresh();
+            $fcm_notes =  [
+                'title'=>['dashboard.notification.client_cancel_order_title'],
+                'body'=> ['dashboard.notification.client_cancel_order_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'sender_data' => new SenderResource(auth('api')->user())
+            ];
             $main_order->client->notify(new CancelOrderNotification($main_order,['database']));
 
             $admins = User::whereIn('user_type',['superadmin','admin'])->get();
             Notification::send($admins, new CancelOrderNotification($main_order,['database','broadcast']));
+            pushFcmNotes($fcm_notes,optional($main_order->client)->devices);
             return (new SingleOrderResource($main_order))->additional(['status'=>'success','message'=>'']);
     }
 
@@ -97,10 +110,16 @@ class OrderController extends Controller
             $this->chargeWallet($order->price_after_offer,$sitter_order->client_id);
         }
         $order->refresh();
+        $fcm_notes = [
+            'title'=>['dashboard.notification.order_has_been_rejected_title'],
+            'body'=> ['dashboard.notification.order_has_been_rejected_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'sender_data' => new SenderResource(auth('api')->user())
+        ];
         $order->client->notify(new RejectOrderNotification($order,['database']));
 
         $admins = User::whereIn('user_type',['superadmin','admin'])->get();
         Notification::send($admins, new RejectOrderNotification($order,['database','broadcast']));
+        pushFcmNotes($fcm_notes,optional($order->client)->devices);
         return (new SingleOrderResource($order))->additional(['status'=>'success','message'=>'']);
     }
 
