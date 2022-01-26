@@ -290,46 +290,40 @@ function convertArabicNumber($number)
 
 function filter_mobile_number($mob_num)
 {
-    $mob_num = convertArabicNumber($mob_num);
     $first_3_val = substr($mob_num, 0, 3);
-    $first_4_val = substr($mob_num, 0, 4);
     $sixth_val = substr($mob_num, 0, 6);
+    $fifth_val = substr($mob_num, 0, 5);
     $first_val = substr($mob_num, 0, 1);
     $mob_number = 0;
     $val = 0;
     if ($sixth_val == "009665") {
         $val = null;
-        $mob_number = substr($mob_num, 2, 12);
-    } elseif ($sixth_val == "009660") {
-        $val = 966;
-        $mob_number = substr($mob_num, 6, 14);
+        $mob_number = substr($mob_num, 2);
+    } elseif ($fifth_val == "00966") {
+        $val = null;
+        $mob_number = substr($mob_num, 2);
     } elseif ($first_3_val == "+96") {
         $val = "966";
         $mob_number = substr($mob_num, 4);
-    } elseif ($first_4_val == "9660") {
-        $val = "966";
-        $mob_number = substr($mob_num, 4);
-    }elseif ($first_3_val == "966") {
+    } elseif ($first_3_val == "966") {
         $val = null;
         $mob_number = $mob_num;
     } elseif ($first_val == "5") {
         $val = "966";
         $mob_number = $mob_num;
     } elseif ($first_3_val == "009") {
-        $val = "9";
+        $val = "966";
         $mob_number = substr($mob_num, 4);
     } elseif ($first_val == "0") {
         $val = "966";
-        $mob_number = substr($mob_num, 1, 9);
+        $mob_number = substr($mob_num, 1);
     } else {
         $val = "966";
         $mob_number = $mob_num;
     }
-
     $real_mob_number = $val . $mob_number;
     return $real_mob_number;
 }
-
 
 /**
  * Push Notifications to phone FCM
