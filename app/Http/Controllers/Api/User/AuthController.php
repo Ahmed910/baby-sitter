@@ -98,6 +98,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'data' => null,'is_active' => false , 'is_ban' => false, 'message' => trans('api.auth.failed')],402);
         }
 
+        
         $user = auth('api')->user();
 
        if (! $user->is_active) {
