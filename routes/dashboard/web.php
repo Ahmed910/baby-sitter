@@ -37,7 +37,7 @@ Route::group(
             Route::get('transfer_request/reject/{id}','TransferRequestController@reject')->name('transfer_request.reject');
 
              // orders
-             Route::resource('orders','OrderController')->only('index','show');
+             Route::resource('orders','OrderController')->only('index','show','destroy');
             //  Route::get('orders','OrderController@index')->name('orders.index');
             //  Route::get('orders/{id}','OrderController@index')->name('orders.show');
 

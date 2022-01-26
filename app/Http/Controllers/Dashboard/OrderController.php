@@ -48,5 +48,13 @@ class OrderController extends Controller
 
     }
 
+    public function destroy($id)
+    {
+        $order = MainOrder::findOrFail($id);
+        if ($order->delete()) {
+          return response()->json(['value' => 1]);
+        }
+    }
+
 
 }

@@ -40,6 +40,9 @@
                             <a href="{!! route('dashboard.orders.show',$order->id) !!}" class="text-primary mr-2" title="{!! trans('dashboard.general.edit') !!}">
                                 <i class="fas fa-desktop font-medium-3"></i>
                             </a>
+                            <a onclick="deleteItem('{{ $order->id }}' , '{{ route('dashboard.orders.destroy',$order->id) }}')" class="text-danger" title="{!! trans('dashboard.general.delete') !!}">
+                                <i class="fas fa-trash-alt font-medium-3"></i>
+                            </a>
                         </td>
                     </tr>
                     @endforeach
