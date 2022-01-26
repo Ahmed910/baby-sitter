@@ -24,11 +24,11 @@ use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
 {
-    use OTP,Order;
+    use OTP, Order;
     public $order;
     public function __construct(OrderStatuses $order)
     {
-       $this->order = $order;
+        $this->order = $order;
     }
 
 
@@ -48,21 +48,16 @@ class OrderController extends Controller
         // })->get();
         // $data['expired_orders'] = OrderResource::collection($expired_orders);
 
-        $orders = MainOrder::where(['to'=>'sitter','sitter_id'=>auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
-            if($request->order_type == 'new_orders'){
-                $q->whereHas('sitter_order',function($q){
-                    $q->where('status','pending');
-                });
-            }elseif($request->order_type == 'active_orders'){
-                $q->whereHas('sitter_order',function($q){
-                    $q->whereIn('status',['waiting','with_the_child']);
-                });
-            }
-            elseif($request->order_type == 'expired_orders'){
-                $q->whereHas('sitter_order',function($q){
-                    $q->whereIn('status',['rejected','completed','canceled']);
-                });
-            }
+        $orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
+            $q->whereHas('sitter_order', function ($q) use ($request) {
+                if ($request->order_type == 'new_orders') {
+                    $q->where('status', 'pending');
+                } elseif ($request->order_type == 'active_orders') {
+                    $q->whereIn('status', ['waiting', 'with_the_child']);
+                } elseif ($request->order_type == 'expired_orders') {
+                    $q->whereIn('status', ['rejected', 'completed', 'canceled']);
+                }
+            });
         })->get();
 
         return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
@@ -71,89 +66,88 @@ class OrderController extends Controller
     public function getOrderDetails($order_id)
     {
 
-        return $this->order->getDetailsForOrder($order_id,'sitter_id');
+        return $this->order->getDetailsForOrder($order_id, 'sitter_id');
     }
 
     public function acceptOrder($order_id)
     {
-        $order = MainOrder::where('sitter_id',auth('api')->id())->findOrFail($order_id);
+        $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
 
-        $sitter_order = SitterOrder::where('status','pending')->findOrFail(optional($order->sitter_order)->id);
-        $sitter_order->update(['status'=>'waiting']);
+        $sitter_order = SitterOrder::where('status', 'pending')->findOrFail(optional($order->sitter_order)->id);
+        $sitter_order->update(['status' => 'waiting']);
         $order->refresh();
         $fcm_notes = [
-            'title'=>['dashboard.notification.order_has_been_accepted_title'],
-            'body'=> ['dashboard.notification.order_has_been_accepted_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'title' => ['dashboard.notification.order_has_been_accepted_title'],
+            'body' => ['dashboard.notification.order_has_been_accepted_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
-        $order->client->notify(new AcceptOrderNotification($order,['database']));
+        $order->client->notify(new AcceptOrderNotification($order, ['database']));
 
-        $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-        Notification::send($admins, new AcceptOrderNotification($order,['database','broadcast']));
-        pushFcmNotes($fcm_notes,optional($order->client)->devices);
-        return (new SingleOrderResource($order))->additional(['status'=>'success','message'=>'']);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new AcceptOrderNotification($order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($order->client)->devices);
+        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function cancelOrder($order_id)
     {
-        $main_order = MainOrder::where('sitter_id',auth('api')->id())->findOrFail($order_id);
+        $main_order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
 
-           // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-            $sitter_order=SitterOrder::where('status','waiting')->findOrFail($main_order->sitter_order->id);
-            $sitter_order->update(['status'=>'canceled']);
-            if($sitter_order->pay_type == 'wallet'){
-                $this->chargeWallet($main_order->price_after_offer,$sitter_order->client_id);
-            }
-            $main_order->refresh();
-            $fcm_notes =  [
-                'title'=>['dashboard.notification.client_cancel_order_title'],
-                'body'=> ['dashboard.notification.client_cancel_order_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
-                'sender_data' => new SenderResource(auth('api')->user())
-            ];
-            $main_order->client->notify(new CancelOrderNotification($main_order,['database']));
+        // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+        $sitter_order = SitterOrder::where('status', 'waiting')->findOrFail($main_order->sitter_order->id);
+        $sitter_order->update(['status' => 'canceled']);
+        if ($sitter_order->pay_type == 'wallet') {
+            $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
+        }
+        $main_order->refresh();
+        $fcm_notes =  [
+            'title' => ['dashboard.notification.client_cancel_order_title'],
+            'body' => ['dashboard.notification.client_cancel_order_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'sender_data' => new SenderResource(auth('api')->user())
+        ];
+        $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
 
-            $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-            Notification::send($admins, new CancelOrderNotification($main_order,['database','broadcast']));
-            pushFcmNotes($fcm_notes,optional($main_order->client)->devices);
-            return (new SingleOrderResource($main_order))->additional(['status'=>'success','message'=>'']);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new CancelOrderNotification($main_order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
+        return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function rejectOrder($order_id)
     {
-        $order = MainOrder::where('sitter_id',auth('api')->id())->findOrFail($order_id);
+        $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
 
-        $sitter_order = SitterOrder::where('status','pending')->findOrFail(optional($order->sitter_order)->id);
-        $sitter_order->update(['status'=>'rejected']);
-        if($sitter_order->pay_type == 'wallet')
-        {
-            $this->chargeWallet($order->price_after_offer,$sitter_order->client_id);
+        $sitter_order = SitterOrder::where('status', 'pending')->findOrFail(optional($order->sitter_order)->id);
+        $sitter_order->update(['status' => 'rejected']);
+        if ($sitter_order->pay_type == 'wallet') {
+            $this->chargeWallet($order->price_after_offer, $sitter_order->client_id);
         }
         $order->refresh();
         $fcm_notes = [
-            'title'=>['dashboard.notification.order_has_been_rejected_title'],
-            'body'=> ['dashboard.notification.order_has_been_rejected_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'title' => ['dashboard.notification.order_has_been_rejected_title'],
+            'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
-        $order->client->notify(new RejectOrderNotification($order,['database']));
+        $order->client->notify(new RejectOrderNotification($order, ['database']));
 
-        $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-        Notification::send($admins, new RejectOrderNotification($order,['database','broadcast']));
-        pushFcmNotes($fcm_notes,optional($order->client)->devices);
-        return (new SingleOrderResource($order))->additional(['status'=>'success','message'=>'']);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new RejectOrderNotification($order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($order->client)->devices);
+        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function sendOTPToReceiveChildern($order_id)
     {
-        return $this->sendOTP($order_id,'waiting');
+        return $this->sendOTP($order_id, 'waiting');
     }
     public function checkOtpValidityAndRecieveChildern(OTPRequest $request)
     {
-        return $this->checkOtpValidity($request,'waiting','with_the_child');
+        return $this->checkOtpValidity($request, 'waiting', 'with_the_child');
     }
 
     public function sendOTPToDeliverChildern($order_id)
     {
-        return $this->sendOTP($order_id,'with_the_child');
+        return $this->sendOTP($order_id, 'with_the_child');
     }
 
     public function resendOTP(ResendOTPRequest $request)
@@ -172,19 +166,19 @@ class OrderController extends Controller
 
     public function checkOtpValidityAndDeliverChildern(OTPRequest $request)
     {
-        return $this->checkOtpValidity($request,'with_the_child','completed');
+        return $this->checkOtpValidity($request, 'with_the_child', 'completed');
     }
 
     protected function sendVerifyOTP($order)
     {
         if (setting('use_sms_service') == 'enable') {
-            $message = trans('api.auth.otp_code_is',['otp' => $order->otp]);
+            $message = trans('api.auth.otp_code_is', ['otp' => $order->otp]);
             $response = send_sms(optional($order->sitter)->phone, $message);
 
             if (setting('sms_provider') == 'hisms' && $response['response'] != 3) {
                 // $user->forceDelete();
                 $sms_response = $response['result'];
-                return response()->json(['status' => 'fail','data'=> null ,'message'=> "لم يتم حفظ رجاء التحقق من البيانات ( ".$sms_response." )" ], 422);
+                return response()->json(['status' => 'fail', 'data' => null, 'message' => "لم يتم حفظ رجاء التحقق من البيانات ( " . $sms_response . " )"], 422);
             }
         }
     }

@@ -29,7 +29,7 @@ class OrderController extends Controller
     public $order;
     public function __construct(OrderStatuses $order)
     {
-       $this->order = $order;
+        $this->order = $order;
     }
     public function getOrders(Request $request)
     {
@@ -52,147 +52,136 @@ class OrderController extends Controller
         // $data['waiting_orders'] = OrderResource::collection($waiting_orders);
 
 
-        $orders = MainOrder::where(['to'=>'sitter','sitter_id'=>auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
-            if($request->order_type == 'new_orders'){
-                $q->whereHas('center_order',function($q){
-                    $q->where('status','pending');
-                });
-            }elseif($request->order_type == 'active_orders'){
-                $q->whereHas('center_order',function($q){
-                    $q->where('status','active');
-                });
-            }
-            elseif($request->order_type == 'waiting_orders'){
-                $q->whereHas('center_order',function($q){
-                    $q->whereIn('status',['waiting']);
-                });
-            }
-            elseif($request->order_type == 'expired_orders'){
-                $q->whereHas('center_order',function($q){
-                    $q->whereIn('status',['rejected','completed','canceled']);
-                });
-            }
+        $orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
+            $q->whereHas('center_order', function ($q) use ($request) {
+                if ($request->order_type == 'new_orders') {
+                    $q->where('status', 'pending');
+                } elseif ($request->order_type == 'active_orders') {
+                    $q->where('status', 'active');
+                } elseif ($request->order_type == 'waiting_orders') {
+                    $q->whereIn('status', ['waiting']);
+                } elseif ($request->order_type == 'expired_orders') {
+                    $q->whereIn('status', ['rejected', 'completed', 'canceled']);
+                }
+            });
         })->get();
 
         return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
-       // return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
+        // return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
     }
 
     public function getOrderDetails($order_id)
     {
-        return $this->order->getDetailsForOrder($order_id,'center_id');
+        return $this->order->getDetailsForOrder($order_id, 'center_id');
     }
 
     public function acceptOrder($order_id)
     {
-        $order = MainOrder::where('center_id',auth('api')->id())->findOrFail($order_id);
+        $order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
-        $center_order = CenterOrder::where('status','pending')->findOrFail(optional($order->center_order)->id);
-        $center_order->update(['status'=>'waiting']);
-        $this->chargeWallet($center_order->price,$center_order->center_id);
+        $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
+        $center_order->update(['status' => 'waiting']);
+        $this->chargeWallet($center_order->price, $center_order->center_id);
         $order->refresh();
-    //   dd($center_order);
+        //   dd($center_order);
         $fcm_notes = [
-            'title'=>['dashboard.notification.order_has_been_accepted_title'],
-            'body'=> ['dashboard.notification.order_has_been_accepted_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'title' => ['dashboard.notification.order_has_been_accepted_title'],
+            'body' => ['dashboard.notification.order_has_been_accepted_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
-        $order->client->notify(new AcceptOrderNotification($order,['database']));
+        $order->client->notify(new AcceptOrderNotification($order, ['database']));
 
-        $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-        Notification::send($admins, new AcceptOrderNotification($order,['database','broadcast']));
-        pushFcmNotes($fcm_notes,optional($order->client)->devices);
-        return (new SingleOrderResource($order))->additional(['status'=>'success','message'=>'']);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new AcceptOrderNotification($order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($order->client)->devices);
+        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function rejectOrder($order_id)
     {
-        $order = MainOrder::where('center_id',auth('api')->id())->findOrFail($order_id);
+        $order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
-        $center_order = CenterOrder::where('status','pending')->findOrFail(optional($order->center_order)->id);
-        $center_order->update(['status'=>'rejected']);
-        if($center_order->pay_type =='wallet')
-        {
-            $this->chargeWallet($center_order->price,$center_order->client_id);
+        $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
+        $center_order->update(['status' => 'rejected']);
+        if ($center_order->pay_type == 'wallet') {
+            $this->chargeWallet($center_order->price, $center_order->client_id);
         }
-        $order->client->notify(new RejectOrderNotification($order,['database']));
+        $order->client->notify(new RejectOrderNotification($order, ['database']));
 
-        $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-        Notification::send($admins, new RejectOrderNotification($order,['database','broadcast']));
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new RejectOrderNotification($order, ['database', 'broadcast']));
         return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_has_been_rejected')]);
     }
 
     public function cancelOrder($order_id)
     {
-        $main_order = MainOrder::where('center_id',auth('api')->id())->findOrFail($order_id);
+        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
         $fcm_notes = [
-            'title'=>['dashboard.notification.order_has_been_rejected_title'],
-            'body'=> ['dashboard.notification.order_has_been_rejected_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'title' => ['dashboard.notification.order_has_been_rejected_title'],
+            'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
-           // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-            $center_order=CenterOrder::where('status','waiting')->findOrFail($main_order->center_order->id);
-            $center_order->update(['status'=>'canceled']);
-            if($center_order->pay_type == 'wallet'){
+        // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+        $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
+        $center_order->update(['status' => 'canceled']);
+        if ($center_order->pay_type == 'wallet') {
 
-                $this->chargeWallet($center_order->price,$center_order->client_id);
-            }
-            $main_order->client->notify(new CancelOrderNotification($main_order,['database']));
+            $this->chargeWallet($center_order->price, $center_order->client_id);
+        }
+        $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
 
-            $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-            Notification::send($admins, new CancelOrderNotification($main_order,['database','broadcast']));
-            pushFcmNotes($fcm_notes,optional($main_order->client)->devices);
-            return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_canceled')]);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new CancelOrderNotification($main_order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
+        return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_canceled')]);
     }
 
     public function activeOrder($order_id)
     {
-        $main_order = MainOrder::where('center_id',auth('api')->id())->findOrFail($order_id);
+        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
         $fcm_notes = [
-            'title'=>['dashboard.notification.order_has_been_active_title'],
-            'body'=> ['dashboard.notification.order_has_been_active_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'title' => ['dashboard.notification.order_has_been_active_title'],
+            'body' => ['dashboard.notification.order_has_been_active_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-         $center_order=CenterOrder::where('status','waiting')->findOrFail($main_order->center_order->id);
-         $center_order->update(['status'=>'active']);
+        $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
+        $center_order->update(['status' => 'active']);
         $main_order->refresh();
-         $main_order->client->notify(new ActiveOrderNotification($main_order,['database']));
+        $main_order->client->notify(new ActiveOrderNotification($main_order, ['database']));
 
-         $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-         Notification::send($admins, new ActiveOrderNotification($main_order,['database','broadcast']));
-         pushFcmNotes($fcm_notes,optional($main_order->client)->devices);
-         return (new SingleOrderResource($main_order))->additional(['status'=>'success','message'=>'']);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new ActiveOrderNotification($main_order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
+        return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function completeOrder($order_id)
     {
-        $main_order = MainOrder::where('center_id',auth('api')->id())->findOrFail($order_id);
+        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
         $fcm_notes = [
-            'title'=>['dashboard.notification.order_has_been_completed_title'],
-            'body'=> ['dashboard.notification.order_has_been_completed_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'title' => ['dashboard.notification.order_has_been_completed_title'],
+            'body' => ['dashboard.notification.order_has_been_completed_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-         $center_order=CenterOrder::where('status','active')->findOrFail($main_order->center_order->id);
-         $center_order->update(['status'=>'completed']);
-         $main_order->update(['finished_at'=>now()]);
-         if($center_order->pay_type == 'wallet'){
-             $center = User::findOrFail($main_order->center_id);
-             $wallet_before = $center->wallet;
-             $this->chargeWallet($main_order->final_price,$main_order->center_id);
-             Wallet::create(['amount'=>$main_order->final_price,'wallet_before'=>$wallet_before,'wallet_after'=>$center->wallet,'user_id'=>$main_order->center_id,'transferd_by'=>$main_order->client_id,'order_id'=>$main_order->id]);
-         }
+        $center_order = CenterOrder::where('status', 'active')->findOrFail($main_order->center_order->id);
+        $center_order->update(['status' => 'completed']);
+        $main_order->update(['finished_at' => now()]);
+        if ($center_order->pay_type == 'wallet') {
+            $center = User::findOrFail($main_order->center_id);
+            $wallet_before = $center->wallet;
+            $this->chargeWallet($main_order->final_price, $main_order->center_id);
+            Wallet::create(['amount' => $main_order->final_price, 'wallet_before' => $wallet_before, 'wallet_after' => $center->wallet, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
+        }
 
-         $main_order->refresh();
-         $main_order->client->notify(new CompleteOrderNotification($main_order,['database']));
+        $main_order->refresh();
+        $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
 
-         $admins = User::whereIn('user_type',['superadmin','admin'])->get();
-         Notification::send($admins, new CompleteOrderNotification($main_order,['database','broadcast']));
-         pushFcmNotes($fcm_notes,optional($main_order->client)->devices);
-         return (new SingleOrderResource($main_order))->additional(['status'=>'success','message'=>'']);
+        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+        Notification::send($admins, new CompleteOrderNotification($main_order, ['database', 'broadcast']));
+        pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
+        return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
     }
-
-
 }
