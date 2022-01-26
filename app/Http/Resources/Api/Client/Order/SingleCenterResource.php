@@ -16,6 +16,7 @@ class SingleCenterResource extends JsonResource
      */
     public function toArray($request)
     {
+        $service_type = optional($this->service)->service_type;
         return [
             'id'=>$this->id,
             'status'=> $this->status,
@@ -36,14 +37,15 @@ class SingleCenterResource extends JsonResource
             'lat'=>$this->when(auth('api')->user()->user_type == 'client',optional(optional($this->center)->profile)->lat),
             'lng'=>$this->when(auth('api')->user()->user_type == 'client',optional(optional($this->center)->profile)->lng),
             'service'=> new ServiceResource($this->service),
-            'hour'=> $this->when($this->service->service_type == 'hour',new HourOrderResource($this->hours)),
-            'month'=> $this->when($this->service->service_type == 'month',new MonthOrderResource($this->months)),
+            'service_details'=>$service_type == 'hour' ? new HourOrderResource($this->hours) : new MonthOrderResource($this->months),
+            // 'hour'=> $this->when($this->service->service_type == 'hour',new HourOrderResource($this->hours)),
+            // 'month'=> $this->when($this->service->service_type == 'month',new MonthOrderResource($this->months)),
             'days_in_month'=> $this->when($this->service->service_type == 'month' ,isset($this->months) ? OrderDaysInMonthResource::collection($this->months->month_days):null),
             'kids'=> OrderKidsResource::collection($this->kids),
             'comment'=> $this->comment,
-            
+
            // 'rate'=>$this->when($this->status == 'completed',new RateForSpecificOrderResource($rate)),
-            'created_at'=>$this->created_at
+            'created_at'=>$this->created_at->toFormattedDateString()
         ];
     }
 }

@@ -15,7 +15,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.today_profits_bookings') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.today_profits_bookings') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $today_profits_bookings }}$</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.product.show',$most_sellers_products->first()->id)}}">{{ $most_sellers_products->first()->name }}</a></h6>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_week_profits_bookings') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_week_profits_bookings') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_week_profits_bookings ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_month_profits_bookings') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_month_profits_bookings') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_month_profits_bookings ."$" }}</h4>
                         </div>
 
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_year_profits_bookings') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_year_profits_bookings') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_year_profits_bookings ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.client.show',$most_bought_clients->first()->id)}}">{{ $most_bought_clients->first()->fullname }}</a></h6>
@@ -99,7 +99,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.today_profits_for_sitter_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.today_profits_for_sitter_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $today_profits_for_sitter_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_week_profits_for_sitter_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_week_profits_for_sitter_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_week_profits_for_sitter_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_month_profits_for_sitter_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_month_profits_for_sitter_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_month_profits_for_sitter_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -163,7 +163,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_year_profits_for_sitter_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_year_profits_for_sitter_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_year_profits_for_sitter_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -184,7 +184,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.today_profits_for_center_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.today_profits_for_center_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $today_profits_for_center_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -205,7 +205,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_week_profits_for_center_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_week_profits_for_center_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_week_profits_for_center_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -226,7 +226,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_month_profits_for_center_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_month_profits_for_center_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_month_profits_for_center_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>
@@ -248,7 +248,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistics.current_year_profits_for_center_orders') !!}</h6>
+                            <h6 class="text-bold-700 mt-1 col-8">{!! trans('dashboard.financial_statistic.current_year_profits_for_center_orders') !!}</h6>
                             <h4 class="text-bold-700 mt-1">{{ $current_year_profits_for_center_orders ."$" }}</h4>
                         </div>
                         {{--  <h6 class="text-bold-700 mt-1"><a href="{{route('dashboard.provider.show',$best_sales_providers->first()->id)}}">{{ $best_sales_providers->first()->fullname }}</a></h6>

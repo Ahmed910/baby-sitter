@@ -19,7 +19,7 @@ class SingleSitterOrderResource extends JsonResource
     public function toArray($request)
     {
 
-
+       $service_type = optional($this->service)->service_type;
         return [
 
             'id'=>$this->id,
@@ -37,10 +37,11 @@ class SingleSitterOrderResource extends JsonResource
             ]),
             //'baby_sitter_name'=>$this->when(auth('api')->user()->user_type == 'childcenter',optional($this->baby_sitter)->name),
             'qr_code'=>$this->when(auth('api')->user()->user_type == 'babysitter',$this->qrCode),
+            'service_type'=>$service_type,
             'service'=> new ServiceResource($this->service),
-            'service_type'=>optional($this->service)->service_type,
-            'hour'=> $this->when(optional($this->service)->service_type == 'hour',new HourOrderResource($this->hours)),
-            'month'=> $this->when(optional($this->service)->service_type == 'month',new MonthOrderResource($this->months)),
+            'service_details'=>$service_type == 'hour' ? new HourOrderResource($this->hours) : new MonthOrderResource($this->months),
+            // 'hour'=> $this->when(optional($this->service)->service_type == 'hour',new HourOrderResource($this->hours)),
+            // 'month'=> $this->when(optional($this->service)->service_type == 'month',new MonthOrderResource($this->months)),
             'days_in_month'=> $this->when(optional($this->service)->service_type == 'month' ,isset($this->months) ? OrderDaysInMonthResource::collection($this->months->month_days):null),
             'customer_location'=> $this->location,
             'lat'=>$this->lat,
@@ -49,7 +50,7 @@ class SingleSitterOrderResource extends JsonResource
             'comment'=> $this->comment,
             'total_price'=> (float)$this->price,
 
-            'created_at'=>$this->created_at
+            'created_at'=>$this->created_at->toFormattedDateString()
         ];
     }
 }

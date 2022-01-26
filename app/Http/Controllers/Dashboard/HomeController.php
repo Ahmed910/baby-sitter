@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\{City , Country , User , Driver, MainOrder};
+use App\Models\{City , Country , User , Driver, MainOrder, SitterOrder};
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -39,10 +39,13 @@ class HomeController extends Controller
             $data['child_center_is_ban_count'] = $child_center->where('is_ban',1)->count();
 
 
-            $booking_query = MainOrder::latest()->get();
-            $data['bookings'] = $booking_query;
-            $data['bookings_count'] = $booking_query->count();
-
+            // $booking_query = MainOrder::get();
+            // $data['bookings'] = $booking_query;
+            // $data['bookings_count'] = $booking_query->count();
+            // $sitter_orders = SitterOrder::get();
+            // $data['rejected_sitters_bookings_count'] = $sitter_orders->where('status','rejected')->count();
+            // $data['accepted_sitters_bookings_count'] = $sitter_orders->where('status','accepted')->count();
+            // $data['canceled_sitters_bookings_count'] = $sitter_orders->where('status','canceled')->count();
 
             $from_date = now()->subMonths(11)->format('Y-m-d');
             $to_date = now()->format('Y-m-d');
@@ -60,19 +63,19 @@ class HomeController extends Controller
             $client_analytics = $clients->when($request->from_date || $request->to_date,function($collection)use($from_date,$to_date){
                 if ($from_date && $to_date) {
                     return $collection->filter(function($item)use($from_date,$to_date){
-                            if ($item->created_at->format("Y-m-d") <= $to_date && $item->created_at->format("Y-m-d") >= $from_date) {
+                            if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") <= $to_date && \Carbon\Carbon::parse($item->created_at)->format("Y-m-d") >= $from_date) {
                                 return $item;
                             }
                         });
                 }elseif ($from_date) {
                     return $collection->filter(function($item)use($from_date){
-                            if ($item->created_at->format("Y-m-d") >= $from_date) {
+                            if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") >= $from_date) {
                                 return $item;
                             }
                         });
                 }elseif ($to_date) {
                     return $collection->filter(function($item)use($to_date){
-                        if ($item->created_at->format("Y-m-d") <= $to_date) {
+                        if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") <= $to_date) {
                             return $item;
                         }
                     });
@@ -80,22 +83,46 @@ class HomeController extends Controller
             })->groupBy(function ($date) {
                 return \Carbon\Carbon::parse($date->created_at)->format('Y-m');
             });
-            $driver_analytics = $baby_sitters->when($request->from_date || $request->to_date,function($collection)use($from_date,$to_date){
+            $babysitter_analytics = $baby_sitters->when($request->from_date || $request->to_date,function($collection)use($from_date,$to_date){
                 if ($from_date && $to_date) {
                     return $collection->filter(function($item)use($from_date,$to_date){
-                            if ($item->created_at->format("Y-m-d") <= $to_date && $item->created_at->format("Y-m-d") >= $from_date) {
+                            if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") <= $to_date && \Carbon\Carbon::parse($item->created_at)->format("Y-m-d") >= $from_date) {
                                 return $item;
                             }
                         });
                 }elseif ($from_date) {
                     return $collection->filter(function($item)use($from_date){
-                            if ($item->created_at->format("Y-m-d") >= $from_date) {
+                            if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") >= $from_date) {
                                 return $item;
                             }
                         });
                 }elseif ($to_date) {
                     return $collection->filter(function($item)use($to_date){
-                        if ($item->created_at->format("Y-m-d") <= $to_date) {
+                        if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") <= $to_date) {
+                            return $item;
+                        }
+                    });
+                }
+            })->groupBy(function ($date) {
+                return \Carbon\Carbon::parse($date->created_at)->format('Y-m');
+            });
+
+            $childcenter_analytics = $child_center->when($request->from_date || $request->to_date,function($collection)use($from_date,$to_date){
+                if ($from_date && $to_date) {
+                    return $collection->filter(function($item)use($from_date,$to_date){
+                            if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") <= $to_date && \Carbon\Carbon::parse($item->created_at)->format("Y-m-d") >= $from_date) {
+                                return $item;
+                            }
+                        });
+                }elseif ($from_date) {
+                    return $collection->filter(function($item)use($from_date){
+                            if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") >= $from_date) {
+                                return $item;
+                            }
+                        });
+                }elseif ($to_date) {
+                    return $collection->filter(function($item)use($to_date){
+                        if (\Carbon\Carbon::parse($item->created_at)->format("Y-m-d") <= $to_date) {
                             return $item;
                         }
                     });
@@ -114,10 +141,15 @@ class HomeController extends Controller
                     } else {
                         $data['client_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = 0;
                     }
-                    if (isset($driver_analytics[\Carbon\Carbon::parse($to_date)->format('Y-m')])) {
-                        $data['driver_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = $driver_analytics[\Carbon\Carbon::parse($to_date)->format('Y-m')]->count();
+                    if (isset($babysitter_analytics[\Carbon\Carbon::parse($to_date)->format('Y-m')])) {
+                        $data['babysitter_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = $babysitter_analytics[\Carbon\Carbon::parse($to_date)->format('Y-m')]->count();
                     } else {
-                        $data['driver_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = 0;
+                        $data['babysitter_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = 0;
+                    }
+                    if (isset($childcenter_analytics[\Carbon\Carbon::parse($to_date)->format('Y-m')])) {
+                        $data['childcenter_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = $childcenter_analytics[\Carbon\Carbon::parse($to_date)->format('Y-m')]->count();
+                    } else {
+                        $data['childcenter_analytics'][\Carbon\Carbon::parse($to_date)->format('Y-m')] = 0;
                     }
                 } else {
                     if (isset($client_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')])) {
@@ -125,10 +157,16 @@ class HomeController extends Controller
                     } else {
                         $data['client_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = 0;
                     }
-                    if (isset($driver_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')])) {
-                        $data['driver_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = $driver_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')]->count();
+                    if (isset($babysitter_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')])) {
+                        $data['babysitter_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = $babysitter_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')]->count();
                     } else {
-                        $data['driver_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = 0;
+                        $data['babysitter_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = 0;
+                    }
+
+                    if (isset($childcenter_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')])) {
+                        $data['childcenter_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = $childcenter_analytics[\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')]->count();
+                    } else {
+                        $data['childcenter_analytics'][\Carbon\Carbon::parse($to_date)->subMonths($i)->format('Y-m')] = 0;
                     }
 
                 }

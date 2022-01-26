@@ -162,7 +162,7 @@
                         <div class="card-header rounded d-flex align-items-start pb-0">
                             <div>
                                 <h2 class="text-bold-700 mb-0">{{ $child_center_is_deactive_count }}</h2>
-                                <p>{{ trans('dashboard.sitter.deactive_centers') }}</p>
+                                <p>{{ trans('dashboard.center.deactive_centers') }}</p>
                             </div>
                             <div class="avatar bg-rgba-warning p-50 m-0">
                                 <div class="avatar-content">
@@ -236,184 +236,6 @@
 
 
 
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $bookings_count }}</h2>
-                                <p>{{ trans('dashboard.orders.bookings_count') }}</p>
-                            </div>
-                            <div class="avatar bg-rgba-primary p-50 m-0">
-                                <div class="avatar-content">
-                                     <a href="{{ route('dashboard.orders.index') }}">
-
-                                        <i class="fas fa-badge text-primary font-medium-5"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $rejected_sitters_bookings_count }}</h2>
-                                <p>{{ trans('dashboard.order.rejected_sitters_requests') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $pending_bookings_count }}</h2>
-                                <p>{{ trans('dashboard.booking_request.pending_requests') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $finished_bookings_count }}</h2>
-                                <p>{{ trans('dashboard.booking_request.finished_requests') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $canceled_bookings_count }}</h2>
-                                <p>{{ trans('dashboard.booking_request.canceled_requests') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                 <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $underway_bookings_count }}</h2>
-                                <p>{{ trans('dashboard.booking_request.underway_requests') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $sitter_types_count }}</h2>
-                                <p>{{ trans('dashboard.sitter_type.sitter_types') }}</p>
-                            </div>
-                            <div class="avatar bg-rgba-success p-50 m-0">
-                                <div class="avatar-content">
-                                    <a href="{{ route('dashboard.sitter_type.index') }}">
-                                        <i class="fa fa-child font-medium-5" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $qualifications_count }}</h2>
-                                <p>{{ trans('dashboard.qualification.qualifications') }}</p>
-                            </div>
-                            <div class="avatar bg-rgba-success p-50 m-0">
-                                <div class="avatar-content">
-                                    <a href="{{ route('dashboard.qualification.index') }}">
-                                        <i class="fas fa-graduation-cap text-success font-medium-5"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $finished_bookings_percent }}</h2>
-                                <p>{{ trans('dashboard.booking_request.finished_bookings_percent') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $pending_bookings_percent }}</h2>
-                                <p>{{ trans('dashboard.booking_request.pending_bookings_percent') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $canceled_bookings_percent }}</h2>
-                                <p>{{ trans('dashboard.booking_request.canceled_bookings_percent') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $rejected_bookings_percent }}</h2>
-                                <p>{{ trans('dashboard.booking_request.rejected_bookings_percent') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                  <div class="col-md-4 col-12">
-                    <div class="card border-info bg-transparent">
-                        <div class="card-header rounded d-flex align-items-start pb-0">
-                            <div>
-                                <h2 class="text-bold-700 mb-0">{{ $underway_bookings_percent }}</h2>
-                                <p>{{ trans('dashboard.booking_request.underway_bookings_percent') }}</p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -446,28 +268,7 @@
                 </div>
             </div>
 
-            <div class="card border-info bg-transparent">
-                <div class="card-header d-flex flex-sm-row flex-column justify-content-md-between align-items-start justify-content-start">
-                    {{-- <h4 class="card-title mb-sm-0 mb-1">{!! trans('dashboard.order.orders') !!}</h4> --}}
-                    <div>
-                        <span class="cursor-pointer mr-1">
-                            <span class="bullet bullet-sm align-middle" style="background-color: rgba(43, 155, 244, 0.85)">&nbsp;</span>
-                            <span class="align-middle">{!! trans('dashboard.booking_request.pending_requests') !!}</span>
-                        </span>
-                        <span class="cursor-pointer mr-1">
-                            <span class="bullet bullet-sm align-middle" style="background-color: rgba(254, 232, 2, 0.85)">&nbsp;</span>
-                            <span class="align-middle">{!! trans('dashboard.booking_request.canceled_requests') !!}</span>
-                        </span>
-                        <span class="cursor-pointer">
-                            <span class="bullet bullet-sm align-middle" style="background-color: rgba(63, 208, 189, 0.85)">&nbsp;</span>
-                            <span class="align-middle">{!! trans('dashboard.booking_request.finished_requests') !!}</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div id="radialbar-chart" style="background-color: #283046"></div>
-                </div>
-            </div>
+
         </div>
 
     </div>

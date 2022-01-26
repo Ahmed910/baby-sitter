@@ -24,13 +24,14 @@ class ManagerRequest extends FormRequest
     public function rules()
     {
         $manager = $this->manager;
+     
         $password = 'required|min:6|confirmed';
 
         if ($manager) {
             $password = 'nullable|min:6|confirmed';
         }
         return [
-            'fullname' => 'required|string|between:2,100',
+            'name' => 'required|string|between:2,100',
             'email' => 'required|email|unique:users,email,' . $manager,
             'phone' => 'required|numeric|digits_between:5,20|unique:users,phone,' . $manager,
             // 'identity_number' => 'required|numeric|unique:users,identity_number,' . $manager,

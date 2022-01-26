@@ -41,6 +41,7 @@ class LoginController extends Controller
 
     protected function credentials(Request $request)
     {
+        // dd('aaa');
         $credentials=$request->has('username') ? [$this->username() => $request->username, 'password' => $request->password] : $request->only($this->username(), 'password');
         $credentials['is_active'] = 1;
         return $credentials;
@@ -77,6 +78,7 @@ class LoginController extends Controller
      */
     public function redirectPath()
     {
+        // dd(auth()->user()->role()->exists());
         if ((auth()->user()->user_type == 'superadmin' && !auth()->user()->role()->exists()) || (auth()->user()->role()->exists() && auth()->user()->user_type == 'admin')) {
           $this->redirectTo='dashboard/';
           return $this->redirectTo;
@@ -91,6 +93,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
       $locale=app()->getLocale();
+     
       if (request()->is("$locale/dashboard/*") || request()->is("$locale/dashboard") || request()->is("$locale/dashboard/") || request()->is("dashboard/*") || request()->is("dashboard") || request()->is("dashboard/")){
             return view("dashboard.auth.login");
       }

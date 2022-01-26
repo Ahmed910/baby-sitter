@@ -38,9 +38,11 @@ Route::group(
 
              // orders
              Route::resource('orders','OrderController')->only('index','show');
+            //  Route::get('orders','OrderController@index')->name('orders.index');
+            //  Route::get('orders/{id}','OrderController@index')->name('orders.show');
 
              // Financial Statistics
-            Route::resource('financial_statistics','FinancialController');
+            Route::resource('financial_statistic','FinancialController');
             // ====================HR===========================================
             // Manager
             Route::resource('manager','ManagerController');

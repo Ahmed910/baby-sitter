@@ -289,7 +289,9 @@ return [
       'sitters_count'=>'عدد الحاضنات',
       'baby_sitters_is_active_count'=>'عدد الحاضنات المفعلين',
       'baby_sitters_is_ban_count'=>'عدد الحاضنات المحظورين',
-      'bookings_count'=>'عدد طلبات الحجز'
+      'bookings_count'=>'عدد طلبات الحجز',
+      'banned_sitters'=>'الحاضنات المحظورين',
+      'deactive_sitters'=>'الحاضنات الغير مفعلين',
 
   ],
 
@@ -916,7 +918,8 @@ return [
     'open' => 'متاح',
     'typing' => 'يكتب ...'
   ],
-  'financial_statistics'=>[
+  'financial_statistic'=>[
+      'financial_statistics'=>'التقارير المالية',
       'today_profits_bookings'=>'ارباح التطبيق خلال يوم',
       'current_week_profits_bookings'=>'ارباح التطبيق خلال اسبوع',
       'current_month_profits_bookings'=>'ارباح التطبيق خلال شهر',
@@ -937,6 +940,8 @@ return [
     'financial_statistics'=>'التقارير المالية',
     'main_data' => 'البيانات الاساسية',
     'website' => 'الموقع الرئيسي',
+    'accept'=>'قبول',
+    'reject'=>'رفض',
     'optional' => 'اختياري',
     'from_date' => 'من تاريخ',
     'to_date' => 'إلى',
@@ -1129,6 +1134,7 @@ return [
     ],
 
  ],
+
  'order' => [
    'order' => 'الطلب',
    'orders' => 'الطلبات',
@@ -1310,6 +1316,9 @@ return [
    'created_from_date' => 'من تاريخ',
    'created_to_date' => 'إلى',
  ],
+ 'orders'=>[
+     'orders'=>'طلبات الحجز'
+ ],
 
  'wallet_transaction' => [
      'wallet_transaction' => 'عملية المحفظة',
@@ -1374,6 +1383,8 @@ return [
         'price_after_offer'=>'سعر الطلب بعد تطبيق الكوبون',
         'provider_profit'=>'ربح مقدم الخدمة'
     ],
+
+
 
     'kids'=>[
         'kids_info'=>'الاطفال',

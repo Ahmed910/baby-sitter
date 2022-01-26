@@ -580,6 +580,21 @@ return [
       'incubation_license'=>'incubation license',
       'incubation_security_and_safety_certificate'=>'incubation security and safety certificate'
   ],
+  'financial_statistic'=>[
+    'financial_statistics'=>'financial statistics',
+    'today_profits_bookings'=>'today profits bookings',
+    'current_week_profits_bookings'=>'current week profits bookings',
+    'current_month_profits_bookings'=>'current month profits bookings',
+    'current_year_profits_bookings'=>'current year profits bookings',
+    'today_profits_for_sitter_orders'=>'today profits for sitter orders',
+    'current_week_profits_for_sitter_orders'=>'current week profits for sitter orders',
+    'current_month_profits_for_sitter_orders'=>'current month profits for sitter orders',
+    'current_year_profits_for_sitter_orders'=>'current year profits for sitter orders',
+    'today_profits_for_center_orders'=>'today profits for center orders',
+    'current_week_profits_for_center_orders'=>'current week profits for center orders',
+    'current_month_profits_for_center_orders'=>'current month profits for center orders',
+    'current_year_profits_for_center_orders'=>'current year profits for center orders',
+],
   'general' => [
     'previous' => 'previous',
     'coordinates' => 'coordinates',
@@ -776,6 +791,25 @@ return [
     'edit_favorite_time' => 'edit favorite time',
   ],
 
+  'center'=>[
+    'center'=>'center',
+    'centers'=>'centers',
+    'add_center'=>'add center',
+    'certificates'=>'certificates',
+    'hour'=>'hour',
+    'name'=>'center name',
+    'is_educational'=>'educational',
+    'yes'=>'yes',
+    'child_center_count'=>'chil center count',
+    'banned_centers'=>'banned centers',
+    'deactive_centers'=>'deactive centers',
+    'no'=>'no',
+    'center_location'=>'center location',
+    'business_register'=>'business register',
+    'business_license'=>'business license',
+    'month'=>'monthy price',
+    'edit_center'=>'edit center',
+],
   'order'=>[
     'orders'=>'orders',
     'order'=>'order',
@@ -854,9 +888,20 @@ return [
       'fri' => 'الجمعة',
   ],
 
+  'feature'=>[
+    'feature'=>'feature',
+    'features'=>'features',
+    'add_feature'=>'add feature',
+    'edit_feature'=>'edit feature',
+],
+'orders'=>[
+    'orders'=>'orders'
+],
+
  'sitter' => [
     'sitter' => 'sitter',
     'sitters' => 'sitters',
+    'sitters_count'=>'sitters count',
     'add_sitter' => 'add sitter',
     'edit_sitter' => 'edit sitter',
     'banned_sitters'=>'banned sitters',

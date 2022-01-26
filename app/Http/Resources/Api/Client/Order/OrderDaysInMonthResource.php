@@ -16,8 +16,8 @@ class OrderDaysInMonthResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'day'=>new DayResource($this->day),
+            // 'id'=>$this->id,
+            'day'=>$this->day->name,
             'start_time'=>$this->start_time->format('g:i A'),
             'end_time'=>$this->end_time->format('g:i A')
         ];

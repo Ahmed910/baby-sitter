@@ -105,7 +105,7 @@
              @if (auth()->user()->hasPermissions('feature'))
              <li class=" nav-item">
                  <a class="d-flex align-items-center" href="#">
-                     <i data-feather='users'></i>
+                    <i class="fas fa-columns"></i>
                      <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.feature.features') !!}">
                          {!! trans('dashboard.feature.features') !!}
                      </span>
@@ -138,7 +138,7 @@
              @if (auth()->user()->hasPermissions('center'))
              <li class=" nav-item">
                  <a class="d-flex align-items-center" href="#">
-                     <i data-feather='users'></i>
+                    <i class="fas fa-child"></i>
                      <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.center.centers') !!}">
                          {!! trans('dashboard.center.centers') !!}
                      </span>
@@ -204,7 +204,7 @@
              @if (auth()->user()->hasPermissions('transfer_request'))
              <li class=" nav-item">
                  <a class="d-flex align-items-transfer_request" href="#">
-                     <i data-feather='users'></i>
+                    <i class="fas fa-exchange-alt"></i>
                      <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.transfer_request.transfer_requests') !!}">
                          {!! trans('dashboard.transfer_request.transfer_requests') !!}
                      </span>
@@ -226,7 +226,7 @@
              @if (auth()->user()->hasPermissions('orders'))
              <li class=" nav-item">
                  <a class="d-flex align-items-transfer_request" href="#">
-                     <i data-feather='users'></i>
+                    <i class="fab fa-first-order"></i>
                      <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.order.orders') !!}">
                          {!! trans('dashboard.order.orders') !!}
                      </span>
@@ -246,8 +246,8 @@
              @endif
 
              @if (auth()->user()->hasPermissions('orders'))
-             <li class="{{ request()->route()->getName() == 'dashboard.financial_statistics.index' ? 'active' : '' }} nav-item">
-                <a class="d-flex align-items-center" href="{!! route('dashboard.financial_statistics.index') !!}">
+             <li class="{{ request()->route()->getName() == 'dashboard.financial_statistic.index' ? 'active' : '' }} nav-item">
+                <a class="d-flex align-items-center" href="{!! route('dashboard.financial_statistic.index') !!}">
                     <i class="far fa-analytics"></i>
                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.general.financial_statistics') !!}">
                         {!! trans('dashboard.general.financial_statistics') !!}
@@ -392,7 +392,7 @@
 
 
                     {{-- Sliders --}}
-              @if (auth()->user()->hasPermissions('slider'))
+              {{--  @if (auth()->user()->hasPermissions('slider'))
               <li class=" nav-item">
                   <a class="d-flex align-items-center" href="#">
                     <i class="fas fa-sliders-h"></i>
@@ -421,7 +421,7 @@
                       @endif
                   </ul>
               </li>
-              @endif
+              @endif  --}}
 
 
 

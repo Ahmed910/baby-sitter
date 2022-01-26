@@ -15,9 +15,14 @@ class OrderKidsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $kid = $this->kid;
         return [
-            'id'=>$this->id,
-            'kid'=>new KidResource($this->kid)
+            'id'=>$kid->id,
+            // 'kid'=>new KidResource($this->kid)
+            'kidname'=>$kid->kidname,
+            'age'=>$kid->age,
+            'health_state'=>$kid->health_state,
+            'image'=>$kid->image
         ];
     }
 }

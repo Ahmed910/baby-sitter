@@ -93,8 +93,12 @@
 
                     @if($transfer_request->status == 'pending')
                     <div style="float: left">
+                        @if(auth()->user()->hasPermissions('transfer_request','accept'))
                         <a href="{{ route('dashboard.transfer_request.accept',$transfer_request->id) }}" class="btn btn-success">{{ trans('dashboard.transfer_request.status.accept') }}</a>
+                        @endif
+                        @if(auth()->user()->hasPermissions('transfer_request','reject'))
                         <a href="{{ route('dashboard.transfer_request.reject',$transfer_request->id) }}" class="btn btn-danger">{{ trans('dashboard.transfer_request.status.reject') }}</a>
+                        @endif
                     </div>
                     @endif
                     </div>

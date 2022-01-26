@@ -3,12 +3,12 @@
 	<div class="col-12">
 		<div class="media mb-2">
 			@if (isset($manager) && $manager->image)
-			<img src="{{ $manager->avatar }}" alt="{{ $manager->fullname }}" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer image-preview" height="90" width="90" />
+			<img src="{{ $manager->avatar }}" alt="{{ $manager->name }}" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer image-preview" height="90" width="90" />
 			@else
 			<img src="{{ asset('dashboardAssets/images/backgrounds/placeholder_image.png') }}" alt="users avatar" class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer image-preview" height="90" width="90" />
 			@endif
 			<div class="media-body mt-50">
-				<h4>{{ isset($manager) ? $manager->fullname : trans('dashboard.general.image') }}</h4>
+				<h4>{{ isset($manager) ? $manager->name : trans('dashboard.general.image') }}</h4>
 				<div class="col-12 d-flex mt-1 px-0">
 					<label class="btn btn-primary mr-75 mb-0" for="change-picture">
 						<span class="d-none d-sm-block">Change</span>
@@ -26,7 +26,7 @@
 	<div class="col-md-6 col-12">
 		<div class="form-group">
 			<label for="full-name-column">{{ trans('dashboard.user.fullname') }} <span class="text-danger">*</span></label>
-			{!! Form::text('fullname', null , ['class' => 'form-control','id' => "full-name-column" , 'placeholder' => trans('dashboard.user.fullname')]) !!}
+			{!! Form::text('name', null , ['class' => 'form-control','id' => "full-name-column" , 'placeholder' => trans('dashboard.user.fullname')]) !!}
 		</div>
 	</div>
 	<div class="col-md-6 col-12">
