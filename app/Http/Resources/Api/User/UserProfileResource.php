@@ -21,13 +21,14 @@ class UserProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_type' => (string)$this->user_type,
             'name' => $this->name,
             'phone' => (string)$this->phone,
             'email' => (string)$this->email,
             'image' => (string)$this->avatar,
             'rate_avg'=> 4,
             'qr_code'=>$this->qr_code,
-            'test_version' => (string)setting('test_version'),
+            // 'test_version' => (string)setting('test_version'),
             'unread_notifications' => $this->unreadnotifications->count(),
             'identity_number' => $this->when($this->user_type != 'childcenter',$this->identity_number),
             'services'=> $this->when($this->user_type !='client',UserServiceResource::collection($this->user_services)),
@@ -36,7 +37,6 @@ class UserProfileResource extends JsonResource
             'business_register'=>$this->when($this->user_type =='childcenter',optional($this->child_centre)->business_register),
             'business_register_image'=>$this->when($this->user_type =='childcenter',optional($this->child_centre)->business_license_image),
             'bio'=>$this->when($this->user_type =='babysitter',optional($this->profile)->bio),
-            'user_type' => (string)$this->user_type,
             'galleries' => $this->when($this->user_type !='client',GalleryResource::collection($this->galleries)),
             'features' => $this->when($this->user_type !='client',UserFeatureResource::collection($this->user_features)),
 

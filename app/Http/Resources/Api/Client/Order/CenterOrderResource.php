@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\Client\Order;
 
+use App\Http\Resources\Api\Center\CenterResource;
 use App\Http\Resources\Api\Help\ServiceResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 

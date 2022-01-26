@@ -98,7 +98,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'fail', 'data' => null,'is_active' => false , 'is_ban' => false, 'message' => trans('api.auth.failed')],402);
         }
 
-        
+
         $user = auth('api')->user();
 
        if (! $user->is_active) {
@@ -118,7 +118,7 @@ class AuthController extends Controller
               'is_active' => false ,
               'is_ban' => false,
               'dev_message' => $user->verified_code
-            ], 403);
+            ], 422);
           }elseif ($user->is_ban) {
             auth('api')->logout();
             return response()->json([
@@ -127,7 +127,7 @@ class AuthController extends Controller
               'message' => "هذا الحساب تم حظرة من قبل الادارة لـ " .$user->ban_reason,
               'is_active' => true ,
               'is_ban' => true
-            ], 403);
+            ], 422);
           }
 
         if (in_array($user->user_type , ['admin','superadmin'])) {

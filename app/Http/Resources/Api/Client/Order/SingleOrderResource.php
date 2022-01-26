@@ -30,7 +30,8 @@ class SingleOrderResource extends JsonResource
             'client_rate'=>$this->when(((isset($this->center_order) && optional($this->center_order)->status == 'completed') || (isset($this->sitter_order) && optional($this->sitter_order)->status == 'completed')) && (auth('api')->user()->user_type != 'client') ,new RateForSpecificOrderResource(Rate::where(['from'=>auth('api')->id(),'order_id'=>$this->id])->where('to_client','<>',null)->first())),
             //  'order_data'=> new OrderDetailsResource($this->to == 'sitter' ? $this->sitter_order:$this->center_order)
             'status'=> $order->status,
-            'provider_name'=>$this->when(auth('api')->user()->user_type == 'client',$this->to == 'sitter' ? optional($this->sitter)->name : optional($this->center)->name),
+            // 'provider_name'=>$this->when(auth('api')->user()->user_type == 'client',$this->to == 'sitter' ? optional($this->sitter)->name : optional($this->center)->name),
+            'provider' => $this->when(auth('api')->user()->user_type == 'client',new ProviderResource($this->to == 'sitter' ? $this->sitter : $this->center)),
             'sitter_worker_name_in_center'=>$this->when($this->to == 'center',optional($order->baby_sitter)->name),
             'customer_data'=>$this->when(auth('api')->user()->user_type == 'babysitter',[
                 'customer_id'=>optional($this->client)->id,
