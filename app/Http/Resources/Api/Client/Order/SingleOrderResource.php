@@ -23,6 +23,7 @@ class SingleOrderResource extends JsonResource
             'id'=>$this->id,
             'type'=>$this->to,
             'total_price'=> (float)$this->price_after_offer,
+
             'chat_id'=>$this->when(isset($this->sitter_order),optional($this->chat)->id),
             'sitter_rate'=>$this->when(isset($this->sitter_order) && optional($this->sitter_order)->status == 'completed',new RateForSpecificOrderResource(Rate::where(['from'=>auth('api')->id(),'order_id'=>$this->id])->where('to','<>',null)->first())),
             'center_rate'=>$this->when(isset($this->center_order) && optional($this->center_order)->status == 'completed',new RateForSpecificOrderResource(Rate::where(['from'=>auth('api')->id(),'order_id'=>$this->id])->where('to_center','<>',null)->first())),
@@ -48,10 +49,10 @@ class SingleOrderResource extends JsonResource
             'lat'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center',optional(optional($this->center)->profile)->lat),
             'lng'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center',optional(optional($this->center)->profile)->lng),
 
-            'customer_location'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter', optional(optional($this->client)->profile)->location),
-            'customer_lat'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter',optional(optional($this->client)->profile)->lat),
-            'customer_lng'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter',optional(optional($this->client)->profile)->lng),
-
+            'customer_location'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter', $order->location),
+            'customer_lat'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter',$order->lat),
+            'customer_lng'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter',$order->lng),
+            'service_type'=>optional($order->service)->service_type,
             'service'=> new ServiceResource($order->service),
             'service_details'=>optional($order->service)->service_type == 'hour' ? new HourOrderResource($order->hours) : new MonthOrderResource($order->months),
             'days_in_month'=> $this->when(optional($order->service)->service_type == 'month' ,isset($order->months) ? OrderDaysInMonthResource::collection($order->months->month_days):null),
