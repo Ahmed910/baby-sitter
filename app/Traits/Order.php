@@ -75,7 +75,7 @@ trait Order
                 $order = SitterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
                 $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date']), $order, $request->schedules);
             }
-
+             dd($this->getKids($request->kids, 'SitterOrder', $order->id));
             $order->kids()->createMany($this->getKids($request->kids, 'SitterOrder', $order->id));
             if ($request->pay_type == 'wallet') {
 
