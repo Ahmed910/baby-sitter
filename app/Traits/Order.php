@@ -42,6 +42,7 @@ trait Order
     protected function SitterOrder(OrderSitterRequest $request)
     {
 
+
         if ($request->pay_type == 'credit' && $request->check_order == 'test') {
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.payment_has_been_successfully')], 200);
         }
@@ -77,7 +78,7 @@ trait Order
             }
 
             $order->kids()->createMany($this->getKids($request->kids, 'SitterOrder', $order->id));
-            dd($this->getKids($request->kids, 'SitterOrder', $order->id));
+            // dd($this->getKids($request->kids, 'SitterOrder', $order->id));
             if ($request->pay_type == 'wallet') {
 
                 $this->withdrawFromWallet($main_order->price_after_offer, auth('api')->id());
@@ -246,6 +247,7 @@ trait Order
                 'order_kidsable_id' => $orderId
             ];
         }
+
 
         return $data;
     }

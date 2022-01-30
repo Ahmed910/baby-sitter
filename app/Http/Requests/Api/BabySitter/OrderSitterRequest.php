@@ -32,7 +32,7 @@ class OrderSitterRequest extends ApiMasterRequest
     {
         // dd($this->service_type);
         // $data=[];
-
+        // dd('sss');
         $data=[
             'sitter_id' => 'required|exists:users,id',
             'service_id' => 'required|exists:services,id',
@@ -40,7 +40,7 @@ class OrderSitterRequest extends ApiMasterRequest
             'lng'=>'required|numeric',
             'location'=>'required|between:3,250',
             'kids'=>'required|array',
-            'kid.*'=>'required|exists:kids,id',
+            'kids.*'=>'required|exists:kids,id',
             'comment'=>'nullable|between:3,10000',
             'pay_type'=>'required|in:credit,wallet',
             'check_order'=>'required_if:pay_type,credit|in:test,live',
