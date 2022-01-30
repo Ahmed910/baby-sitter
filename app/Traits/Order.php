@@ -12,6 +12,7 @@ use App\Http\Resources\Api\Notification\SenderResource;
 use App\Models\CenterOrder;
 use App\Models\Chat;
 use App\Models\MainOrder;
+use App\Models\Offer;
 use App\Models\Service;
 use App\Models\SitterOrder;
 use App\Models\User;
@@ -48,8 +49,12 @@ trait Order
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
         $sitter = User::findOrFail($request->sitter_id);
+
         $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price'];
-        $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'sitter_id' => $request->sitter_id, 'to' => 'sitter'];
+        $offer_data = $this->checkOfferExisting($request->offer_id,$request->price_after_offer);
+        $main_sitter_order_data = ['client_id' => auth('api')->id(),'sitter_id' => $request->sitter_id, 'to' => 'sitter'];
+        $main_order_data = array_merge($offer_data,$main_sitter_order_data);
+        // dd($main_order_data);
         $financials = $this->getAppProfit($request->price_after_offer);
 
         DB::beginTransaction();
@@ -105,7 +110,9 @@ trait Order
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
         $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price'];
-        $main_order_data = ['client_id' => auth('api')->id(),'price_before_offer'=>$request->price_before_offer,'discount'=>$request->discount,'price_after_offer'=>$request->price_after_offer, 'center_id' => $request->center_id, 'to' => 'center'];
+        $offer_data = $this->checkOfferExisting($request->offer_id,$request->price_after_offer);
+        $main_center_order_data = ['client_id' => auth('api')->id(), 'center_id' => $request->center_id, 'to' => 'center'];
+        $main_order_data = array_merge($offer_data,$main_center_order_data);
         $financials = $this->getAppProfit($request->price_after_offer);
         $center = User::findOrFail($request->center_id);
         DB::beginTransaction();
@@ -150,7 +157,27 @@ trait Order
         }
     }
 
+    private function checkOfferExisting($offer_id = null,$request_price_after_offer)
+    {
+        $data = [];
 
+        if(isset($offer_id) && $offer_id)
+        {
+            $offer = Offer::findOrFail($offer_id);
+            $data['price_before_offer'] = $request_price_after_offer + $offer->discount;
+            $data['price_after_offer'] = $request_price_after_offer ;
+            $data['discount'] = $offer->discount;
+            $data['offer_id'] = $offer->id;
+        }else{
+            $data['price_before_offer'] = $request_price_after_offer;
+            $data['price_after_offer'] = $request_price_after_offer;
+            $data['discount'] = 0;
+
+            $data['offer_id'] = null;
+
+        }
+        return $data;
+    }
 
     protected function withdrawFromWallet($price, $user_id)
     {

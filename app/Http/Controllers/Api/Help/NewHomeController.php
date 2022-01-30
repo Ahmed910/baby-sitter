@@ -89,11 +89,6 @@ class NewHomeController extends Controller
         return OfferResource::collection($offers)->additional(['status'=>'success','message'=>'']);
     }
 
-    public function showOffer($offer_id)
-    {
-       $offer = Offer::findOrFail($offer_id);
-       return (new OfferDetailsResource($offer))->additional(['status'=>'success','message'=>'']);
-    }
 
     public function getNearestCenters(NearestCentersRequest $request)
     {

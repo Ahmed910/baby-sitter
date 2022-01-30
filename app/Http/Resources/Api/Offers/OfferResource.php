@@ -19,6 +19,8 @@ class OfferResource extends JsonResource
             'id'=>$this->id,
             'title'=>$this->title,
             'offer_photo'=>$this->photo,
+            'discount'=> $this->discount,
+            'promo_code' => $this->promo_code,
             'status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status)
         ];
     }

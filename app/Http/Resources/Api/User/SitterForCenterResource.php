@@ -24,7 +24,7 @@ class SitterForCenterResource extends JsonResource
             'total_num_of_student'=>$this->total_num_of_student,
             'max_num_of_child_care'=>$this->max_num_of_child_care,
             'bio'=>$this->bio,
-
+            'center_id'=>optional($this->center)->id,
             'user_service'=>UserServiceResource::collection(optional($this->center)->user_services),
            // 'service_price'=>optional($this->center->user_services->service->service_type),
             'rate_avg'=>$this->rate_avg,
