@@ -24,7 +24,8 @@ class NewOrderResource extends JsonResource
             'provider' => $this->when(auth('api')->user()->user_type == 'client',new UserDataResource($this->to == 'sitter' ? $this->sitter : $this->center)),
             'client'=> new UserDataResource($this->client),
             //'provider' => new ProviderResource($this->to == 'sitter' ? $this->sitter : $this->center),
-            'service' => new ServiceResource($order->service),
+            'service_type'=>optional($order->service)->service_type,
+            // 'service' => new ServiceResource($order->service),
             'service_details'=>$service_type == 'hour' ? new HourOrderResource($order->hours) : new MonthOrderResource($order->months),
             // 'service_type' => [
             //     'type' => $service_type,

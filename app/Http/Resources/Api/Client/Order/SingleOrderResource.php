@@ -54,7 +54,7 @@ class SingleOrderResource extends JsonResource
             'customer_lat'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter',$order->lat),
             'customer_lng'=>$this->when(auth('api')->user()->user_type != 'childcenter' && $this->to == 'sitter',$order->lng),
             'service_type'=>optional($order->service)->service_type,
-            'service'=> new ServiceResource($order->service),
+            // 'service'=> new ServiceResource($order->service),
             'service_details'=>optional($order->service)->service_type == 'hour' ? new HourOrderResource($order->hours) : new MonthOrderResource($order->months),
             'days_in_month'=> $this->when(optional($order->service)->service_type == 'month' ,isset($order->months) ? OrderDaysInMonthResource::collection($order->months->month_days):null),
             'kids'=> OrderKidsResource::collection($order->kids),
