@@ -32,7 +32,8 @@ class SingleOrderResource extends JsonResource
             //  'order_data'=> new OrderDetailsResource($this->to == 'sitter' ? $this->sitter_order:$this->center_order)
             'status'=> $order->status,
             // 'provider_name'=>$this->when(auth('api')->user()->user_type == 'client',$this->to == 'sitter' ? optional($this->sitter)->name : optional($this->center)->name),
-            'provider' => $this->when(auth('api')->user()->user_type == 'client',new ProviderResource($this->to == 'sitter' ? $this->sitter : $this->center)),
+            'provider' => $this->when(auth('api')->user()->user_type == 'client',new UserDataResource($this->to == 'sitter' ? $this->sitter : $this->center)),
+            'client'=> new UserDataResource($this->client),
             'sitter_worker_name_in_center'=>$this->when($this->to == 'center',optional($order->baby_sitter)->name),
             'customer_data'=>$this->when(auth('api')->user()->user_type == 'babysitter',[
                 'customer_id'=>optional($this->client)->id,

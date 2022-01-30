@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api\Client\Order;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProviderResource extends JsonResource
+class UserDataResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
