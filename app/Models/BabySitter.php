@@ -50,4 +50,9 @@ class BabySitter extends Model
      {
          return $this->morphOne(AppMedia::class,'app_mediaable');
      }
+
+     public function center()
+     {
+         return $this->belongsTo(User::class,'center_id');
+     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\WalletRequest;
 use App\Http\Resources\Api\User\WalletTransactionResource;
+use App\Http\Resources\Api\User\WalletTransationsResource;
 use App\Models\MainOrder;
 use App\Models\Wallet;
 use App\Models\WalletWithdraw;
@@ -51,6 +52,6 @@ class WalletController extends Controller
     {
         $user = auth('api')->user();
         $transactions = Wallet::where('user_id',$user->id)->get();
-        return WalletTransactionResource::collection($transactions)->additional(['user_wallet'=>$user->wallet,'status'=>'success','message'=>'']);
+        return WalletTransationsResource::collection($transactions)->additional(['user_wallet'=>$user->wallet,'status'=>'success','message'=>'']);
     }
 }
