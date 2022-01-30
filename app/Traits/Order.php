@@ -58,9 +58,9 @@ trait Order
         // dd($main_order_data);
         $financials = $this->getAppProfit($request->price_after_offer);
 
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        try {
+        // try {
             $service = Service::findOrFail($request->service_id);
             $main_order = MainOrder::create(array_merge($financials,$main_order_data));
             if ($service->service_type == 'hour') {
@@ -84,7 +84,7 @@ trait Order
                 $this->withdrawFromWallet($main_order->price_after_offer, auth('api')->id());
             }
             $chat = Chat::create(['sender_id' => auth('api')->id(), 'order_id' => $main_order->id, 'receiver_id' => $main_order->sitter_id, 'last_message' => '']);
-            DB::commit();
+            // DB::commit();
             $fcm_notes = [
                 'title'=>['dashboard.notification.order_has_been_created_title'],
                  'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
@@ -97,10 +97,10 @@ trait Order
             pushFcmNotes($fcm_notes,$sitter->devices);
             return response()->json(['data' => null, 'status' => 'success', 'chat_id' => $chat->id, 'message' => trans('api.messages.order_created_successfully')]);
             // all good
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+        // }
     }
 
     protected function CenterOrder(OrderCenterRequest $request)
