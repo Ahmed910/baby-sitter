@@ -17,7 +17,7 @@ class UserServiceResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            // 'service' => new ServiceResource($this->service),
+            'service' => new ServiceResource($this->service),
             'service_type'=>optional($this->service)->service_type,
             'price'=>(float)$this->price
         ];
