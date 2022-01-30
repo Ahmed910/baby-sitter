@@ -58,9 +58,9 @@ trait Order
         // dd($main_order_data);
         $financials = $this->getAppProfit($request->price_after_offer);
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
             $service = Service::findOrFail($request->service_id);
             $main_order = MainOrder::create(array_merge($financials,$main_order_data));
             if ($service->service_type == 'hour') {
@@ -97,10 +97,10 @@ trait Order
             pushFcmNotes($fcm_notes,$sitter->devices);
             return response()->json(['data' => null, 'status' => 'success', 'chat_id' => $chat->id, 'message' => trans('api.messages.order_created_successfully')]);
             // all good
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+        }
     }
 
     protected function CenterOrder(OrderCenterRequest $request)
@@ -203,7 +203,7 @@ trait Order
         $financial = [];
 
         $financial['app_profit_percentage'] = setting('app_profit_percentage') != null ? (double)setting('app_profit_percentage'):0 ;
-        dd($financial['app_profit_percentage']);
+        // dd($financial['app_profit_percentage']);
         $financial['app_profit'] = $totol_price_for_order * ($financial['app_profit_percentage']/100);
         $financial['final_price'] = $totol_price_for_order - $financial['app_profit'];
         return $financial;
