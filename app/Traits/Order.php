@@ -203,7 +203,7 @@ trait Order
         $financial = [];
 
         $financial['app_profit_percentage'] = setting('app_profit_percentage') != null ? (double)setting('app_profit_percentage'):0 ;
-        // dd($financial['app_profit_percentage']);
+        dd($financial['app_profit_percentage']);
         $financial['app_profit'] = $totol_price_for_order * ($financial['app_profit_percentage']/100);
         $financial['final_price'] = $totol_price_for_order - $financial['app_profit'];
         return $financial;
