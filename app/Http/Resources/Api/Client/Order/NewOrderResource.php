@@ -23,10 +23,11 @@ class NewOrderResource extends JsonResource
             'status' => $this->to == 'sitter' ? $order->status : $order->status,
             'provider' => new ProviderResource($this->to == 'sitter' ? $this->sitter : $this->center),
             'service' => new ServiceResource($order->service),
-            'service_type' => [
-                'type' => $service_type,
-                'dates_times' => $service_type == 'month' ? new MonthOrderResource($order->months) : new HourOrderResource($order->hours)
-            ],
+            'service_details'=>$service_type == 'hour' ? new HourOrderResource($order->hours) : new MonthOrderResource($order->months),
+            // 'service_type' => [
+            //     'type' => $service_type,
+            //     'dates_times' => $service_type == 'month' ? new MonthOrderResource($order->months) : new HourOrderResource($order->hours)
+            // ],
         ];
     }
 }

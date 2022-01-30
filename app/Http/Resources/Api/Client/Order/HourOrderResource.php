@@ -21,7 +21,7 @@ class HourOrderResource extends JsonResource
             //  'end_time'=>$this->end_time->format('g:i A'),
             'start' => $this->start_time->format('g:i A'),
             'end' => $this->end_time->format('g:i A'),
-            'date' => $this->when(isset($request->order_id), $this->date->toFormattedDateString())
+            'date' =>  $this->date->toFormattedDateString()
         ];
     }
 }
