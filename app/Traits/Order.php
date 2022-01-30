@@ -41,7 +41,7 @@ trait Order
 
     protected function SitterOrder(OrderSitterRequest $request)
     {
-
+         dd('ssjsjdj');
 
         if ($request->pay_type == 'credit' && $request->check_order == 'test') {
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.payment_has_been_successfully')], 200);
