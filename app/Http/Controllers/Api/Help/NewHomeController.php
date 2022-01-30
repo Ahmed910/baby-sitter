@@ -9,6 +9,7 @@ use App\Http\Requests\Api\Help\FilterSittersRequest;
 use App\Http\Requests\Api\Help\NearestCentersRequest;
 use App\Http\Resources\Api\Babysitters\BabySitterResource;
 use App\Http\Resources\Api\Center\CenterResource;
+use App\Http\Resources\Api\Offers\OfferDetailsResource;
 use App\Http\Resources\Api\Offers\OfferResource;
 use App\Http\Resources\Api\User\CenterInfoResource;
 use App\Http\Resources\Api\User\SitterForCenterResource;
@@ -86,6 +87,12 @@ class NewHomeController extends Controller
     {
         $offers = Offer::latest()->get();
         return OfferResource::collection($offers)->additional(['status'=>'success','message'=>'']);
+    }
+
+    public function showOffer($offer_id)
+    {
+       $offer = Offer::findOrFail($offer_id);
+       return (new OfferDetailsResource($offer))->additional(['status'=>'success','message'=>'']);
     }
 
     public function getNearestCenters(NearestCentersRequest $request)

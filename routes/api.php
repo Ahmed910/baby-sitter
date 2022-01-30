@@ -70,6 +70,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Offers
             Route::get('offers/{order_id}','OfferController@offers');
             Route::get('offers/{order_id}/{offer_id}','OfferController@showOffer');
+           // Route::get('offers','OfferController@getOffers');
+            // Route::get('offers/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
             Route::post('apply_offer','OfferController@applyOffer');
 
@@ -199,6 +201,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::post('contact', 'HomeController@contact');
 
         Route::get('get_all_offers','NewHomeController@getAllOffers');
+        Route::get('offers/{offer_id}','NewHomeController@showOffer');
         Route::get('get_sitters','NewHomeController@getSitters');
 
         Route::get('get_sitter_details/{sitter_id}','NewHomeController@getSitterDetails');
