@@ -31,6 +31,7 @@ return[
         'successfully_evaluated'=>'Successfully evaluated',
         'order_has_been_activated'=>'order has been activated',
         'order_has_been_completed'=>'order has been completed',
+        'cannot_cancel_order_before_start_by_24_hour'=>'cannot cancel order before start by 24 hour',
         'your_balance_in_wallet_is_insufficiant'=>'your balance in wallet is less than the required amount',
         'request_has_been_sent'=>'request has been sent',
         'the_required_amount_is_greater_than_order_price'=>'The required amount is greater than order price',

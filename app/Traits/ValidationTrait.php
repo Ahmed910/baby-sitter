@@ -42,6 +42,7 @@ trait ValidationTrait
             $data['end_date'] = 'required|date_format:Y-m-d';
             $data['schedules'] = 'required|array';
             $data['schedules.*.day_id'] = 'required|exists:days,id|required_with:schedules.*.start_time,schedules.*.end_time';
+            $data['schedules.*.date'] = 'required|after:start_date|before:end_date|date_format:Y-m-d|required_with:schedules.*.start_time,schedules.*.end_time';
             $data['schedules.*.start_time'] = 'required|date_format:H:i';
             $data['schedules.*.end_time'] = 'required|date_format:H:i';
          }

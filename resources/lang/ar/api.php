@@ -23,6 +23,7 @@ return[
         'order_hint_if_offer_after_accept' => "سوف يتم اضافة مبلغ :driver_wallet_amount ريال الى محفظتك بعد انهاء الرحلة وسيقوم العميل بدفع مبلغ :client_pay_amount ريال",
         'cant_finish_order_before_received_from_client' => "لايمكنك انهاء الطلب قبل تأكيد استلام الطلب من العميل",
           'offer_created_successfully'=>'تم إنشاء العرض بنجاح',
+
           'the_max_num_for_offer_has_been_used'=>'لقد تم استخدام الحد الاقصي لهذا العرض',
           'request_has_been_sent'=>'تم إرسال الطلب',
           'your_balance_in_wallet_is_insufficiant'=>'رصيدك فى المحفظة اقل من المبلغ المطلوب',
@@ -38,6 +39,7 @@ return[
           'update_gallery'=>'تم التعديل الصورة',
           'order_canceled'=>'تم الغاء الطلب بنجاح',
           'payment_has_been_successfully'=>'تم الدفع بنجاح',
+          'cannot_cancel_order_before_start_by_24_hour'=>'لا يمكن إلغاء الطلب قبل بدايته ب 24 ساعة',
           'order_has_been_accepted'=>'تم الموافقة على طلب الحجز',
           'order_has_been_rejected'=>'تم رفض طلب الحجز',
           'baby_sitter_added_successfully'=>'لقد تم إضافة الحاضنة بنجاح',

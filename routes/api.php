@@ -86,6 +86,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::post('create_order_for_sitter','OrderController@createOrderForSitter');
             Route::post('create_order_for_center','OrderController@createOrderForCenter');
             Route::get('get_orders','OrderController@getOrders');
+            Route::get('get_days_in_month_service_for_order/{order_id}','OrderController@getDaysInMonthServiceForOrder');
+            Route::get('cancel_day_in_month/{day_id}','OrderController@cancelDayInMonth');
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
             // Route::get('get_center_order_details/{order_id}','OrderController@getCenterOrderDetails');
             Route::get('cancel_order/{order_id}','OrderController@cancelOrder');

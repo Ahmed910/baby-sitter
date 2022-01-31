@@ -20,6 +20,7 @@ use App\Notifications\Orders\CompleteOrderNotification;
 use App\Notifications\Orders\RejectOrderNotification;
 use App\Traits\AppProfit;
 use App\Traits\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -103,11 +104,12 @@ class OrderController extends Controller
 
         $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
         Notification::send($admins, new RejectOrderNotification($order, ['database', 'broadcast']));
-        return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_has_been_rejected')]);
+        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function cancelOrder($order_id)
     {
+
         $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
         $fcm_notes = [
@@ -117,17 +119,27 @@ class OrderController extends Controller
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
         $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
+        if($center_order->status == 'waiting'){
+            $center_order_period = optional($center_order->service)->service_type =='hour'
+            ? $center_order->hours()->whereBetween('date',[Carbon::now(),Carbon::now()->addDay()])->first()
+            : $center_order->months()->whereBetween('start_date',[Carbon::now(),Carbon::now()->addDay()])->first();
+        }
+
+        if(isset($center_order_period) && $center_order_period)
+        {
+            return response()->json(['data'=>null,'status'=>'fail','message'=>__('api.messages.cannot_cancel_order_before_start_by_24_hour')],400);
+        }
         $center_order->update(['status' => 'canceled']);
         if ($center_order->pay_type == 'wallet') {
 
-            $this->chargeWallet($center_order->price, $center_order->client_id);
+            $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
         }
         $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
 
         $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
         Notification::send($admins, new CancelOrderNotification($main_order, ['database', 'broadcast']));
         pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
-        return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_canceled')]);
+        return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function activeOrder($order_id)

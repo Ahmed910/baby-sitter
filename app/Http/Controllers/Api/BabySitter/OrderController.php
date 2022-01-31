@@ -19,6 +19,7 @@ use App\Notifications\Orders\CancelOrderNotification;
 use App\Notifications\Orders\RejectOrderNotification;
 use App\Traits\Order;
 use App\Traits\OTP;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -89,6 +90,17 @@ class OrderController extends Controller
 
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
         $sitter_order = SitterOrder::where('status', 'waiting')->findOrFail($main_order->sitter_order->id);
+        if($sitter_order->status == 'waiting'){
+            $sitter_order_period = optional($sitter_order->service)->service_type =='hour'
+            ? $sitter_order->hours()->whereBetween('date',[Carbon::now(),Carbon::now()->addDay()])->first()
+            : $sitter_order->months()->whereBetween('start_date',[Carbon::now(),Carbon::now()->addDay()])->first();
+        }
+        // dd(Carbon::now()->addDay());
+
+        if(isset($sitter_order_period) && $sitter_order_period)
+        {
+            return response()->json(['data'=>null,'status'=>'fail','message'=>__('api.messages.cannot_cancel_order_before_start_by_24_hour')],400);
+        }
         $sitter_order->update(['status' => 'canceled']);
         if ($sitter_order->pay_type == 'wallet') {
             $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);

@@ -41,4 +41,8 @@ class CenterOrder extends Model
     {
         return $this->belongsTo(Service::class,'service_id');
     }
+    public function main_order()
+    {
+        return $this->belongsTo(MainOrder::class,'main_order_id');
+    }
 }
