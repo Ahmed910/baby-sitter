@@ -40,7 +40,7 @@ class OfferRequest extends ApiMasterRequest
         return [
             'start_date'=>$start_date,
             'end_date'  => 'nullable|date_format:Y-m-d|after:start_date',
-            'title'=>'required|string|between:2,200',
+            'title'=>'nullable|string|between:2,200',
             'max_num'=>'nullable|integer',
             'promo_code'=>$promo_code,
             'discount'=>$discount,
