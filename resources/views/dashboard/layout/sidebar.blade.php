@@ -223,6 +223,28 @@
              </li>
              @endif
 
+             @if (auth()->user()->hasPermissions('offer_request'))
+             <li class=" nav-item">
+                 <a class="d-flex align-items-offer_request" href="#">
+                    <i class="fas fa-exchange-alt"></i>
+                     <span class="menu-title text-truncate" data-i18n="{!! trans('dashboard.offer_request.offer_requests') !!}">
+                         {!! trans('dashboard.offer_request.offer_requests') !!}
+                     </span>
+                 </a>
+                 <ul class="menu-content">
+                     <li class="{{ request()->route()->getName() == 'dashboard.offer_request.index' || request()->route()->getName() == 'dashboard.offer_request.show' ? 'active' : '' }}">
+                         <a class="d-flex align-items-offer_request" href="{!! route('dashboard.offer_request.index') !!}">
+                             <i data-feather="circle"></i>
+                             <span class="menu-item" data-i18n="{!! trans('dashboard.offer_request.offer_requests') !!}">
+                                 {!! trans('dashboard.general.show_all') !!}
+                             </span>
+                         </a>
+                     </li>
+
+                 </ul>
+             </li>
+             @endif
+
              @if (auth()->user()->hasPermissions('orders'))
              <li class=" nav-item">
                  <a class="d-flex align-items-transfer_request" href="#">

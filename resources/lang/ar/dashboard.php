@@ -89,6 +89,22 @@ return [
 
   ],
 
+  'offer_request'=>[
+      'offer_request'=>'طلب عرض',
+      'offer_requests'=>'طلبات العروض',
+      'start_date'=>'تاريخ البداية',
+      'promo_code'=>'البروموكود',
+      'end_date'=>'تاريخ النهاية',
+      'offer_user'=>'صاحب العرض',
+      'discount'=>'قيمة الخصم',
+      'status'=>[
+          'status'=>'حالة العرض',
+          'pending'=>'قيد الإنتظار',
+          'accepted'=>'تم القبول',
+          'accepted'=>'تم القبول',
+      ]
+  ],
+
   'brand' => [
     'brand' => 'ماركة السيارة',
     'brands' => 'الماركات',

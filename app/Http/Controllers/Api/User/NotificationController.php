@@ -15,12 +15,10 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notifications = auth('api')->user()->notifications()->paginate(10);
+        $notifications = auth('api')->user()->notifications()->get();
         $unreadnotifications = auth('api')->user()->unreadNotifications;
         foreach ($unreadnotifications as $notification) {
-            if (isset($notification->data['notify_type']) && $notification->data['notify_type'] == 'management' && is_null($notification->read_at)) {
-                $notification->markAsRead();
-            }
+             $notification->markAsRead();
         }
         return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>'']);
     }

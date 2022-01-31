@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Api\Notification;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\{Order , Chat , OrderOffer};
+use App\Models\{Order , Chat , MainOrder, OrderOffer};
 
 class NotificationResource extends JsonResource
 {
@@ -55,15 +55,15 @@ class NotificationResource extends JsonResource
 
     protected function orderData($order_id)
     {
-        $order = Order::find($order_id);
+        $order = MainOrder::find($order_id);
         $data = null;
         if ($order) {
             $data = [
                 'order_id' => $order->id,
                 'client_id' => $order->client_id,
-                'driver_id' => $order->driver_id,
-                'order_type' => $order->order_type,
-                'order_status' => $order->order_status,
+                'provider_id' => isset($order->center_id) ? $order->center_id : $order->sitter_id,
+                'order_type' => $order->to,
+                'order_status' => $order->to == 'sitter' ? optional($order->sitter_order)->status : optional($order->center_order)->status,
             ];
         }
 

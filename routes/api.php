@@ -108,7 +108,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('get_rates_for_sitter','RateSitterController@getRatesForSitter');
             // Route::post('rates','OrderController@SetRate');
             // Orders
-            Route::get('get_orders','OrderController@getOrders');
+            Route::get('get_new_orders','OrderController@getNewOrders');
+            Route::get('get_other_orders','OrderController@getActiveAndExpiredOrders');
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
             Route::get('accept_order/{order_id}','OrderController@acceptOrder');
             Route::get('reject_order/{order_id}','OrderController@rejectOrder');
@@ -139,7 +140,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Rate && Review
             Route::get('get_rates_for_center','RateCenterController@getRatesForCenter');
             // Order
-            Route::get('get_orders','OrderController@getOrders');
+            Route::get('get_new_and_active_orders','OrderController@getNewAndActiveOrders');
+            Route::get('get_waiting_and_expired_orders','OrderController@getWaitingAndExpiredOrders');
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
             Route::get('accept_order/{order_id}','OrderController@acceptOrder');
             Route::get('reject_order/{order_id}','OrderController@rejectOrder');

@@ -32,7 +32,7 @@ class OfferRequest extends ApiMasterRequest
             $discount = 'nullable|numeric|between:0,100';
 
         }else{
-            $photo_validation = 'required|image|mimes:jpeg,jpg,png';
+            $photo_validation = 'nullable|image|mimes:jpeg,jpg,png';
             $start_date = 'required|date_format:Y-m-d|after_or_equal:today';
             $promo_code = 'required';
             $discount = 'required|numeric|between:0,100';

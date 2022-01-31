@@ -51,7 +51,7 @@ class CancelOrderNotification extends Notification implements ShouldBroadcast
             'title'=>['dashboard.notification.client_cancel_order_title'],
             'body'=> ['dashboard.notification.client_cancel_order_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
             'sender_data' => new SenderResource(auth('api')->user()),
-            'notify_type'=>'cancel_order',
+            'notify_type'=>'change_order_status',
             'route' => route('dashboard.orders.show',$this->booking->id),
             'order_id' => optional($this->booking)->id,
         ];

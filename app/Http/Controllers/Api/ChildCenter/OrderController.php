@@ -31,25 +31,8 @@ class OrderController extends Controller
     {
         $this->order = $order;
     }
-    public function getOrders(Request $request)
+    public function getNewAndActiveOrders(Request $request)
     {
-        // $data=[];
-        // $new_orders = MainOrder::where(['to'=>'center','center_id'=>auth('api')->id()])->whereHas('center_order',function($q){
-        //     $q->where('status','pending');
-        // })->get();
-        // $data['new_orders'] = OrderResource::collection($new_orders);
-        // $active_orders = MainOrder::where(['to'=>'center','center_id'=>auth('api')->id()])->whereHas('center_order',function($q){
-        //     $q->where('status','active');
-        // })->get();
-        // $data['active_orders'] = OrderResource::collection($active_orders);
-        // $expired_orders = MainOrder::where(['to'=>'center','center_id'=>auth('api')->id()])->whereHas('center_order',function($q){
-        //     $q->whereIn('status',['rejected','completed','canceled']);
-        // })->get();
-        // $data['expired_orders'] = OrderResource::collection($expired_orders);
-        // $waiting_orders = MainOrder::where(['to'=>'center','center_id'=>auth('api')->id()])->whereHas('center_order',function($q){
-        //     $q->whereIn('status',['waiting']);
-        // })->get();
-        // $data['waiting_orders'] = OrderResource::collection($waiting_orders);
 
 
         $orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
@@ -58,16 +41,26 @@ class OrderController extends Controller
                     $q->where('status', 'pending');
                 } elseif ($request->order_type == 'active_orders') {
                     $q->where('status', 'active');
-                } elseif ($request->order_type == 'waiting_orders') {
-                    $q->whereIn('status', ['waiting']);
-                } elseif ($request->order_type == 'expired_orders') {
-                    $q->whereIn('status', ['rejected', 'completed', 'canceled']);
                 }
             });
         })->get();
 
         return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
         // return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
+    }
+
+    public function getWaitingAndExpiredOrders()
+    {
+        $data =[];
+        $waiting_orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->whereHas('center_order',function($q){
+            $q->where('status', 'waiting');
+        })->get();
+        $data['waiting_orders'] = NewOrderResource::collection($waiting_orders);
+        $expired_orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->whereHas('center_order',function($q){
+            $q->whereIn('status', ['rejected', 'completed', 'canceled']);
+        })->get();
+        $data['expired_orders'] = NewOrderResource::collection($expired_orders);
+        return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
     }
 
     public function getOrderDetails($order_id)

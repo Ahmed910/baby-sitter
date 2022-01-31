@@ -32,35 +32,29 @@ class OrderController extends Controller
     }
 
 
-    public function getOrders(Request $request)
+    public function getNewOrders()
     {
-        // $data=[];
-        // $new_orders = MainOrder::where(['to'=>'sitter','sitter_id'=>auth('api')->id()])->whereHas('sitter_order',function($q){
-        //     $q->where('status','pending');
-        // })->get();
-        // $data['new_orders'] = OrderResource::collection($new_orders);
-        // $active_orders = MainOrder::where(['to'=>'sitter','sitter_id'=>auth('api')->id()])->whereHas('sitter_order',function($q){
-        //     $q->whereIn('status',['waiting','with_the_child']);
-        // })->get();
-        // $data['active_orders'] = OrderResource::collection($active_orders);
-        // $expired_orders = MainOrder::where(['to'=>'sitter','sitter_id'=>auth('api')->id()])->whereHas('sitter_order',function($q){
-        //     $q->whereIn('status',['rejected','completed','canceled']);
-        // })->get();
-        // $data['expired_orders'] = OrderResource::collection($expired_orders);
 
-        $orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
-            $q->whereHas('sitter_order', function ($q) use ($request) {
-                if ($request->order_type == 'new_orders') {
-                    $q->where('status', 'pending');
-                } elseif ($request->order_type == 'active_orders') {
-                    $q->whereIn('status', ['waiting', 'with_the_child']);
-                } elseif ($request->order_type == 'expired_orders') {
-                    $q->whereIn('status', ['rejected', 'completed', 'canceled']);
-                }
-            });
+        $orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->whereHas('sitter_order', function ($q){
+            $q->where('status', 'pending');
         })->get();
 
         return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
+    }
+
+    public function getActiveAndExpiredOrders()
+    {
+        $data =[];
+        $active_orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->whereHas('sitter_order',function($q){
+            $q->whereIn('status', ['waiting', 'with_the_child']);
+        })->get();
+        $data['active_orders'] = NewOrderResource::collection($active_orders);
+        $expired_orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->whereHas('sitter_order',function($q){
+            $q->whereIn('status', ['rejected', 'completed', 'canceled']);
+        })->get();
+        $data['expired_orders'] = NewOrderResource::collection($expired_orders);
+        return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
+
     }
 
     public function getOrderDetails($order_id)

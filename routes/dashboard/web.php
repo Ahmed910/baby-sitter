@@ -36,6 +36,11 @@ Route::group(
             Route::get('transfer_request/accept/{id}','TransferRequestController@accept')->name('transfer_request.accept');
             Route::get('transfer_request/reject/{id}','TransferRequestController@reject')->name('transfer_request.reject');
 
+            // Offer Requests
+            Route::resource('offer_request','OfferRequestController')->only('index','show');
+            Route::get('offer_request/accept/{id}','OfferRequestController@accept')->name('offer_request.accept');
+            Route::get('offer_request/reject/{id}','OfferRequestController@reject')->name('offer_request.reject');
+
              // orders
              Route::resource('orders','OrderController')->only('index','show','destroy');
             //  Route::get('orders','OrderController@index')->name('orders.index');
