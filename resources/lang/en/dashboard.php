@@ -422,6 +422,12 @@ return [
     'client_create_request_body'=>'client :body create request',
     'update_request_to_underway_title'=>'sitter has been delivered childern and booking is underway now',
     'update_request_to_underway_body'=> 'client :body updated booking to underway',
+    'offer'=>[
+        'offer_has_been_accepted_title'=>'offer has been accepted',
+        'offer_has_been_accepted_body'=>'offer has been accepted by :body',
+        'offer_has_been_rejected_title'=>'offer has been rejected',
+        'offer_has_been_rejected_body'=>'offer has been rejected by :body',
+    ],
   ],
   'nationality' => [
     'nationality' => 'nationality',
@@ -448,6 +454,23 @@ return [
     'nationality' => 'nationality in arabic',
     'car_type'=>'car type in arabic'
   ],
+
+  'offer' =>[
+    'offer' => 'offer',
+    'offers' => 'offers',
+    'price_offered' => 'price offered :price',
+    'offer_price' => 'offer price',
+    // 'consultation_owner' => 'صاحب الاستشارة',
+    'offer_count' => 'offer count',
+    'offer_status' => 'offer status',
+    'offer_statuses' => [
+        'pending' => 'pending',
+        'accepted' => 'accepted',
+        'rejected' => 'rejected',
+        'expired' => 'expired',
+        'no_offers' => 'no offers',
+    ],
+],
   'en' => [
     'name' => 'name in english',
     'desc' => 'description in english',

@@ -733,6 +733,7 @@ return [
     'order_has_been_active_body'=>'تم تفعيل الطلب من قبل :body',
     'admin_refuse_body' => "تم رفض طلبك رقم ( :body ) رجاء التواصل مع الادارة",
     'admin_finish_title' => "تم انهاء الطلب",
+
     'admin_finish_body' => "تم انهاء طلبك رقم ( :body )من الادارة ",
     'client_finish_title' => "تم انهاء الطلب",
     'client_finish_body' => "تم انهاء الطلب من :body ",
@@ -749,6 +750,13 @@ return [
     'order_has_been_rejected_title'=>'تم رفض الطلب',
     'order_has_been_rejected_body'=>'تم رفض الطلب من قبل :body',
     'client_add_ad_body' => "قام :client بإضافة اعلان جديد في انتظار الموافقة",
+    'offer'=>[
+        'offer_has_been_accepted_title'=>'تم الموافقة على العرض',
+        'offer_has_been_accepted_body'=>'تم الموافقة على العرض من قبل :body',
+        'offer_has_been_rejected_title'=>'تم رفض العرض',
+        'offer_has_been_rejected_body'=>'تم رفض العرض من قبل :body',
+    ],
+
   ],
   'ar' => [
     'name' => 'الاسم باللغة العربية',
@@ -1047,6 +1055,7 @@ return [
       'reject_transfer'=>'تم رفض طلب التحويل',
       'success_send' => 'تم الارسال بنجاح',
       'success_update' => 'تم التعديل بنجاح',
+      'offer_accepted'=>'تم الموافقة على العرض',
       'success_delete'=>'تم الحذف بنجاح',
       'success_refused' => 'تم الالغاء بنجاح',
       'success_accepted' => 'تم تأكيد الحجز',
