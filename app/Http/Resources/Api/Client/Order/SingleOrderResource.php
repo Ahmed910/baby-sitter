@@ -6,6 +6,7 @@ use App\Http\Resources\Api\Help\ServiceResource;
 use App\Http\Resources\Api\User\RateForBabySitterResource;
 use App\Http\Resources\Api\User\RateForSpecificOrderResource;
 use App\Models\Rate;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SingleOrderResource extends JsonResource
@@ -19,6 +20,20 @@ class SingleOrderResource extends JsonResource
     public function toArray($request)
     {
         $order = $this->to == 'sitter' ? $this->sitter_order : $this->center_order ;
+
+        $order_period_before_day_from_starting = optional($order->service)->service_type == 'hour'
+                    ? $order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
+                    : $order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
+        // $passed_time = optional($order->service)->service_type == 'hour' ? $order->hours()->where('date','<',now())->first()
+        if(optional($order->service)->service_type == 'hour' && $order->status == 'waiting'){
+            $passed_time =$order->hours()->where('date','<',now())->first();
+        }
+         if(isset($order_period_before_day_from_starting) && $order_period_before_day_from_starting){
+             $cancel_status = 'cancel';
+         }
+         if(isset($passed_time) && $passed_time){
+            $cancel_status = 'passed_time';
+        }
         return [
             'id'=>$this->id,
             'type'=>$this->to,
@@ -31,6 +46,7 @@ class SingleOrderResource extends JsonResource
             'client_rate'=>$this->when(((isset($this->center_order) && optional($this->center_order)->status == 'completed') || (isset($this->sitter_order) && optional($this->sitter_order)->status == 'completed')) && (auth('api')->user()->user_type != 'client') ,new RateForSpecificOrderResource(Rate::where(['from'=>auth('api')->id(),'order_id'=>$this->id])->where('to_client','<>',null)->first())),
             //  'order_data'=> new OrderDetailsResource($this->to == 'sitter' ? $this->sitter_order:$this->center_order)
             'status'=> $order->status,
+            'cancel_status'=> isset($cancel_status) ? $cancel_status : null ,
             // 'provider_name'=>$this->when(auth('api')->user()->user_type == 'client',$this->to == 'sitter' ? optional($this->sitter)->name : optional($this->center)->name),
             'provider' => $this->when(auth('api')->user()->user_type == 'client',new UserDataResource($this->to == 'sitter' ? $this->sitter : $this->center)),
             'client'=> new UserDataResource($this->client),
@@ -46,6 +62,7 @@ class SingleOrderResource extends JsonResource
                     ]
                 ]),
             'qr_code'=>$this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter',$order->qrCode),
+             'gender'=>$this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter',optional($order->client)->gender),
             'child_center_location'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center', optional(optional($this->center)->profile)->location),
             'lat'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center',optional(optional($this->center)->profile)->lat),
             'lng'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center',optional(optional($this->center)->profile)->lng),

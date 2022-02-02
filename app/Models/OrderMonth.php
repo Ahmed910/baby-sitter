@@ -14,5 +14,10 @@ class OrderMonth extends Model
     {
         return $this->hasMany(OrderMonthDay::class,'order_month_id');
     }
-    
+
+    public function month_dates()
+    {
+        return $this->hasMany(OrderMonthDate::class,'order_month_id');
+    }
+
 }

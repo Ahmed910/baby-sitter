@@ -16,8 +16,10 @@ class MonthDaysInOrderResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'date'=>$this->date,
-            'day'=>optional($this->day)->name,
+            'date'=>$this->date->format('Y-m-d'),
+            'day'=>$this->date->format('l'),
+            'status'=>$this->status
+            // 'day'=>optional($this->day)->name,
             // 'start_time'=>$this->start_time->format('H:i:s'),
             // 'end_time'=>$this->end_time->format('H:i:s'),
             // 'status'=>$this->status,

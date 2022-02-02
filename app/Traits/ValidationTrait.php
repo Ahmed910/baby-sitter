@@ -38,13 +38,15 @@ trait ValidationTrait
             $data['end_time'] = 'required|date_format:H:i|after:start_time';
          }
          else{
-            $data['start_date'] = 'required|date_format:Y-m-d';
-            $data['end_date'] = 'required|date_format:Y-m-d';
+            $data['start_date'] = 'required|date_format:Y-m-d|after_or_equal:' . now()->format("Y-m-d");
+            $data['end_date'] = 'required|date_format:Y-m-d|after_or_equal:' . now()->format("Y-m-d");
             $data['schedules'] = 'required|array';
             $data['schedules.*.day_id'] = 'required|exists:days,id|required_with:schedules.*.start_time,schedules.*.end_time';
-            $data['schedules.*.date'] = 'required|after:start_date|before:end_date|date_format:Y-m-d|required_with:schedules.*.start_time,schedules.*.end_time';
+           // $data['schedules.*.date'] = 'required|after_or_equal:start_date|before_or_equal:end_date|date_format:Y-m-d|required_with:schedules.*.start_time,schedules.*.end_time';
             $data['schedules.*.start_time'] = 'required|date_format:H:i';
             $data['schedules.*.end_time'] = 'required|date_format:H:i';
+            $data['date'] = 'required|array';
+            $data['date.*'] = 'required|date_format:Y-m-d|after_or_equal:start_date|before_or_equal:end_date';
          }
 
          return $data;

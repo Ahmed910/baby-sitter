@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Notifications\Orders\CancelOrderNotification;
 use App\Traits\Order;
 use Carbon\Carbon;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
@@ -69,17 +70,18 @@ class OrderController extends Controller
     {
 
         $main_order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
-        // dd(optional($main_order->center_order)->service->service_type);
+        // dd($main_order);
        // $order = $main_order->to == 'sitter' ? SitterOrder::where(['status'=>'with_the_child','service_id'=>2])->firstOrFail():CenterOrder::where(['status'=>'active','service_id'=>2])->firstOrFail();
         if ($main_order->to == 'sitter') {
 
-            $sitter_order = SitterOrder::where(['status'=>'with_the_child','service_id'=>2])->firstOrFail();
-            $days = $sitter_order->months->month_days;
-
+            $sitter_order = SitterOrder::where(['main_order_id'=>$order_id,'status'=>'with_the_child','service_id'=>2])->firstOrFail();
+            // dd($sitter_order->months);
+            $days = $sitter_order->months->month_dates;
+        //    dd($sitter_order->months);
         } elseif ($main_order->to == 'center') {
 
-            $center_order = CenterOrder::where(['status'=>'active','service_id'=>2])->firstOrFail();
-            $days = $center_order->months->month_days;
+            $center_order = CenterOrder::where(['main_order_id'=>$order_id,'status'=>'active','service_id'=>2])->firstOrFail();
+            $days = $center_order->months->month_dates;
             // $days = $main_order->center_order->months->month_days;
 
         }

@@ -18,6 +18,7 @@ use App\Models\SitterOrder;
 use App\Models\User;
 use App\Notifications\Orders\CreateOrderNotification;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
@@ -62,7 +63,9 @@ trait Order
 
         // try {
             $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
+
+            $price = $service->service_type == 'hour' ? ['price_per_hour'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price] : ['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price];
+            $main_order = MainOrder::create(array_merge($financials,$main_order_data,$price));
             if ($service->service_type == 'hour') {
                 //   $price = $this->calculatePricePerHour($service,$request);
 
@@ -71,10 +74,10 @@ trait Order
             } else {
 
 
-                //   $price = $this->calculatePricePerMonth($service,$request);
+           //  dd(array_only($request->validated(), ['start_date', 'end_date'])+['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price]);
 
                 $order = SitterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
-                $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date']), $order, $request->schedules);
+                $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date'])+['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price], $order, $request->schedules,$request->date);
             }
 
             $order->kids()->createMany($this->getKids($request->kids, 'SitterOrder', $order->id));
@@ -117,22 +120,22 @@ trait Order
         $main_order_data = array_merge($offer_data,$main_center_order_data);
         $financials = $this->getAppProfit($request->price_after_offer);
         $center = User::findOrFail($request->center_id);
+        $service = Service::findOrFail($request->service_id);
         DB::beginTransaction();
 
         try {
 
 
-            $service = Service::findOrFail($request->service_id);
-            $main_order = MainOrder::create(array_merge($financials,$main_order_data));
+            $price = $service->service_type == 'hour' ? ['price_per_hour'=>$center->user_services()->where('service_id',$request->service_id)->firstOrFail()->price] : ['price_per_hour_for_month'=>$center->user_services()->where('service_id',$request->service_id)->firstOrFail()->price];
+            $main_order = MainOrder::create(array_merge($financials,$main_order_data,$price));
             if ($service->service_type == 'hour') {
                 // $price = $this->calculatePricePerHour($service,$request);
                 $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
                 $this->hour_center->saveOrderByHourService(array_only($request->validated(), ['date', 'start_time', 'end_time']), $order);
             } else {
                 // $price = $this->calculatePricePerMonth($service,$request);
-
                 $order = CenterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
-                $this->month_center->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date']), $order, $request->schedules);
+                $this->month_center->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date'])+['price_per_hour_for_month'=>$center->user_services()->where('service_id',$request->service_id)->firstOrFail()->price], $order, $request->schedules,$request->date);
             }
 
             $order->kids()->createMany($this->getKids($request->kids, 'CenterOrder', $order->id));
