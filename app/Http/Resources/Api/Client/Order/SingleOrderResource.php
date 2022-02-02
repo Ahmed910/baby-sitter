@@ -62,7 +62,7 @@ class SingleOrderResource extends JsonResource
                     ]
                 ]),
             'qr_code'=>$this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter',$order->qrCode),
-             
+             'gender'=>$this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter',optional($order->client)->gender),
             'child_center_location'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center', optional(optional($this->center)->profile)->location),
             'lat'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center',optional(optional($this->center)->profile)->lat),
             'lng'=>$this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center',optional(optional($this->center)->profile)->lng),
