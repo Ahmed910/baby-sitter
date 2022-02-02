@@ -17,7 +17,8 @@ class UserDataResource extends JsonResource
         return [
             'id'=>$this->id,
             'avatar'=>$this->avatar,
-            'name'=>$this->name
+            'name'=>$this->name,
+            'gender'=>$this->gender,
         ];
     }
 }
