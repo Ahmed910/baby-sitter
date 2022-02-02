@@ -34,9 +34,10 @@ trait Offers{
     protected function UpdateOffer(OfferRequest $request,$id)
     {
 
-        $offer = Offer::offeruser()->findOrFail($id);
-        $offer->update($request->validated());
-        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_updated_successfully')]);
+        $offer = Offer::offeruser()->where('end_date','<',now())->where('status','active')->findOrFail($id);
+
+        $offer->update($request->validated()+['status'=>'reactive']);
+        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_request_has_been_sent_to_management')]);
     }
 }
 ?>

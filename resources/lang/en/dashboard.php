@@ -465,7 +465,7 @@ return [
     'offer_status' => 'offer status',
     'offer_statuses' => [
         'pending' => 'pending',
-        'accepted' => 'accepted',
+        'active' => 'active',
         'rejected' => 'rejected',
         'expired' => 'expired',
         'no_offers' => 'no offers',
@@ -738,6 +738,8 @@ return [
       'success_add' => 'تمت الاضافة بنجاح',
       'success_transfer' => 'success transfer',
       'reject_transfer'=>'transfer request has been rejected',
+      'offer_rejected'=>'offer has been rejected',
+      'the_end_date_less_than_the_current_date'=>'The end date less than the current date',
       'success_send' => 'تم الارسال بنجاح',
       'success_update' => 'تم التعديل بنجاح',
       'success_refused' => 'تم الالغاء بنجاح',

@@ -16,10 +16,15 @@ class OfferRequestController extends Controller
         return view('dashboard.offer_request.index',compact('offer_requests'));
     }
 
+
     public function acceptOffer($offer_id)
     {
         $offer = Offer::findOrFail($offer_id);
-        $offer->update(['status'=>'accepted']);
+        if($offer->end_date < now()){
+            return redirect(route('dashboard.offer_request.index'))->withFalse(trans('dashboard.messages.the_end_date_less_than_the_current_date'));
+        }
+
+        $offer->update(['status'=>'active']);
 
         if(isset($offer->user)){
             $offer->user->notify(new AcceptOffer($offer));
@@ -37,6 +42,9 @@ class OfferRequestController extends Controller
     public function rejectOffer($offer_id)
     {
         $offer = Offer::findOrFail($offer_id);
+        if($offer->end_date < now()){
+            return redirect(route('dashboard.offer_request.index'))->withFalse(trans('dashboard.messages.the_end_date_less_than_the_current_date'));
+        }
         $offer->update(['status'=>'rejected']);
 
         if(isset($offer->user)){
@@ -48,7 +56,7 @@ class OfferRequestController extends Controller
             'sender_data' => new SenderResource(auth()->user())
         ];
         pushFcmNotes($fcm_notes, optional($offer->user)->devices);
-        return redirect(route('dashboard.offer_request.index'))->withTrue(trans('dashboard.messages.offer_accepted'));
+        return redirect(route('dashboard.offer_request.index'))->withFalse(trans('dashboard.messages.offer_rejected'));
 
     }
 }

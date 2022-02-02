@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\BabySitter\Offers;
 
 use App\Http\Requests\Api\ApiMasterRequest;
+use App\Models\Offer;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OfferRequest extends ApiMasterRequest
@@ -24,6 +25,7 @@ class OfferRequest extends ApiMasterRequest
      */
     public function rules()
     {
+        $offer = Offer::findOrFail($this->offer);
         if(isset($this->offer) && $this->offer)
         {
             $photo_validation = 'nullable|image|mimes:jpeg,jpg,png';
@@ -41,7 +43,7 @@ class OfferRequest extends ApiMasterRequest
             'start_date'=>$start_date,
             'end_date'  => 'required|date_format:Y-m-d|after:start_date',
             'title'=>'required|string|between:2,200',
-            'max_num'=>'nullable|integer',
+            'max_num'=>'nullable|integer|gt:'.$offer->max_num,
             'promo_code'=>$promo_code,
             'discount'=>$discount,
             'photo'=>$photo_validation
