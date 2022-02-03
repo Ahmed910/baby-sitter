@@ -33,7 +33,7 @@ trait ValidationTrait
     {
 
         if($service_type == 'hour'){
-            $data['date'] = 'required|date_format:Y-m-d';
+            $data['date'] = 'required|date_format:Y-m-d|after_or_equal:' . now()->format("Y-m-d");
             $data['start_time'] = 'required|date_format:H:i';
             $data['end_time'] = 'required|date_format:H:i|after:start_time';
          }
