@@ -104,6 +104,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::middleware(['auth:api','baby_sitter_middleware'])->group(function(){
             // Offers
             Route::apiResource('offer','OfferController');
+            Route::post('offer/pay_offer/{id}','OfferController@payOffer');
+            Route::get('offer/inactive/{id}','OfferController@inactiveOffer');
+            Route::post('offer/reactive/{id}','OfferController@reactiveOffer');
             // Schedules
             Route::apiResource('schedule','ScheduleController');
             // Rate && Review
@@ -134,7 +137,9 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::middleware(['auth:api','child_center_middleware'])->group(function(){
             // Offers
             Route::apiResource('offer','OfferController');
-
+            Route::post('offer/pay_offer/{id}','OfferController@payOffer');
+            Route::get('offer/inactive/{id}','OfferController@inactiveOffer');
+            Route::post('offer/reactive/{id}','OfferController@reactiveOffer');
             // //
             // Route::post('reject_orders','OfferController@rejectOrder');
             // Route::post('change_order_status','OrderController@changeOrderStatus');
@@ -201,6 +206,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
         Route::get('tax','HomeController@getTax')->middleware('auth:api');
         // Contact
         Route::get('contact', 'HomeController@getContact');
+        // Offer Fees
+        Route::get('offer_fees', 'HomeController@getOfferFees');
         // Contact Us & Complaints   // ->middleware('auth:api')
         Route::post('contact', 'HomeController@contact');
 

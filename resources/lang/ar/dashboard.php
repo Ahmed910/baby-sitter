@@ -92,16 +92,26 @@ return [
   'offer_request'=>[
       'offer_request'=>'طلب عرض',
       'offer_requests'=>'طلبات العروض',
-      'start_date'=>'تاريخ البداية',
+      'max_num'=>'الحد الاقصى لاستخدام العرض',
       'promo_code'=>'البروموكود',
-      'end_date'=>'تاريخ النهاية',
-      'offer_user'=>'صاحب العرض',
+
+      'offer_request_data'=>'بيانات العرض',
+      'offer_user'=>'مقدم العرض',
       'discount'=>'قيمة الخصم',
+      'start_date'=>'تاريخ بداية العرض',
+      'end_date'=>'تاريخ نهاية العرض',
+      'title'=>'عنوان العرض',
+      'offer_photo'=>'صورة العرض',
+      'provider_type'=>'نوع مقدم العرض',
       'status'=>[
           'status'=>'حالة العرض',
           'pending'=>'قيد الإنتظار',
           'accepted'=>'تم القبول',
-          'accepted'=>'تم القبول',
+          'accept'=>'قبول',
+          'reject'=>'رفض',
+          'active'=>'مفعل',
+          'inactive'=>'غير مفعل',
+          'rejected'=>'تم الرفض',
       ]
   ],
 
@@ -830,6 +840,7 @@ return [
     'test_version' => 'النسخة التجريبية',
     'main_setting' => 'الاعدادات الرئيسية',
     'app_profit_percentage'=>'نسبة ربح التطبيق',
+   'offer_fees'=>'قيمة الرسوم المطلوبة للعروض',
     'wallet_setting' => 'اعدادات المحفظة',
     'search_distance' => 'مسافة البحث (كم)',
     'min_offer_price' => 'أقل سعر لعروض الكباتن',

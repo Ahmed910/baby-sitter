@@ -12,8 +12,14 @@ class OfferRequestController extends Controller
 {
     public function index()
     {
-        $offer_requests = Offer::paginate(100);
+        $offer_requests = Offer::latest()->paginate(100);
         return view('dashboard.offer_request.index',compact('offer_requests'));
+    }
+
+    public function show($id)
+    {
+        $offer_request = Offer::findOrFail($id);
+        return view('dashboard.offer_request.show',compact('offer_request'));
     }
 
 
@@ -24,7 +30,7 @@ class OfferRequestController extends Controller
             return redirect(route('dashboard.offer_request.index'))->withFalse(trans('dashboard.messages.the_end_date_less_than_the_current_date'));
         }
 
-        $offer->update(['status'=>'active']);
+        $offer->update(['status'=>'accepted']);
 
         if(isset($offer->user)){
             $offer->user->notify(new AcceptOffer($offer));

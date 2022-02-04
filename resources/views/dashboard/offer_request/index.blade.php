@@ -28,7 +28,7 @@
                         <td>{{ $offer_request->start_date->format("Y-m-d") }}</td>
                         <td>{{ $offer_request->end_date->format("Y-m-d") }}</td>
                         <td>{{ $offer_request->promo_code }}</td>
-                        <td>{{ trans('dashboard.offer.offer_statuses.'.$offer_request->status) }}</td>
+                        <td>{{ trans('dashboard.offer_request.status.'.$offer_request->status) }}</td>
 
 
 
@@ -36,22 +36,25 @@
                             <div class="badge badge-primary badge-md mr-1 mb-1">{{ $offer_request->created_at->format("Y-m-d") }}</div>
                         </td>
                         <td class="justify-content-center">
-                           @if(($offer_request->status =='pending' || $offer_request->status =='reactive') && $offer_request->end_date > now())
-                            <a href="{!! route('dashboard.offer_request.accept',$offer_request->id) !!}" class="text-success mr-2" title="{!! trans('dashboard.general.accept') !!}">
+                           {{--  @if(($offer_request->status =='pending' || $offer_request->status =='reactive') && $offer_request->end_date > now())  --}}
+                            {{--  <a href="{!! route('dashboard.offer_request.accept',$offer_request->id) !!}" class="text-success mr-2" title="{!! trans('dashboard.general.accept') !!}">
                                 <i class="fas fa-check font-medium-3"></i>
+                            </a>  --}}
+                            <a href="{!! route('dashboard.offer_request.show',$offer_request->id) !!}" class="text-success mr-2" title="{!! trans('dashboard.general.show') !!}">
+                                <i class="fas fa-desktop font-medium-3"></i>
                             </a>
 
-                            <a  href="{!! route('dashboard.offer_request.reject',$offer_request->id) !!}" class="text-danger mr-2" title="{!! trans('dashboard.general.reject') !!}">
-                                {{--  <i class="fas fa-check font-medium-3"></i>  --}}
+                            {{--  <a  href="{!! route('dashboard.offer_request.reject',$offer_request->id) !!}" class="text-danger mr-2" title="{!! trans('dashboard.general.reject') !!}">
+                                <i class="fas fa-check font-medium-3"></i>
                                 <i class="fa fa-ban font-medium-3" aria-hidden="true"></i>
-                            </a>
+                            </a>  --}}
 
-                            @elseif($offer_request->end_date < now())
+                            {{--  @elseif($offer_request->end_date < now())
                               {{ trans('dashboard.messages.the_end_date_less_than_the_current_date') }}
 
                            @else
                            {{ trans('dashboard.offer.offer_statuses.'.$offer_request->status) }}
-                             @endif
+                             @endif  --}}
                         </td>
                     </tr>
                     @endforeach

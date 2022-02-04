@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ChildCenter;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\Offers\OfferRequest;
+use App\Http\Requests\Api\BabySitter\Offers\PayOfferRequest;
 use App\Traits\Offers;
 use Illuminate\Http\Request;
 
@@ -31,6 +32,21 @@ class OfferController extends Controller
        return $this->CreateOffer($request);
     }
 
+
+    public function payOffer(PayOfferRequest $request,$id)
+    {
+        return $this->pay($request,$id);
+    }
+
+    public function inactiveOffer($id)
+     {
+        return $this->inactiveForOffer($id);
+     }
+
+     public function reactiveOffer(OfferRequest $request,$id)
+     {
+         return $this->reactiveForOffer($request,$id);
+     }
     /**
      * Display the specified resource.
      *

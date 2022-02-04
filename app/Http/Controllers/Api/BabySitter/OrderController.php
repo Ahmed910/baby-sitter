@@ -86,6 +86,7 @@ class OrderController extends Controller
 
     public function cancelOrder($order_id)
     {
+        // dd(auth('api')->user());
         $main_order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
 
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);

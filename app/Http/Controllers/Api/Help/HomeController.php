@@ -41,6 +41,11 @@ class HomeController extends Controller
         return response()->json(['data' => ['tax' => (float) setting('tax')] , 'status' => 'success' , 'message' => '']);
     }
 
+    public function getOfferFees()
+    {
+        return response()->json(['data' => ['offer_fees' => (float) setting('offer_fees')] , 'status' => 'success' , 'message' => '']);
+    }
+
     public function getContact()
     {
         $data = [

@@ -61,6 +61,7 @@ class SettingRequest extends FormRequest
           // SMS
           'use_sms_service' => "nullable|in:enable,disable",
           'app_profit_percentage'=>'nullable|numeric|min:0|max:100',
+          'offer_fees'=>'nullable|numeric',
           'sms_provider' => "nullable|required_if:use_sms_service,enable|in:hisms,net_powers,sms_gateway",
           'sms_username' => "nullable|required_if:use_sms_service,enable|string|between:3,250",
           'sms_password' => "nullable|required_with:sms_username",

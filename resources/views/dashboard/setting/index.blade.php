@@ -75,6 +75,15 @@
                                 </div>
                             </div>
 
+                              <div class="form-group">
+                                <div class="row">
+                                    <label class="font-medium-1 col-md-2">{!! trans('dashboard.setting.offer_fees') !!}</label>
+                                    <div class="col-md-10">
+                                        {!! Form::text('offer_fees', setting('offer_fees') ? setting('offer_fees'):old('offer_fees'), ['class'=>'form-control','placeholder'=>trans('dashboard.setting.offer_fees')]) !!}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="row">
                                     <label class="font-medium-1 col-md-2">{!! trans('dashboard.general.logo') !!}</label>

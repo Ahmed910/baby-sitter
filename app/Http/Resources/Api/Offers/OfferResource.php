@@ -24,23 +24,19 @@ class OfferResource extends JsonResource
             'discount'=> $this->discount,
             'promo_code' => $this->promo_code,
             // 'admin_approved_status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status),
-            'status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->getOfferStatus())
+            'status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status),
+            'is_reactive'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')),$this->getOfferIsReactive())
         ];
     }
 
-    private function getOfferStatus()
+    private function getOfferIsReactive()
     {
         $orders_with_that_offer = MainOrder::where('offer_id',$this->id)->count();
-        if($this->status == 'active' && now() < $this->end_date && $orders_with_that_offer <= $this->max_num)
-        {
-            $offer_status = 'active';
-        }elseif(now() > $this->end_date || $orders_with_that_offer > $this->max_num){
-            $offer_status = 'reactive';
-        }elseif($this->status =='rejected'){
-            $offer_status = 'rejected';
+       if(now() > $this->end_date || $orders_with_that_offer == $this->max_num || $this->status =='inactive'){
+            $is_reactive = true;
         }else{
-            $offer_status = 'pending';
+            $is_reactive = false;
         }
-        return $offer_status;
+        return $is_reactive;
     }
 }

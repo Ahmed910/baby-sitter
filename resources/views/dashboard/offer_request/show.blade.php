@@ -8,10 +8,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">{{ trans('dashboard.transfer_request.transfer_request_data') }}</div>
+                    <div class="card-title">{{ trans('dashboard.offer_request.offer_request_data') }}</div>
                     <div class="heading-elements">
                         <div class="badge badge-primary block badge-md mr-1 mb-1">
-                            {{ $transfer_request->created_at->format("Y-m-d") }}
+                            {{ $offer_request->created_at->format("Y-m-d") }}
                         </div>
 
                     </div>
@@ -28,76 +28,105 @@
 
 
                     <table class="ml-0 ml-sm-0 ml-lg-0">
+
                         <tr>
-                            <td class="font-weight-bold">{{ trans('dashboard.transfer_request.amount') }} :
+                            <td class="font-weight-bold">{{ trans('dashboard.offer_request.offer_photo') }} :
                             </td>
                             <td>
-                                {{ $transfer_request->amount }}
+                                <a href="{{ $offer_request->photo }}" data-fancybox="gallery">
+                                    <div class="avatar">
+                                    <img src="{{ $offer_request->photo }}" alt="" style="width:100px; height:100px;" class="img-thumbnail rounded">
+                                    {{--  <span class="avatar-status-busy avatar-status-md" id="online_{{ $center->id }}"></span>  --}}
+                                    </div>
+                                    </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">{{ trans('dashboard.offer_request.title') }} :
+                            </td>
+                            <td>
+                                {{ $offer_request->title }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">{{ trans('dashboard.offer_request.offer_user') }} :
+                            </td>
+                            <td>
+                                {{ optional($offer_request->user)->name }}
                             </td>
                         </tr>
 
                         <tr>
-                            <td class="font-weight-bold">{{ trans('dashboard.transfer_request.status.status') }} :
+                            <td class="font-weight-bold">{{ trans('dashboard.offer_request.provider_type') }} :
                             </td>
                             <td>
-                                {{ trans('dashboard.transfer_request.status.'.$transfer_request->status) }}
+                                {{ $offer_request->user_type }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="font-weight-bold">{{ trans('dashboard.offer_request.status.status') }} :
+                            </td>
+                            <td>
+                                {{ trans('dashboard.offer_request.status.'.$offer_request->status) }}
                             </td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">
-                                {{ trans('dashboard.transfer_request.bank_account_data.account_name') }} :
+                                {{ trans('dashboard.offer_request.start_date') }} :
                             </td>
                             <td>
-                                {{ optional($transfer_request->walletWithdraw)->account_name }}
+                                {{ $offer_request->start_date->toFormattedDateString() }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">
+                                {{ trans('dashboard.offer_request.end_date') }} :
+                            </td>
+                            <td>
+                                {{ $offer_request->end_date->toFormattedDateString() }}
                             </td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold">
-                                {{ trans('dashboard.transfer_request.bank_account_data.bank_name') }} :
+                                {{ trans('dashboard.offer_request.discount') }} :
                             </td>
                             <td>
-                                {{ optional($transfer_request->walletWithdraw)->bank_name }}
+                                {{ $offer_request->discount }}
                             </td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold">
-                                {{ trans('dashboard.transfer_request.user_name') }} :
+                                {{ trans('dashboard.offer_request.promo_code') }} :
                             </td>
                             <td>
-                                {{ optional($transfer_request->user)->name }}
+                                {{ $offer_request->promo_code }}
                             </td>
                         </tr>
 
                         <tr>
                             <td class="font-weight-bold">
-                                {{ trans('dashboard.transfer_request.bank_account_data.account_number') }} :
+                                {{ trans('dashboard.offer_request.max_num') }} :
                             </td>
                             <td>
-                                {{ optional($transfer_request->walletWithdraw)->account_number }}
+                                {{ $offer_request->max_num }}
                             </td>
                         </tr>
 
-                        <tr>
-                            <td class="font-weight-bold">
-                                {{ trans('dashboard.transfer_request.bank_account_data.iban_number') }} :
-                            </td>
-                            <td>
-                                {{ optional($transfer_request->walletWithdraw)->iban_number }}
-                            </td>
-                        </tr>
+
 
 
                     </table>
 
-                    @if($transfer_request->status == 'pending')
+                    @if($offer_request->status == 'pending')
                     <div style="float: left">
-                        @if(auth()->user()->hasPermissions('transfer_request','accept'))
-                        <a href="{{ route('dashboard.transfer_request.accept',$transfer_request->id) }}" class="btn btn-success">{{ trans('dashboard.transfer_request.status.accept') }}</a>
+                        @if(auth()->user()->hasPermissions('offer_request','accept'))
+                        <a href="{{ route('dashboard.offer_request.accept',$offer_request->id) }}" class="btn btn-success">{{ trans('dashboard.offer_request.status.accept') }}</a>
                         @endif
-                        @if(auth()->user()->hasPermissions('transfer_request','reject'))
-                        <a href="{{ route('dashboard.transfer_request.reject',$transfer_request->id) }}" class="btn btn-danger">{{ trans('dashboard.transfer_request.status.reject') }}</a>
+                        @if(auth()->user()->hasPermissions('offer_request','reject'))
+                        <a href="{{ route('dashboard.offer_request.reject',$offer_request->id) }}" class="btn btn-danger">{{ trans('dashboard.offer_request.status.reject') }}</a>
                         @endif
                     </div>
                     @endif

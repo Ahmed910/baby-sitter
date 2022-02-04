@@ -533,6 +533,7 @@ return [
     'test_version' => 'test version',
     'main_setting' => 'main setting',
     'app_profit_percentage'=>'app profit percentage',
+    'offer_fees'=>'offer fees',
     'sms_setting' => 'SMS setting',
     'use_sms_service' => 'use sms service',
     'payment_service_enable' => 'payment servic enable',
@@ -733,6 +734,33 @@ return [
         'rejected'=>'rejected',
     ],
 
+],
+
+'offer_request'=>[
+    'offer_request'=>'offer request',
+    'offer_requests'=>'offer requests',
+
+    'promo_code'=>'promo code',
+
+    'offer_request_data'=>'offer request data',
+    'offer_user'=>'offer provider',
+    'provider_type'=>'offer provider type',
+    'start_date'=>'start date',
+    'title'=>'offer title',
+    'end_date'=>'end date',
+    'max_num'=>'max number of use',
+    'discount'=>'discount',
+    'offer_photo'=>'offer phote',
+    'status'=>[
+        'status'=>'status',
+        'pending'=>'pending',
+        'accepted'=>'accepted',
+        'rejected'=>'rejected',
+        'accept'=>'accept',
+          'reject'=>'reject',
+        'active'=>'active',
+        'inactive'=>'inactive',
+    ]
 ],
   'messages' => [
       'success_add' => 'تمت الاضافة بنجاح',
