@@ -129,6 +129,7 @@ class OrderController extends Controller
         if ($sitter_order->pay_type == 'wallet') {
             $this->chargeWallet($order->price_after_offer, $sitter_order->client_id);
         }
+        $sitter_order->refresh();
         $order->refresh();
         $fcm_notes = [
             'title' => ['dashboard.notification.order_has_been_rejected_title'],

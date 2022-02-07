@@ -17,7 +17,7 @@ class WalletTransationsResource extends JsonResource
         // dd(optional($this->transfered_user)->avatar);
         return [
             'id'=>$this->id,
-            'avatar'=>optional($this->transfered_user)->avatar,
+            'avatar'=>isset($this->transfered_user) ? $this->transfered_user->avatar :,
             'name'=>optional($this->transfered_user)->name,
             'created_at'=>$this->created_at->toFormattedDateString(),
             'amount'=>$this->amount

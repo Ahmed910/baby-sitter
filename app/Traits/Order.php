@@ -52,7 +52,7 @@ trait Order
         }
         $sitter = User::findOrFail($request->sitter_id);
 
-        $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price'];
+        $order_data = ['pay_type', 'sitter_id', 'service_id', 'lat', 'lng', 'location', 'transaction_id', 'price','comment'];
         $offer_data = $this->checkOfferExisting($request->offer_id,$request->price_after_offer);
         $main_sitter_order_data = ['client_id' => auth('api')->id(),'sitter_id' => $request->sitter_id, 'to' => 'sitter'];
         $main_order_data = array_merge($offer_data,$main_sitter_order_data);
@@ -114,7 +114,7 @@ trait Order
         if ($request->pay_type == 'wallet' && $request->price > auth('api')->user()->wallet) {
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
-        $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price'];
+        $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price','comment'];
         $offer_data = $this->checkOfferExisting($request->offer_id,$request->price_after_offer);
         $main_center_order_data = ['client_id' => auth('api')->id(), 'center_id' => $request->center_id, 'to' => 'center'];
         $main_order_data = array_merge($offer_data,$main_center_order_data);

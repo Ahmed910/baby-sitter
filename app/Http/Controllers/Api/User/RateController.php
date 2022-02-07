@@ -80,9 +80,9 @@ class RateController extends Controller
         }
         elseif(isset($request->to_client) && $request->to_client && $request->type=='client'){
             Rate::updateOrCreate(
-                ['order_id' => $order->id, 'from'=>auth('api')->id(),'to_baby_sitter'=>$request->to_baby_sitter],
+                ['order_id' => $order->id, 'from'=>auth('api')->id(),'to_client'=>$request->to_baby_sitter],
                 ['order_id' => $order->id, 'from'=>auth('api')->id(),
-                'to_baby_sitter'=>$request->to_baby_sitter,'rate'=>$request->rate,'type'=>$request->type,
+                'to_client'=>$request->to_client,'rate'=>$request->rate,'type'=>$request->type,
                 'review'=>$request->review]
             );
 
