@@ -71,7 +71,8 @@ class SingleOrderResource extends JsonResource
             'service_type' => optional($order->service)->service_type,
             // 'service'=> new ServiceResource($order->service),
             'service_details' => optional($order->service)->service_type == 'hour' ? new HourOrderResource($order->hours) : new MonthOrderResource($order->months),
-            'days_in_month' => $this->when(optional($order->service)->service_type == 'month', isset($order->months) ? OrderDaysInMonthResource::collection($order->months->month_days) : null),
+            'next_day'=>$this->when(optional($order->service)->service_type == 'month',new MonthDaysInOrderResource($order->months->month_dates()->where('status','waiting')->first())),
+            // 'days_in_month' => $this->when(optional($order->service)->service_type == 'month', isset($order->months) ? OrderDaysInMonthResource::collection($order->months->month_days) : null),
             'kids' => OrderKidsResource::collection($order->kids),
             'comment' => $order->comment,
 
@@ -93,6 +94,12 @@ class SingleOrderResource extends JsonResource
                 $waiting_check = false;
             }
         } else {
+            $passed_time = $order->months->month_dates()->where('date', '=', now()->format('Y-m-d'))->first();
+            if (isset($passed_time) && $order->status == 'process') {
+                $waiting_check = true;
+            } else {
+                $waiting_check = false;
+            }
             $waiting_check = false;
         }
 

@@ -74,7 +74,11 @@ class OrderController extends Controller
         $order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
         $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
-        $center_order->update(['status' => 'waiting']);
+        if(optional($center_order->service)->service_type == 'hour'){
+            $center_order->update(['status' => 'waiting']);
+        }else{
+            $center_order->update(['status' => 'process']);
+        }
         $this->chargeWallet($center_order->price, $center_order->center_id);
         $order->refresh();
         //   dd($center_order);

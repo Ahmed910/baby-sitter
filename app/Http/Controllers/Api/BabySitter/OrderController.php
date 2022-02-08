@@ -69,7 +69,11 @@ class OrderController extends Controller
         $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
 
         $sitter_order = SitterOrder::where('status', 'pending')->findOrFail(optional($order->sitter_order)->id);
-        $sitter_order->update(['status' => 'waiting']);
+        if(optional($sitter_order->service)->service_type == 'hour'){
+            $sitter_order->update(['status' => 'waiting']);
+        }else{
+            $sitter_order->update(['status' => 'process']);
+        }
         $order->refresh();
         $fcm_notes = [
             'title' => ['dashboard.notification.order_has_been_accepted_title'],
@@ -146,6 +150,7 @@ class OrderController extends Controller
 
     public function sendOTPToReceiveChildern($order_id)
     {
+        // third param in [1,2]
         return $this->sendOTP($order_id, 'waiting');
     }
     public function checkOtpValidityAndRecieveChildern(OTPRequest $request)

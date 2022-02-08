@@ -44,6 +44,7 @@ trait Order
     {
         //  dd('ssjsjdj');
 
+
         if ($request->pay_type == 'credit' && $request->check_order == 'test') {
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.payment_has_been_successfully')], 200);
         }
@@ -59,9 +60,9 @@ trait Order
         // dd($main_order_data);
         $financials = $this->getAppProfit($request->price_after_offer);
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
             $service = Service::findOrFail($request->service_id);
 
             $price = $service->service_type == 'hour' ? ['price_per_hour'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price] : ['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price];
@@ -77,7 +78,7 @@ trait Order
            //  dd(array_only($request->validated(), ['start_date', 'end_date'])+['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price]);
 
                 $order = SitterOrder::create(array_only($request->validated(), $order_data) + ['client_id' => auth('api')->id(), 'main_order_id' => $main_order->id]);
-                $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date'])+['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price], $order, $request->schedules,$request->date);
+                $this->month_sitter->saveOrderByMonthService(array_only($request->validated(), ['start_date', 'end_date'])+['price_per_hour_for_month'=>$sitter->user_services()->where('service_id',$request->service_id)->firstOrFail()->price], $order, $request->schedules);
             }
 
             $order->kids()->createMany($this->getKids($request->kids, 'SitterOrder', $order->id));
@@ -86,8 +87,9 @@ trait Order
 
                 $this->withdrawFromWallet($main_order->price_after_offer, auth('api')->id());
             }
+
             $chat = Chat::create(['sender_id' => auth('api')->id(), 'order_id' => $main_order->id, 'receiver_id' => $main_order->sitter_id, 'last_message' => '']);
-            // DB::commit();
+            DB::commit();
             $fcm_notes = [
                 'title'=>['dashboard.notification.order_has_been_created_title'],
                  'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
@@ -100,10 +102,10 @@ trait Order
             pushFcmNotes($fcm_notes,$sitter->devices);
             return response()->json(['data' => null, 'status' => 'success', 'chat_id' => $chat->id, 'message' => trans('api.messages.order_created_successfully')]);
             // all good
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+        }
     }
 
     protected function CenterOrder(OrderCenterRequest $request)

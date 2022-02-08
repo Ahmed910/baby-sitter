@@ -16,7 +16,7 @@ class CreateOrderMonthDatesTable extends Migration
         Schema::create('order_month_dates', function (Blueprint $table) {
             $table->id();
             $table->date('date')->nullable();
-            $table->string('status')->default('pending');
+            $table->string('status')->default('waiting');
             $table->unsignedBigInteger('order_month_id')->nullable();
             $table->foreign('order_month_id')->references('id')->on('order_months')->onDelete('cascade');
             $table->timestamps();

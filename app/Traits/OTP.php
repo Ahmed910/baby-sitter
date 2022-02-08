@@ -22,12 +22,19 @@ trait OTP
     {
         $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
 //optional($order->sitter_order)->id
-        $sitter_order = SitterOrder::where('status', $status)->findOrFail(optional($order->sitter_order)->id);
+        $service_id = $order->to == 'sitter'? optional($order->sitter_order)->service_id:optional($order->center_order)->service_id;
+
+        if($service_id == 1){  // 1=>hour
+            $otp_order = SitterOrder::where('status', $status)->findOrFail(optional($order->sitter_order)->id);
+        }else{
+            $sitter_order = SitterOrder::where(['status'=> 'process','service_id'=>$service_id])->findOrFail(optional($order->sitter_order)->id);
+            $otp_order = $sitter_order->months->month_dates()->where('status', $status)->firstOrFail();
+        }
         $otp = 1111;
         if (setting('use_sms_service') == 'enable') {
             $otp = mt_rand(1111, 9999); //generate_unique_code(4,'\\App\\Models\\User','verified_code');
         }
-        $sitter_order->update(['otp_code' => $otp]);
+        $otp_order->update(['otp_code' => $otp]);
         $this->sendVerifyOTP($order);
 
         return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.otp_has_been_sent')]);
@@ -39,8 +46,13 @@ trait OTP
     public function checkOtpValidity(OTPRequest $request, $current_status, $updated_status)
     {
         $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($request->order_id);
-
-        $sitter_order = SitterOrder::where(['status' => $current_status, 'otp_code' => $request->otp_code, 'main_order_id' => $order->id])->first();
+        $service_id = $order->to == 'sitter'? optional($order->sitter_order)->service_id:optional($order->center_order)->service_id;
+        if($service_id == 1){
+            $sitter_order = SitterOrder::where(['status' => $current_status, 'otp_code' => $request->otp_code, 'main_order_id' => $order->id])->firstOrFail();
+        }else{
+            $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->first();
+            $sitter_order = $order_for_sitter->months->month_dates()->where(['status' => $current_status, 'otp_code' => $request->otp_code])->firstOrFail();
+        }
         if (isset($sitter_order) && $sitter_order) {
             $sitter_order->update(['status' => $updated_status, 'otp_code' => NULL]);
 
@@ -56,14 +68,23 @@ trait OTP
                 Notification::send($admins, new RecieveChildernNotification($order, ['database', 'broadcast']));
                 pushFcmNotes($fcm_notes,optional($order->client)->devices);
             } else {
-                $order->update(['finished_at'=>now()]);
-                if($sitter_order->pay_type == 'wallet'){
+                $sitter_order->update(['status'=>$updated_status]);
+                if($service_id == 1){
+                    $order->update(['finished_at'=>now()]);
 
-                    $sitter = User::findOrFail($sitter_order->sitter_id);
-                    $wallet_before = $sitter->wallet;
-                    $this->chargeWallet($order->final_price,$sitter_order->sitter_id);
-                    Wallet::create(['amount'=>$order->final_price,'wallet_before'=>$wallet_before,'wallet_after'=>$sitter->wallet,'user_id'=>$order->sitter_id,'transferd_by'=>$order->client_id,'order_id'=>$order->id]);
+                    if($sitter_order->pay_type == 'wallet'){
+
+                        $sitter = User::findOrFail($sitter_order->sitter_id);
+                        $wallet_before = $sitter->wallet;
+                        $this->chargeWallet($order->final_price,$sitter_order->sitter_id);
+                        Wallet::create(['amount'=>$order->final_price,'wallet_before'=>$wallet_before,'wallet_after'=>$sitter->wallet,'user_id'=>$order->sitter_id,'transferd_by'=>$order->client_id,'order_id'=>$order->id]);
+                    }
+
+                }else{
+                     
                 }
+
+
 
                 $fcm_notes = [
                     'title'=>['dashboard.notification.sitter_has_been_deliver_childern_title'],

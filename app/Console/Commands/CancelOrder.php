@@ -43,10 +43,12 @@ class CancelOrder extends Command
      */
     public function handle()
     {
-        $main_orders = MainOrder::pluck('id');
+        // $main_orders = MainOrder::pluck('id');
         // Log::info($main_orders);
-        $sitter_orders = SitterOrder::whereIn('main_order_id', $main_orders)->where('status', 'pending')->where('created_at', '<', now()->addHours(12)->format('Y-m-d H:i:s'))->get();
-        $center_orders = CenterOrder::whereIn('main_order_id', $main_orders)->where('status', 'pending')->where('created_at', '<', now()->addHours(12)->format('Y-m-d H:i:s'))->get();
+        $sitter_orders = SitterOrder::where('status', 'pending')->where('created_at', '<', now()->addHours(12)->format('Y-m-d H:i:s'))->get();
+
+        $center_orders = CenterOrder::where('status', 'pending')->where('created_at', '<', now()->addHours(12)->format('Y-m-d H:i:s'))->get();
+     
         if ($sitter_orders->count() > 0) {
             foreach ($sitter_orders as $sitter_order) {
                 $sitter_order->update(['status' => 'canceled']);
