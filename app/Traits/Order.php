@@ -196,6 +196,12 @@ trait Order
         // $provider->update(['wallet'=>$updated_wallet_for_provider]);
     }
 
+    // public function chargeWalletPerMonth($price,$day,$user_id)
+    // {
+    //     $user = User::findOrFail($user_id);
+
+    // }
+
     protected function chargeWallet($price, $user_id)
     {
         $user = User::findOrFail($user_id);

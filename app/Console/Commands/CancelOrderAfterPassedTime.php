@@ -6,6 +6,7 @@ use App\Models\CenterOrder;
 use App\Models\SitterOrder;
 use App\Traits\Order;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CancelOrderAfterPassedTime extends Command
 {
@@ -56,8 +57,19 @@ class CancelOrderAfterPassedTime extends Command
 
                 }else{
 
-                     $sitter_order->months->month_dates()->where('status','waiting')->where('date','<',now()->format('Y-m-d'))->update(['status'=>'canceled']);
-                    // $sitter_order_month->update(['status'=>'canceled']);
+
+                    if($sitter_order->months && $sitter_order->months->month_dates->count() > 0){
+                        // Log::info($sitter_order->months);
+                       
+                        $sitter_order_month = $sitter_order->months->month_dates()->where('status','waiting')->where('date','<',now()->format('Y-m-d'))->firstOrFail();
+                        // $sitter_order_month->update(['status'=>'canceled']);
+                        // Log::info($sitter_order->months->month_dates);
+
+                        $sitter_order_month->update(['status'=>'canceled']);
+                        // Log::info($hours*optional($sitter_order->months)->price_per_hour_for_month);
+                    }
+
+
                 }
             }
         }
@@ -75,8 +87,21 @@ class CancelOrderAfterPassedTime extends Command
 
                 }else{
 
-                    $center_order_month = $center_order->months->month_dates()->where('status','waiting')->where('date','<',now()->format('Y-m-d'))->first();
-                    $center_order_month->update(['status'=>'canceled']);
+
+                    if($center_order->months){
+
+                        $center_order_month = $center_order->months->month_dates()->where('status','waiting')->where('date','<',now()->format('Y-m-d'))->firstOrFail();
+                        // $center_order_month->update(['status'=>'canceled']);
+                        // Log::info($center_order->months->month_dates);
+                        // $start_time = optional($center_order_month->order_day)->start_time;
+                        // $end_time = optional($center_order_month->order_day)->end_time;
+                        // $hours = $end_time->diffInHours($start_time);
+                        // $price = $hours*optional($center_order->months)->price_per_hour_for_month;
+                        // $this->chargeWallet($price,$center_order->client_id);
+                        $center_order_month->update(['status'=>'canceled']);
+
+                        // Log::info($hours*optional($sitter_order->months)->price_per_hour_for_month);
+                    }
                 }
             }
         }

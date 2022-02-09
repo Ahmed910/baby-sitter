@@ -71,7 +71,7 @@ class SingleOrderResource extends JsonResource
             'service_type' => optional($order->service)->service_type,
             // 'service'=> new ServiceResource($order->service),
             'service_details' => optional($order->service)->service_type == 'hour' ? new HourOrderResource($order->hours) : new MonthOrderResource($order->months),
-            'next_day'=>$this->when(optional($order->service)->service_type == 'month',new MonthDaysInOrderResource($order->months->month_dates()->where('status','waiting')->first())),
+            'next_day'=>$this->when(optional($order->service)->service_type == 'month',new MonthDaysInOrderResource($order->months->month_dates()->where('status','waiting')->orderBy('date','ASC')->first())),
             // 'days_in_month' => $this->when(optional($order->service)->service_type == 'month', isset($order->months) ? OrderDaysInMonthResource::collection($order->months->month_days) : null),
             'kids' => OrderKidsResource::collection($order->kids),
             'comment' => $order->comment,

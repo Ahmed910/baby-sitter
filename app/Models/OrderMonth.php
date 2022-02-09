@@ -15,6 +15,11 @@ class OrderMonth extends Model
         return $this->hasMany(OrderMonthDay::class,'order_month_id');
     }
 
-   
+    public function month_dates()
+    {
+        return $this->hasManyThrough(OrderMonthDate::class, OrderMonthDay::class,'order_month_id','order_month_day_id');
+    }
+
+
 
 }
