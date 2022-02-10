@@ -23,6 +23,7 @@ use App\Traits\AppProfit;
 use App\Traits\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
 class OrderController extends Controller
@@ -98,52 +99,68 @@ class OrderController extends Controller
 
     public function rejectOrder($order_id)
     {
-        $order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
+        DB::beginTransaction();
 
-        $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
-        $center_order->update(['status' => 'rejected']);
-        if ($center_order->pay_type == 'wallet') {
-            $this->chargeWallet($center_order->price, $center_order->client_id);
+        try {
+
+            $order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
+
+            $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
+            $center_order->update(['status' => 'rejected']);
+            if ($center_order->pay_type == 'wallet') {
+                $this->chargeWallet($center_order->price, $center_order->client_id);
+            }
+            $order->client->notify(new RejectOrderNotification($order, ['database']));
+
+            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+            Notification::send($admins, new RejectOrderNotification($order, ['database', 'broadcast']));
+            DB::commit();
+            return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
         }
-        $order->client->notify(new RejectOrderNotification($order, ['database']));
-
-        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
-        Notification::send($admins, new RejectOrderNotification($order, ['database', 'broadcast']));
-        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function cancelOrder($order_id)
     {
+        DB::beginTransaction();
 
-        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
+        try {
+            $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
-        $fcm_notes = [
-            'title' => ['dashboard.notification.order_has_been_rejected_title'],
-            'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
-            'sender_data' => new SenderResource(auth('api')->user())
-        ];
-        // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-        $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
-        if ($center_order->status == 'waiting') {
-            $center_order_period = optional($center_order->service)->service_type == 'hour'
-                ? $center_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
-                : $center_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
+            $fcm_notes = [
+                'title' => ['dashboard.notification.order_has_been_rejected_title'],
+                'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'sender_data' => new SenderResource(auth('api')->user())
+            ];
+            // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+            $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
+            if ($center_order->status == 'waiting') {
+                $center_order_period = optional($center_order->service)->service_type == 'hour'
+                    ? $center_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
+                    : $center_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
+            }
+
+            if (isset($center_order_period) && $center_order_period) {
+                return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
+            }
+            $center_order->update(['status' => 'canceled']);
+            if ($center_order->pay_type == 'wallet') {
+
+                $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
+            }
+            $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
+
+            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+            Notification::send($admins, new CancelOrderNotification($main_order, ['database', 'broadcast']));
+            pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
+            DB::commit();
+            return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
         }
-
-        if (isset($center_order_period) && $center_order_period) {
-            return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
-        }
-        $center_order->update(['status' => 'canceled']);
-        if ($center_order->pay_type == 'wallet') {
-
-            $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
-        }
-        $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
-
-        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
-        Notification::send($admins, new CancelOrderNotification($main_order, ['database', 'broadcast']));
-        pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
-        return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
     }
 
     public function activeOrder($order_id)
@@ -176,84 +193,93 @@ class OrderController extends Controller
 
     public function completeOrder($order_id)
     {
-        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
-        $fcm_notes = [
-            'title' => ['dashboard.notification.order_has_been_completed_title'],
-            'body' => ['dashboard.notification.order_has_been_completed_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
-            'sender_data' => new SenderResource(auth('api')->user())
-        ];
-        // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-        $center_order = CenterOrder::findOrFail($main_order->center_order->id);
-        if (optional($center_order->service)->service_type == 'hour') {
-            $center_order->update(['status' => 'completed']);
-            $main_order->update(['finished_at' => now()]);
-            if ($center_order->pay_type == 'wallet') {
-                $center = User::findOrFail($main_order->center_id);
-                $wallet_before = $center->wallet;
-                $this->chargeWallet($main_order->final_price, $main_order->center_id);
-                Wallet::create(['amount' => $main_order->final_price, 'wallet_before' => $wallet_before, 'wallet_after' => $center->wallet, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
-            }
-            $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
+        DB::beginTransaction();
 
-            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
-            Notification::send($admins, new CompleteOrderNotification($main_order, ['database', 'broadcast']));
-            pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
-        } else {
-            $center_order_month = $center_order->months->month_dates()->where('status', 'active')->first();
-            if (isset($center_order_month) && $center_order_month) {
-                $center_order_month->update(['status' => 'completed']);
-            }
-            if (isset($center_order_month) && $center_order_month) {
-                $last_day = OrderMonthDate::where('order_month_id', $main_order->center_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
-            }
-            // dd($last_day->id == $center_order_month->id);
-            if (isset($last_day) && $last_day->id == $center_order_month->id) {
-                $center_order->update(['status'=>'completed']);
+        try {
+            $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
+            $fcm_notes = [
+                'title' => ['dashboard.notification.order_has_been_completed_title'],
+                'body' => ['dashboard.notification.order_has_been_completed_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'sender_data' => new SenderResource(auth('api')->user())
+            ];
+            // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+            $center_order = CenterOrder::findOrFail($main_order->center_order->id);
+            if (optional($center_order->service)->service_type == 'hour') {
+                $center_order->update(['status' => 'completed']);
+                $main_order->update(['finished_at' => now()]);
                 if ($center_order->pay_type == 'wallet') {
-                    $total_canceled_price = 0;
-                    $total_completed_price = 0;
-                    $canceled_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'canceled'])->get();
-
-                    $completed_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'completed'])->get();
-                    foreach ($canceled_dates as $cancel_date) {
-                        $start_time = optional($cancel_date->order_day)->start_time;
-                        $end_time = optional($cancel_date->order_day)->end_time;
-                        $hours = $end_time->diffInHours($start_time);
-                        $total_canceled_price += ($hours * optional($cancel_date->month)->price_per_hour_for_month);
-                    }
-                    foreach ($completed_dates as $completed_date) {
-                        $start_time = optional($completed_date->order_day)->start_time;
-                        $end_time = optional($completed_date->order_day)->end_time;
-                        $hours = $end_time->diffInHours($start_time);
-                        $total_completed_price += ($hours * optional($completed_date->month)->price_per_hour_for_month);
-                    }
-                    // dd($total_completed_price);
-
-                    if ($total_canceled_price > 0) {
-                        $client = $center_order->client;
-                        $client_wallet_before = $client->wallet;
-                        $client_wallet_after = $client->wallet + $total_canceled_price;
-                        Wallet::create(['amount' => $total_canceled_price, 'wallet_before' => $client_wallet_before, 'wallet_after' => $client_wallet_after, 'user_id' => $main_order->client_id, 'transferd_by' => $order->center_id, 'order_id' => $main_order->id]);
-                        $this->chargeWallet($total_canceled_price, $center_order->client_id);
-                    }
-                    if ($total_completed_price > 0) {
-                        $center = $center_order->center;
-                        $center_wallet_before = $center->wallet;
-                        $center_wallet_after = $center->wallet + $total_completed_price;
-
-                        Wallet::create(['amount' => $total_completed_price, 'wallet_before' => $center_wallet_before, 'wallet_after' => $center_wallet_after, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
-                        $this->chargeWallet($total_completed_price, $center_order->center_id);
-                    }
+                    $center = User::findOrFail($main_order->center_id);
+                    $wallet_before = $center->wallet;
+                    $this->chargeWallet($main_order->final_price, $main_order->center_id);
+                    Wallet::create(['amount' => $main_order->final_price, 'wallet_before' => $wallet_before, 'wallet_after' => $center->wallet, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
                 }
                 $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
 
                 $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
                 Notification::send($admins, new CompleteOrderNotification($main_order, ['database', 'broadcast']));
                 pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
-            }
-        }
-        $main_order->refresh();
+            } else {
+                $center_order_month = $center_order->months->month_dates()->where('status', 'active')->first();
+                if (isset($center_order_month) && $center_order_month) {
+                    $center_order_month->update(['status' => 'completed']);
+                }
+                if (isset($center_order_month) && $center_order_month) {
+                    $last_day = OrderMonthDate::where('order_month_id', $main_order->center_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
+                }
+                // dd($last_day->id == $center_order_month->id);
+                if (isset($last_day) && $last_day->id == $center_order_month->id) {
+                    $center_order->update(['status' => 'completed']);
+                    if ($center_order->pay_type == 'wallet') {
+                        $total_canceled_price = 0;
+                        $total_completed_price = 0;
+                        $canceled_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'canceled'])->get();
 
-        return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
+                        $completed_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'completed'])->get();
+                        foreach ($canceled_dates as $cancel_date) {
+                            $start_time = optional($cancel_date->order_day)->start_time;
+                            $end_time = optional($cancel_date->order_day)->end_time;
+                            $hours = $end_time->diffInHours($start_time);
+                            $total_canceled_price += ($hours * optional($cancel_date->month)->price_per_hour_for_month);
+                        }
+                        foreach ($completed_dates as $completed_date) {
+                            $start_time = optional($completed_date->order_day)->start_time;
+                            $end_time = optional($completed_date->order_day)->end_time;
+                            $hours = $end_time->diffInHours($start_time);
+                            $total_completed_price += ($hours * optional($completed_date->month)->price_per_hour_for_month);
+                        }
+                        // dd($total_completed_price);
+
+                        if ($total_canceled_price > 0) {
+                            $client = $center_order->client;
+                            $client_wallet_before = $client->wallet;
+                            $client_wallet_after = $client->wallet + $total_canceled_price;
+                            Wallet::create(['amount' => $total_canceled_price, 'wallet_before' => $client_wallet_before, 'wallet_after' => $client_wallet_after, 'user_id' => $main_order->client_id, 'transferd_by' => $order->center_id, 'order_id' => $main_order->id]);
+                            $this->chargeWallet($total_canceled_price, $center_order->client_id);
+                        }
+                        if ($total_completed_price > 0) {
+                            $center = $center_order->center;
+                            $center_wallet_before = $center->wallet;
+                            $center_wallet_after = $center->wallet + $total_completed_price;
+
+                            Wallet::create(['amount' => $total_completed_price, 'wallet_before' => $center_wallet_before, 'wallet_after' => $center_wallet_after, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
+                            $this->chargeWallet($total_completed_price, $center_order->center_id);
+                        }
+                    }
+                    $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
+
+                    $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+                    Notification::send($admins, new CompleteOrderNotification($main_order, ['database', 'broadcast']));
+                    pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
+                }
+            }
+            $main_order->refresh();
+            DB::commit();
+            return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
+
+            // all good
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+        }
     }
 }

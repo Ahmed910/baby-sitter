@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Notifications\Orders\DeliverChildernNotification;
 use App\Notifications\Orders\RecieveChildernNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
 trait OTP
@@ -48,7 +49,9 @@ trait OTP
 
     public function checkOtpValidity(OTPRequest $request, $current_status, $updated_status)
     {
+        DB::beginTransaction();
 
+        try {
         $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($request->order_id);
         $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
         if ($service_id == 1) {
@@ -79,6 +82,7 @@ trait OTP
             } else {
                 // $sitter_order->update(['status'=>$updated_status]);
                 if ($service_id == 1) {
+
                     $order->update(['finished_at' => now()]);
 
                     if ($sitter_order->pay_type == 'wallet') {
@@ -88,6 +92,7 @@ trait OTP
                         $this->chargeWallet($order->final_price, $sitter_order->sitter_id);
                         Wallet::create(['amount' => $order->final_price, 'wallet_before' => $wallet_before, 'wallet_after' => $sitter->wallet, 'user_id' => $order->sitter_id, 'transferd_by' => $order->client_id, 'order_id' => $order->id]);
                     }
+
                 } else {
                     //    dd($sitter_order);
                     //     $sitter_order_month = $sitter_order->months->month_dates()->where('status','with_the_child')->first();
@@ -168,6 +173,12 @@ trait OTP
             }
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.otp_is_valid')]);
         }
+        DB::commit();
         return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.otp_is_not_valid')], 400);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+    }
+
     }
 }
