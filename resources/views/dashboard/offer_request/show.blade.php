@@ -93,7 +93,7 @@
                                 {{ trans('dashboard.offer_request.discount') }} :
                             </td>
                             <td>
-                                {{ $offer_request->discount }}
+                                {{ $offer_request->discount .' %' }}
                             </td>
                         </tr>
 
@@ -120,7 +120,7 @@
 
                     </table>
 
-                    @if($offer_request->status == 'pending')
+                    {{--  @if($offer_request->status == 'pending')
                     <div style="float: left">
                         @if(auth()->user()->hasPermissions('offer_request','accept'))
                         <a href="{{ route('dashboard.offer_request.accept',$offer_request->id) }}" class="btn btn-success">{{ trans('dashboard.offer_request.status.accept') }}</a>
@@ -129,9 +129,10 @@
                         <a href="{{ route('dashboard.offer_request.reject',$offer_request->id) }}" class="btn btn-danger">{{ trans('dashboard.offer_request.status.reject') }}</a>
                         @endif
                     </div>
-                    @endif
+                    @endif  --}}
                     </div>
                     @if($offer_request->status == 'pending')
+                    @if(auth()->user()->hasPermissions('offer_request','change_status'))
                     <div class="col-6 col-sm-3 col-md-6 col-lg-7">
                         <form action="{{ route('dashboard.offer_request.change_status',['id'=>$offer_request->id]) }}" method="POST">
                             @csrf
@@ -156,6 +157,7 @@
 
                         </form>
                     </div>
+                    @endif
                     @endif
                 </div>
             </div>

@@ -11,6 +11,7 @@ $(function () {
     dt_complex_header_table = $('.dt-complex-header'),
     dt_row_grouping_table = $('.dt-row-grouping'),
     dt_multilingual_table = $('.dt-multilingual'),
+    dt_without_title_custom_table = $('.dt_without_title_custom_table'),
     assetPath = '../../../app-assets/';
 
   if ($('body').attr('data-framework') === 'laravel') {
@@ -21,6 +22,7 @@ $(function () {
   // --------------------------------------------------------------------
 
   if (dt_basic_table.length) {
+      
     var dt_basic = dt_basic_table.DataTable({
       ajax: assetPath + 'data/table-datatable.json',
       columns: [

@@ -623,6 +623,7 @@ return [
     'previous' => 'previous',
     'coordinates' => 'coordinates',
     'locales' => 'locales',
+    'change_status_offer'=>'change offer status',
     'financial_statistics'=>'financial statistics',
     'courses'=>'courses',
    'incubation'=>'incubation data',

@@ -94,7 +94,7 @@
 									<label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_read">{{ trans('dashboard.general.read') }}</label>
 
 								</div>
-							@if ($route !='home' && $route != 'orders' && $route != 'financial_statistic' && $route != 'transfer_request')
+							@if ($route !='home' && $route != 'orders' && $route != 'financial_statistic' && $route != 'transfer_request' && $route !='offer_request')
 								<div class="custom-control custom-switch custom-switch-success mr-2 mb-1 col-md-3">
 									{!! Form::checkbox("permissions[$loop->index][][route_name]", $route.".store", isset($role) && $role->permissions && $role->permissions->contains('route_name',$route.".store")? true :false , ['class' =>
 									'custom-control-input
@@ -155,55 +155,26 @@
                                 <label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_reject">{{ trans('dashboard.general.reject') }}</label>
                             </div>
 
-                            {{--  <div class="custom-control custom-switch custom-switch-success mr-2 mb-1 col-md-3">
-                                {!! Form::checkbox("permissions[$loop->index][][route_name]", $route.".reject_interview", isset($role) && $role->permissions && $role->permissions->contains('route_name',$route.".reject_interview")? true :false , ['class' =>
-                                'custom-control-input
-                                permissions','id' => "customSwitch_".$loop->index. "_". $route."_reject_interview"]) !!}
-
-                                <label class="custom-control-label" for="customSwitch_{{ $loop->index }}_{{ $route }}_reject_interview">
-                                    <span class="switch-icon-left"><i class="feather icon-check"></i></span>
-                                    <span class="switch-icon-right"><i class="feather icon-x"></i></span>
-                                </label>
-                                <label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_reject_interview">{{ trans('dashboard.general.reject_interview') }}</label>
-                            </div>
-
-                            <div class="custom-control custom-switch custom-switch-success mr-2 mb-1 col-md-3">
-                                {!! Form::checkbox("permissions[$loop->index][][route_name]", $route.".finish_interview", isset($role) && $role->permissions && $role->permissions->contains('route_name',$route.".finish_interview")? true :false , ['class' =>
-                                'custom-control-input
-                                permissions','id' => "customSwitch_".$loop->index. "_". $route."_finish_interview"]) !!}
-
-                                <label class="custom-control-label" for="customSwitch_{{ $loop->index }}_{{ $route }}_finish_interview">
-                                    <span class="switch-icon-left"><i class="feather icon-check"></i></span>
-                                    <span class="switch-icon-right"><i class="feather icon-x"></i></span>
-                                </label>
-                                <label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_finish_interview">{{ trans('dashboard.general.finish_interview') }}</label>
-                            </div>
 
 
+                            @endif
+
+                            @if($route == 'offer_request')
 
                             <div class="custom-control custom-switch custom-switch-success mr-2 mb-1 col-md-4">
-                                {!! Form::checkbox("permissions[$loop->index][][route_name]", $route.".accept_sitter", isset($role) && $role->permissions && $role->permissions->contains('route_name',$route.".accept_sitter")? true :false , ['class' =>
+                                {!! Form::checkbox("permissions[$loop->index][][route_name]", $route.".change_status", isset($role) && $role->permissions && $role->permissions->contains('route_name',$route.".accept")? true :false , ['class' =>
                                 'custom-control-input
-                                permissions','id' => "customSwitch_".$loop->index. "_". $route."_accept_sitter"]) !!}
+                                permissions','id' => "customSwitch_".$loop->index. "_". $route."_change_status"]) !!}
 
-                                <label class="custom-control-label" for="customSwitch_{{ $loop->index }}_{{ $route }}_accept_sitter">
+                                <label class="custom-control-label" for="customSwitch_{{ $loop->index }}_{{ $route }}_change_status">
                                     <span class="switch-icon-left"><i class="feather icon-check"></i></span>
                                     <span class="switch-icon-right"><i class="feather icon-x"></i></span>
                                 </label>
-                                <label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_accept_sitter">{{ trans('dashboard.general.accept_sitter') }}</label>
+                                <label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_change_status">{{ trans('dashboard.general.change_status_offer') }}</label>
                             </div>
 
-                            <div class="custom-control custom-switch custom-switch-success mr-2 mb-1 col-md-4">
-                                {!! Form::checkbox("permissions[$loop->index][][route_name]", $route.".reject_sitter", isset($role) && $role->permissions && $role->permissions->contains('route_name',$route.".reject_sitter")? true :false , ['class' =>
-                                'custom-control-input
-                                permissions','id' => "customSwitch_".$loop->index. "_". $route."_reject_sitter"]) !!}
+                           
 
-                                <label class="custom-control-label" for="customSwitch_{{ $loop->index }}_{{ $route }}_reject_sitter">
-                                    <span class="switch-icon-left"><i class="feather icon-check"></i></span>
-                                    <span class="switch-icon-right"><i class="feather icon-x"></i></span>
-                                </label>
-                                <label class="font-medium-1 ml-1" for="customSwitch_{{ $loop->index }}_{{ $route }}_reject_sitter">{{ trans('dashboard.general.reject_sitter') }}</label>
-                            </div>  --}}
 
                             @endif
 						</div>

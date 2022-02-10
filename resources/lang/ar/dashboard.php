@@ -97,7 +97,7 @@ return [
 
       'offer_request_data'=>'بيانات العرض',
       'offer_user'=>'مقدم العرض',
-      'discount'=>'قيمة الخصم',
+      'discount'=>'نسبة الخصم',
       'start_date'=>'تاريخ بداية العرض',
       'end_date'=>'تاريخ نهاية العرض',
       'title'=>'عنوان العرض',
@@ -973,6 +973,7 @@ return [
     'previous' => 'السابق',
     'coordinates' => 'الموقع على الخريطة',
     'locales' => 'اللغة',
+    'change_status_offer'=>'تغيير حالة العرض',
     'financial_statistics'=>'التقارير المالية',
     'main_data' => 'البيانات الاساسية',
     'website' => 'الموقع الرئيسي',

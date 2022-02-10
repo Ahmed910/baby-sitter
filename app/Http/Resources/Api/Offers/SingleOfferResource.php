@@ -28,6 +28,7 @@ class SingleOfferResource extends JsonResource
             'discount'=> $this->discount,
             'photo'=>$this->photo,
             'offer_fees'=>setting('offer_fees'),
+            'reject_reason'=>$this->when($this->status == 'rejected' ,$this->reject_reason),
             'is_reactive'=>$this->getOfferIsReactive()
         ];
     }
