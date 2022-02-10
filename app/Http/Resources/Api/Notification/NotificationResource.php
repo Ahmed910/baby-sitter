@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Api\Notification;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\{Order , Chat , MainOrder, OrderOffer};
+use App\Models\{Order , Chat , MainOrder, Offer, OrderOffer};
 
 class NotificationResource extends JsonResource
 {
@@ -74,17 +74,16 @@ class NotificationResource extends JsonResource
     {
         switch ($notify_type) {
             case 'new_order':
-                 return 'order';
-                break;
+                return 'order';
+               break;
+
             case 'change_order_status':
                  return 'order';
                 break;
-            case 'accept_offer':
-                 return 'order';
+            case 'change_offer_status':
+                 return 'offer';
                 break;
-            case 'new_offer':
-                 return 'order';
-                break;
+
             case 'new_chat':
                  return 'chat';
                 break;
@@ -97,16 +96,14 @@ class NotificationResource extends JsonResource
 
     protected function offerData($offer_id)
     {
-        $offer = OrderOffer::find($offer_id);
+        $offer = Offer::find($offer_id);
         $data = null;
         if ($offer) {
             $data = [
                 'offer_id' => $offer->id,
-                'order_id' => $offer->order_id,
-                'order_status' => $offer->order->order_status,
-                'offer_status' => $offer->price_offer_status,
+                'offer_status' => $offer->status,
                 'offer_price' => (string)$offer->offer_price,
-                'cost_reason' => $offer->cost_reason,
+                // 'reject_reason' => isset($reject_reason) ? $offer->reject_reason:,
             ];
         }
 
@@ -132,12 +129,28 @@ class NotificationResource extends JsonResource
     {
         switch ($notify_data['notify_type']) {
             case 'new_order':
-                $order = Order::find($notify_data['order_id']);
-                $image = $order ? ($order->driver_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->driver_id ? $order->driver->avatar : setting('logo'))) : setting('logo');
+                $order = MainOrder::find($notify_data['order_id']);
+                if($order->to == 'sitter'){
+
+                    $image = $order ? ($order->sitter_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->sitter_id ? $order->sitter->avatar : setting('logo'))) : setting('logo');
+                }else{
+
+                    $image = $order ? ($order->center_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->center_id ? $order->center->avatar : setting('logo'))) : setting('logo');
+                }
                 break;
-            case 'new_order':
-                $offer = OrderOffer::find($notify_data['offer_id']);
-                $image = $offer ? ($offer->driver_id == auth('api')->id() ? $offer->order->client->avatar : $offer->driver->avatar ) : setting('logo');
+            case 'change_order_status':
+                $order = MainOrder::find($notify_data['order_id']);
+                if($order->to == 'sitter'){
+
+                    $image = $order ? ($order->sitter_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->sitter_id ? $order->sitter->avatar : setting('logo'))) : setting('logo');
+                }else{
+
+                    $image = $order ? ($order->center_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->center_id ? $order->center->avatar : setting('logo'))) : setting('logo');
+                }
+                break;
+            case 'change_offer_status':
+                $offer = Offer::findOrFail($notify_data['offer_id']);
+                $image= $offer->user->avatar;
                 break;
             case 'new_chat':
                 $chat = Chat::find($notify_data['chat_id']);

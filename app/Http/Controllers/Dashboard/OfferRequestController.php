@@ -31,8 +31,8 @@ class OfferRequestController extends Controller
             $offer->user->notify(new ChangeOfferStatus($offer));
         }
         $fcm_notes = [
-            'title' => ['dashboard.notification.offer.offer_status_has_been_changed_title'],
-            'body' => ['dashboard.notification.offer.offer_status_has_been_changed_body', ['body' => auth()->user()->name ?? auth()->user()->phone]],
+            'title' => $offer->status == 'accepted'? ['dashboard.notification.offer.offer_has_been_accepted_title']:['dashboard.notification.offer.offer_has_been_accepted_title'],
+            'body' => $offer->status == 'accepted'? ['dashboard.notification.offer.offer_has_been_accepted_body', ['body' => auth()->user()->name ?? auth()->user()->phone]]:['dashboard.notification.offer.offer_has_been_rejected_body', ['body' => auth()->user()->name ?? auth()->user()->phone]],
             'sender_data' => new SenderResource(auth()->user())
         ];
         pushFcmNotes($fcm_notes, optional($offer->user)->devices);

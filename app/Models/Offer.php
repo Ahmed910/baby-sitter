@@ -71,4 +71,10 @@ class Offer extends Model
      {
          return $this->belongsTo(User::class);
      }
+
+     public function getOfferPriceAttribute()
+     {
+         return $this->offer_fees * ($this->discount/100);
+     }
+
 }

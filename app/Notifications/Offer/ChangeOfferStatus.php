@@ -39,8 +39,8 @@ class ChangeOfferStatus extends Notification
     {
 
         return [
-            'title' => ['dashboard.notification.offer.offer_status_has_been_changed_title'],
-            'body' => ['dashboard.notification.offer.offer_status_has_been_changed_body', ['body' => auth()->user()->name ?? auth()->user()->phone]],
+            'title' => $this->offer->status == 'accepted'? ['dashboard.notification.offer.offer_has_been_accepted_title']:['dashboard.notification.offer.offer_has_been_accepted_title'],
+            'body' => $this->offer->status == 'accepted'? ['dashboard.notification.offer.offer_has_been_accepted_body', ['body' => auth()->user()->name ?? auth()->user()->phone]]:['dashboard.notification.offer.offer_has_been_rejected_body', ['body' => auth()->user()->name ?? auth()->user()->phone]],
             'sender_data' => new SenderResource(auth()->user()),
             'notify_type'=>'change_offer_status',
             'offer_id' => optional($this->offer)->id,

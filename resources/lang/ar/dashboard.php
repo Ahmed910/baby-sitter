@@ -764,9 +764,14 @@ return [
     'order_has_been_rejected_body'=>'تم رفض الطلب من قبل :body',
     'client_add_ad_body' => "قام :client بإضافة اعلان جديد في انتظار الموافقة",
     'offer'=>[
-        'offer_status_has_been_changed_title'=>'تم تغيير حالة العرض بنجاح',
-        'offer_status_has_been_changed_body'=>'تم تغيير حالة العرض من قبل :body',
+        // 'offer_status_has_been_changed_title'=>'تم تغيير حالة العرض بنجاح',
+        // 'offer_status_has_been_changed_body'=>'تم تغيير حالة العرض من قبل :body',
+        'offer_has_been_accepted_title'=>'تم الموافقة على العرض',
+        'offer_has_been_accepted_body'=>'تم الموافقة على العرض من قبل :body',
+        'offer_has_been_rejected_title'=>'تم رفض العرض',
+        'offer_has_been_rejected_body'=>'تم رفض العرض من قبل :body',
     ],
+
 
   ],
   'ar' => [
@@ -1075,6 +1080,7 @@ return [
       'success_accepted' => 'تم تأكيد الحجز',
       'states_must_be_has_not_sub_categories_if_the_service_is_free'=>'لابد ان تكون قيمة الحالة ليس له اقسام فرعية فى حالة ان الخدمة مجانية',
       'success_delete' => 'تم المسح بنجاح',
+
       'welcome' => 'مرحبا , :name',
       'please_wait' => 'انتظر لحظة من فضلك ...',
       'no_data_found' => 'لايوجد بيانات مضافة',
