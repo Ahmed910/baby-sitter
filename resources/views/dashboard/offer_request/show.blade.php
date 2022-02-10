@@ -23,7 +23,7 @@
                                 <i class="feather icon-truck font-large-3"></i>
                             </span>
                         </div>
-                        <div class="col-12 col-sm-9 col-md-6 col-lg-5">
+                        <div class="col-6 col-sm-9 col-md-6 col-lg-5">
 
 
 
@@ -131,6 +131,32 @@
                     </div>
                     @endif
                     </div>
+                    @if($offer_request->status == 'pending')
+                    <div class="col-6 col-sm-3 col-md-6 col-lg-7">
+                        <form action="{{ route('dashboard.offer_request.change_status',['id'=>$offer_request->id]) }}" method="POST">
+                            @csrf
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" value="accepted">
+                                <label class="form-check-label" for="accept">
+                                    {{ trans('dashboard.offer_request.status.accept') }}
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="status" id="reject" value="rejected">
+                                <label class="form-check-label" for="reject">
+                                    {{ trans('dashboard.offer_request.status.reject') }}
+                                </label>
+                              </div>
+
+                                    <label for="ban_reason-column">{{ trans('dashboard.offer_request.reject_reason') }}</label>
+                                    {!! Form::textarea('reject_reason', null, ['class' => 'form-control' ,"id" => "ban_reason-column", 'placeholder' => trans('dashboard.user.ban_reason')]) !!}
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary">{{ trans('dashboard.offer_request.confirm_state') }}</button>
+                                    </div>
+
+                        </form>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

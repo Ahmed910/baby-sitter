@@ -44,7 +44,6 @@ trait Order
     {
         //  dd('ssjsjdj');
 
-
         if ($request->pay_type == 'credit' && $request->check_order == 'test') {
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.payment_has_been_successfully')], 200);
         }
@@ -117,6 +116,7 @@ trait Order
             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.your_wallet_does_not_have_enough_balance')]);
         }
         $order_data = ['pay_type', 'center_id', 'baby_sitter_id', 'service_id', 'transaction_id', 'price','comment'];
+
         $offer_data = $this->checkOfferExisting($request->offer_id,$request->price_after_offer);
         $main_center_order_data = ['client_id' => auth('api')->id(), 'center_id' => $request->center_id, 'to' => 'center'];
         $main_order_data = array_merge($offer_data,$main_center_order_data);

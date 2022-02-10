@@ -24,9 +24,22 @@ class SingleOfferResource extends JsonResource
             'max_number'=> $this->max_num,
             'promo_code' => $this->promo_code,
             'num_of_used'=> $num_of_used,
-            'status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status),
+            'status'=> $this->status,
             'discount'=> $this->discount,
-            'photo'=>$this->photo
+            'photo'=>$this->photo,
+            'offer_fees'=>setting('offer_fees'),
+            'is_reactive'=>$this->getOfferIsReactive()
         ];
+    }
+
+    private function getOfferIsReactive()
+    {
+        $orders_with_that_offer = MainOrder::where('offer_id',$this->id)->count();
+       if(now() > $this->end_date || $orders_with_that_offer == $this->max_num || $this->status =='inactive'){
+            $is_reactive = true;
+        }else{
+            $is_reactive = false;
+        }
+        return $is_reactive;
     }
 }

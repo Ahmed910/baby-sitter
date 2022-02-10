@@ -26,6 +26,7 @@ class OrderCenterRequest extends ApiMasterRequest
      */
     public function rules()
     {
+
         $data=[
             'center_id' => 'required|exists:users,id',
             'baby_sitter_id' => 'required|exists:baby_sitters,id',
@@ -52,6 +53,7 @@ class OrderCenterRequest extends ApiMasterRequest
     public function getValidatorInstance()
     {
         $data = $this->all();
+        
         // dd($data);
         $data2 = $this->editRequestData($data);
 

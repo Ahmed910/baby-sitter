@@ -139,7 +139,7 @@ class NotificationResource extends JsonResource
                 $offer = OrderOffer::find($notify_data['offer_id']);
                 $image = $offer ? ($offer->driver_id == auth('api')->id() ? $offer->order->client->avatar : $offer->driver->avatar ) : setting('logo');
                 break;
-            case 'chat':
+            case 'new_chat':
                 $chat = Chat::find($notify_data['chat_id']);
                 $image = $chat ? ($chat->receiver_id == auth('api')->id() ? $chat->sender->avatar : $chat->receiver->avatar) : setting('logo');
                 break;

@@ -38,8 +38,9 @@ Route::group(
 
             // Offer Requests
             Route::resource('offer_request','OfferRequestController')->only('index','show');
-            Route::get('offer_request/accept/{id}','OfferRequestController@acceptOffer')->name('offer_request.accept');
-            Route::get('offer_request/reject/{id}','OfferRequestController@rejectOffer')->name('offer_request.reject');
+            // Route::get('offer_request/accept/{id}','OfferRequestController@acceptOffer')->name('offer_request.accept');
+            // Route::get('offer_request/reject/{id}','OfferRequestController@rejectOffer')->name('offer_request.reject');
+            Route::post('offer_request/change_status/{id}','OfferRequestController@changeStatus')->name('offer_request.change_status');
 
              // orders
              Route::resource('orders','OrderController')->only('index','show','destroy');

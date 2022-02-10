@@ -102,6 +102,8 @@ return [
       'end_date'=>'تاريخ نهاية العرض',
       'title'=>'عنوان العرض',
       'offer_photo'=>'صورة العرض',
+      'reject_reason'=>'سبب الرفض',
+      'confirm_state'=>'تأكيد الحالة',
       'provider_type'=>'نوع مقدم العرض',
       'status'=>[
           'status'=>'حالة العرض',
@@ -762,10 +764,8 @@ return [
     'order_has_been_rejected_body'=>'تم رفض الطلب من قبل :body',
     'client_add_ad_body' => "قام :client بإضافة اعلان جديد في انتظار الموافقة",
     'offer'=>[
-        'offer_has_been_accepted_title'=>'تم الموافقة على العرض',
-        'offer_has_been_accepted_body'=>'تم الموافقة على العرض من قبل :body',
-        'offer_has_been_rejected_title'=>'تم رفض العرض',
-        'offer_has_been_rejected_body'=>'تم رفض العرض من قبل :body',
+        'offer_status_has_been_changed_title'=>'تم تغيير حالة العرض بنجاح',
+        'offer_status_has_been_changed_body'=>'تم تغيير حالة العرض من قبل :body',
     ],
 
   ],
@@ -1067,8 +1067,7 @@ return [
       'reject_transfer'=>'تم رفض طلب التحويل',
       'success_send' => 'تم الارسال بنجاح',
       'success_update' => 'تم التعديل بنجاح',
-      'offer_accepted'=>'تم الموافقة على العرض',
-      'offer_rejected'=>'تم رفض العرض',
+      'offer_status_has_been_changed'=>'تم تغيير حالة العرض بنجاح',
       'the_end_date_less_than_the_current_date'=>'تاريخ نهاية العرض اقل من التاريخ الحالى',
       'success_delete'=>'تم الحذف بنجاح',
       'success_refused' => 'تم الالغاء بنجاح',

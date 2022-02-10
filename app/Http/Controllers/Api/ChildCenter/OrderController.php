@@ -11,6 +11,7 @@ use App\Http\Resources\Api\Client\Order\SingleOrderResource;
 use App\Http\Resources\Api\Notification\SenderResource;
 use App\Models\CenterOrder;
 use App\Models\MainOrder;
+use App\Models\OrderMonthDate;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Notifications\Orders\AcceptOrderNotification;
@@ -52,16 +53,16 @@ class OrderController extends Controller
 
     public function getWaitingAndExpiredOrders()
     {
-        $data =[];
-        $waiting_orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->whereHas('center_order',function($q){
+        $data = [];
+        $waiting_orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->whereHas('center_order', function ($q) {
             $q->where('status', 'waiting');
         })->get();
         $data['waiting_orders'] = NewOrderResource::collection($waiting_orders);
-        $expired_orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->whereHas('center_order',function($q){
+        $expired_orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->whereHas('center_order', function ($q) {
             $q->whereIn('status', ['rejected', 'completed', 'canceled']);
         })->get();
         $data['expired_orders'] = NewOrderResource::collection($expired_orders);
-        return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
+        return response()->json(['data' => $data, 'status' => 'success', 'message' => '']);
     }
 
     public function getOrderDetails($order_id)
@@ -74,9 +75,9 @@ class OrderController extends Controller
         $order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
 
         $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
-        if(optional($center_order->service)->service_type == 'hour'){
+        if (optional($center_order->service)->service_type == 'hour') {
             $center_order->update(['status' => 'waiting']);
-        }else{
+        } else {
             $center_order->update(['status' => 'process']);
         }
         $this->chargeWallet($center_order->price, $center_order->center_id);
@@ -123,15 +124,14 @@ class OrderController extends Controller
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
         $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
-        if($center_order->status == 'waiting'){
-            $center_order_period = optional($center_order->service)->service_type =='hour'
-            ? $center_order->hours()->whereBetween('date',[Carbon::now(),Carbon::now()->addDay()])->first()
-            : $center_order->months()->whereBetween('start_date',[Carbon::now(),Carbon::now()->addDay()])->first();
+        if ($center_order->status == 'waiting') {
+            $center_order_period = optional($center_order->service)->service_type == 'hour'
+                ? $center_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
+                : $center_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
         }
 
-        if(isset($center_order_period) && $center_order_period)
-        {
-            return response()->json(['data'=>null,'status'=>'fail','message'=>__('api.messages.cannot_cancel_order_before_start_by_24_hour')],400);
+        if (isset($center_order_period) && $center_order_period) {
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
         }
         $center_order->update(['status' => 'canceled']);
         if ($center_order->pay_type == 'wallet') {
@@ -156,11 +156,11 @@ class OrderController extends Controller
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
         $center_order = CenterOrder::findOrFail($main_order->center_order->id);
-        if(optional($center_order->service)->service_type == 'hour'){
+        if (optional($center_order->service)->service_type == 'hour') {
             $center_order->update(['status' => 'active']);
-        }else{
-            $center_order_month = $center_order->months->month_dates()->where('status','waiting')->first();
-            if(isset($center_order_month) && $center_order_month){
+        } else {
+            $center_order_month = $center_order->months->month_dates()->where('status', 'waiting')->orderBy('date', 'ASC')->first();
+            if (isset($center_order_month) && $center_order_month) {
 
                 $center_order_month->update(['status' => 'active']);
             }
@@ -184,7 +184,7 @@ class OrderController extends Controller
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
         $center_order = CenterOrder::findOrFail($main_order->center_order->id);
-        if(optional($center_order->service)->service_type == 'hour'){
+        if (optional($center_order->service)->service_type == 'hour') {
             $center_order->update(['status' => 'completed']);
             $main_order->update(['finished_at' => now()]);
             if ($center_order->pay_type == 'wallet') {
@@ -198,44 +198,52 @@ class OrderController extends Controller
             $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
             Notification::send($admins, new CompleteOrderNotification($main_order, ['database', 'broadcast']));
             pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
-        }else{
+        } else {
             $center_order_month = $center_order->months->month_dates()->where('status', 'active')->first();
             if (isset($center_order_month) && $center_order_month) {
-                $center_order_month->update(['status'=>'completed']);
+                $center_order_month->update(['status' => 'completed']);
             }
-            if ($center_order->months->month_dates->count() > 0) {
-                $last_day = $center_order->months->month_dates()->orderBy('date', 'DESC')->first();
+            if (isset($center_order_month) && $center_order_month) {
+                $last_day = OrderMonthDate::where('order_month_id', $main_order->center_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
             }
-            if (isset($last_day) && $last_day) {
+            // dd($last_day->id == $center_order_month->id);
+            if (isset($last_day) && $last_day->id == $center_order_month->id) {
+                $center_order->update(['status'=>'completed']);
                 if ($center_order->pay_type == 'wallet') {
                     $total_canceled_price = 0;
-                    $total_completed_price=0;
-                    $canceled_dates = $center_order->months->month_dates()->where('status', 'canceled')->get();
-                    $completed_dates = $center_order->months->month_dates()->where('status', 'completed')->get();
+                    $total_completed_price = 0;
+                    $canceled_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'canceled'])->get();
+
+                    $completed_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'completed'])->get();
                     foreach ($canceled_dates as $cancel_date) {
                         $start_time = optional($cancel_date->order_day)->start_time;
                         $end_time = optional($cancel_date->order_day)->end_time;
                         $hours = $end_time->diffInHours($start_time);
-                        $total_canceled_price+= ($hours*optional($center_order->months)->price_per_hour_for_month);
+                        $total_canceled_price += ($hours * optional($cancel_date->month)->price_per_hour_for_month);
                     }
                     foreach ($completed_dates as $completed_date) {
                         $start_time = optional($completed_date->order_day)->start_time;
                         $end_time = optional($completed_date->order_day)->end_time;
                         $hours = $end_time->diffInHours($start_time);
-                        $total_completed_price+= ($hours*optional($center_order->months)->price_per_hour_for_month);
+                        $total_completed_price += ($hours * optional($completed_date->month)->price_per_hour_for_month);
                     }
-                    $client=$center_order->client;
-                    $client_wallet_before =$client->wallet;
-                    $client_wallet_after =$client->wallet + $total_canceled_price;
-                    $center=$center_order->center;
-                    $center_wallet_before =$center->wallet;
-                    $center_wallet_after =$center->wallet + $total_completed_price;
+                    // dd($total_completed_price);
+
                     if ($total_canceled_price > 0) {
-                        Wallet::create(['amount'=>$total_canceled_price,'wallet_before'=>$client_wallet_before,'wallet_after'=>$client_wallet_after,'user_id'=>$order->client_id,'transferd_by'=>$order->center_id,'order_id'=>$order->id]);
+                        $client = $center_order->client;
+                        $client_wallet_before = $client->wallet;
+                        $client_wallet_after = $client->wallet + $total_canceled_price;
+                        Wallet::create(['amount' => $total_canceled_price, 'wallet_before' => $client_wallet_before, 'wallet_after' => $client_wallet_after, 'user_id' => $main_order->client_id, 'transferd_by' => $order->center_id, 'order_id' => $main_order->id]);
                         $this->chargeWallet($total_canceled_price, $center_order->client_id);
                     }
-                    Wallet::create(['amount'=>$total_completed_price,'wallet_before'=>$center_wallet_before,'wallet_after'=>$center_wallet_after,'user_id'=>$order->center_id,'transferd_by'=>$order->client_id,'order_id'=>$order->id]);
-                    $this->chargeWallet($total_completed_price, $center_order->sitter_id);
+                    if ($total_completed_price > 0) {
+                        $center = $center_order->center;
+                        $center_wallet_before = $center->wallet;
+                        $center_wallet_after = $center->wallet + $total_completed_price;
+
+                        Wallet::create(['amount' => $total_completed_price, 'wallet_before' => $center_wallet_before, 'wallet_after' => $center_wallet_after, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
+                        $this->chargeWallet($total_completed_price, $center_order->center_id);
+                    }
                 }
                 $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
 

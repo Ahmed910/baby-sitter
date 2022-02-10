@@ -29,7 +29,7 @@ class OfferRequest extends ApiMasterRequest
         {
             $offer = Offer::findOrFail($this->offer);
             $photo_validation = 'nullable|image|mimes:jpeg,jpg,png';
-            $start_date = 'nullable|date_format:Y-m-d|after_or_equal:today';
+            $start_date = 'nullable|date_format:Y-m-d';
             $promo_code = 'nullable';
             $max_num = 'nullable|integer|gt:'.$offer->max_num;
             $discount = 'nullable|numeric|between:0,100';
