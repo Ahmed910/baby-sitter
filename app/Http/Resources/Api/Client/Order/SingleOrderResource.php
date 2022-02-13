@@ -29,8 +29,8 @@ class SingleOrderResource extends JsonResource
         // $passed_time =$order->hours()->where('date','<',now())->first();
 
         //   dd(optional($order->service)->service_type);
-        
-            dd($order->months->month_dates()->where('status','waiting')->orderBy('order_month_dates.date','ASC')->first());
+
+            dd($order->months->month_dates()->where('order_month_dates.status','waiting')->orderBy('order_month_dates.date','ASC')->first());
         return [
             'id' => $this->id,
             'type' => $this->to,
