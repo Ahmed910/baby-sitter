@@ -22,9 +22,9 @@ class OfferRequestController extends Controller
     {
         // dd($request->validated());
         $offer = Offer::findOrFail($id);
-        if($offer->end_date < now()){
-            return redirect(route('dashboard.offer_request.index'))->withFalse(trans('dashboard.messages.the_end_date_less_than_the_current_date'));
-        }
+        // if($offer->end_date < now()){
+        //     return redirect(route('dashboard.offer_request.index'))->withFalse(trans('dashboard.messages.the_end_date_less_than_the_current_date'));
+        // }
         $offer->update($request->validated());
 
         if(isset($offer->user)){

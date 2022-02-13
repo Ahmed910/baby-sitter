@@ -108,6 +108,7 @@ class OrderController extends Controller
             }
             //if($sitter_order->status == 'pending' && optional($sitter_order->service)->service_type =='hour' &&  optional($sitter_order->hours)->date )
             $sitter_order->update(['status' => 'canceled']);
+            $sitter_order->refresh();
             if ($sitter_order->pay_type == 'wallet') {
 
                 $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
@@ -126,6 +127,7 @@ class OrderController extends Controller
                 return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
             }
             $center_order->update(['status' => 'canceled']);
+            $center_order->refresh();
             if ($center_order->pay_type == 'wallet') {
                 $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
             }
