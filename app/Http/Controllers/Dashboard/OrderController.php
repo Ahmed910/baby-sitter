@@ -32,6 +32,7 @@ class OrderController extends Controller
     {
         $data=[];
         $order = MainOrder::findOrFail($id);
+        // dd($order);
         $data['order'] = $order;
         if($order->to == 'sitter'){
             $data['order_details'] = $order->sitter_order;
@@ -39,7 +40,7 @@ class OrderController extends Controller
 
         }else{
             $data['order_details'] = $order->center_order;
-            $data['name'] = optional($order->center)->name.' ('.optional($order->baby_sitter)->name.')';
+            $data['name'] = optional($order->center)->name.' ('.optional(@$order->center_order->baby_sitter)->name.')';
 
         }
 

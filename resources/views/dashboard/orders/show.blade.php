@@ -56,13 +56,21 @@
                            <p>{{ trans('dashboard.order.schedules.end_time').' : '.optional($order_details->hours)->end_time->format('g:i A') }}</p>
 
                         @else
+
                         <h5>{{ trans('dashboard.order.schedules.month') }}</h5>
-                        <p>{{ trans('dashboard.order.schedules.start_date').' : '.optional($order_details->months)->start_date->toFormattedDateString() }}</p>
-                        <p>{{ trans('dashboard.order.schedules.end_date').' : '.optional($order_details->months)->end_date->toFormattedDateString() }}</p>
+                        <p>{{ isset($order_details->months) ? trans('dashboard.order.schedules.start_date').' : '.optional($order_details->months)->start_date->toFormattedDateString() : null }}</p>
+                        <p>{{ isset($order_details->months) ? trans('dashboard.order.schedules.end_date').' : '. optional($order_details->months)->end_date->toFormattedDateString() : null }}</p>
                           <h6>{{ trans('dashboard.order.schedules.schedules_during_month') }}</h6>
+                          @if(isset($order_details->months))
                         @foreach (optional($order_details->months)->month_days as $day)
-                          <span>{{ optional($day->day)->name }}</span> : <span>{{ trans('dashboard.order.schedules.from') .':' .$day->start_time->format('g:i A') }}</span> ,<span>{{ trans('dashboard.order.schedules.to') .':' .$day->end_time->format('g:i A') }}</span></br>
+                        <span>{{ optional($day->day)->name }}</span> : <span>{{ trans('dashboard.order.schedules.from') .':' .$day->start_time->format('g:i A') }}</span> ,<span>{{ trans('dashboard.order.schedules.to') .':' .$day->end_time->format('g:i A') }}</span></br>
+                          @foreach ($day->month_dates as $date)
+                          <span>{{ $date->date->toFormattedDateString() }}</span>,
+                          <span>{{ trans('dashboard.order.status.day_status') .':' .trans('dashboard.order.status.'.$date->status) }}</span></br>
+                          @endforeach
+
                         @endforeach
+                        @endif
                         @endif
                     </div>
                     <div class="col-6">

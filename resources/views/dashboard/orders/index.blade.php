@@ -16,6 +16,7 @@
                         <th>{!! trans('dashboard.order.from') !!}</th>
                         <th>{!! trans('dashboard.order.to') !!}</th>
                         <th>{!! trans('dashboard.order.status.status') !!}</th>
+                        <th>{!! trans('dashboard.order.service_type') !!}</th>
                         <th>{!! trans('dashboard.general.added_date') !!}</th>
                         <th>{!! trans('dashboard.general.control') !!}</th>
                     </tr>
@@ -29,7 +30,7 @@
                         <td>{{ optional($order->client)->name }}</td>
                         <td>{{ $order->to == 'sitter' ? optional($order->sitter)->name : optional($order->center)->name }}</td>
                         <td>{{ $order->to == 'sitter' ? trans('dashboard.order.status.'.optional($order->sitter_order)->status) : trans('dashboard.order.status.'.optional($order->center_order)->status) }}</td>
-
+                        <td>{{ $order->to == 'sitter' ? optional(@$order->sitter_order->service)->service_type : optional(@$order->center_order->service)->service_type}}</td>
 
 
                         <td>
@@ -37,7 +38,7 @@
                         </td>
                         <td class="justify-content-center">
 
-                            <a href="{!! route('dashboard.orders.show',$order->id) !!}" class="text-primary mr-2" title="{!! trans('dashboard.general.edit') !!}">
+                            <a href="{!! route('dashboard.orders.show',$order->id) !!}" class="text-primary mr-2" title="{!! trans('dashboard.general.show') !!}">
                                 <i class="fas fa-desktop font-medium-3"></i>
                             </a>
                             <a onclick="deleteItem('{{ $order->id }}' , '{{ route('dashboard.orders.destroy',$order->id) }}')" class="text-danger" title="{!! trans('dashboard.general.delete') !!}">

@@ -1454,15 +1454,17 @@ return [
     'order_data'=>'تفاصيل الطلب',
     'status'=>[
         'status'=>'حالة الطلب',
+        'day_status'=>'حالة اليوم',
         'pending'=>'قيد الإنتظار',
         'accepted'=>'تم القبول',
         'rejected'=>'تم الرفض',
+        'process'=>'يتم العمل',
         'canceled'=>'تم الإلغاء',
         'waiting'=>'قيد التنفيذ',
         'with_the_child'=>'لديها طفل',
         'finished'=>'تم إنهاء الطلب',
         'active'=>'مفعل',
-        'completed'=>'تم إكتمال الطلب'
+        'completed'=>'تم الإكتمال'
     ]
 ],
 

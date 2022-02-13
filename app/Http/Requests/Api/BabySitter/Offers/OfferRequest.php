@@ -25,9 +25,11 @@ class OfferRequest extends ApiMasterRequest
      */
     public function rules()
     {
+
         if(isset($this->offer) && $this->offer)
         {
             $offer = Offer::findOrFail($this->offer);
+
             $photo_validation = 'nullable|image|mimes:jpeg,jpg,png';
             $start_date = 'nullable|date_format:Y-m-d';
             $promo_code = 'nullable';
@@ -49,6 +51,7 @@ class OfferRequest extends ApiMasterRequest
             $max_num = 'required|integer';
             $discount = 'nullable|numeric|between:0,100';
         }
+        // dd($start_date);
         return [
             'start_date'=>$start_date,
             'end_date'  => 'required|date_format:Y-m-d|after:start_date',
