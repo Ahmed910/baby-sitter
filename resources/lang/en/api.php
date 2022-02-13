@@ -30,6 +30,7 @@ return[
         'offer_request_has_been_sent_management_to_reactive_offer'=>'offer request has been sent management to reactive offer',
         'update_gallery'=>'update image in gallery',
         'cant_send_request'=>'cant send request',
+        'offer_has_been_updated'=>'offer has been updated',
         'schedules_created_successfully'=>'schedules created successfully',
         'schedules_updated_successfully'=>'schedules updated successfully',
         'kid_updated_successfully'=>'kid data updated successfully',

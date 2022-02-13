@@ -81,7 +81,7 @@ trait Offers{
         $offer = Offer::offeruser()->where('end_date','<',now())->where('status','active')->findOrFail($id);
 
         $offer->update($request->validated());
-        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_request_has_been_sent_to_management')]);
+        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_has_been_updated')]);
     }
 }
 ?>

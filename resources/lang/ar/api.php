@@ -23,6 +23,7 @@ return[
         'order_hint_if_offer_after_accept' => "سوف يتم اضافة مبلغ :driver_wallet_amount ريال الى محفظتك بعد انهاء الرحلة وسيقوم العميل بدفع مبلغ :client_pay_amount ريال",
         'cant_finish_order_before_received_from_client' => "لايمكنك انهاء الطلب قبل تأكيد استلام الطلب من العميل",
           'offer_created_successfully'=>'تم إنشاء العرض بنجاح',
+          'offer_has_been_updated'=>'تم تعديل العرض بنجاح',
 
           'the_max_num_for_offer_has_been_used'=>'لقد تم استخدام الحد الاقصي لهذا العرض',
           'request_has_been_sent'=>'تم إرسال الطلب',
@@ -65,7 +66,7 @@ return[
           'there_is_an_error_try_again'=>'هناك خطا حاول مره اخري',
           'offer_request_has_been_sent_management_to_reactive_offer'=>'تم إرسال طلب للادارة لاعادة تفعيل العرض',
           'deleted_from_gallery'=>'تم حذف الصورة من المعرض الخاص بك',
-          
+
           'cant_send_request'=>'لا يمكن ارسال الطلب',
         'driver_finish_trip' => "تم انهاء الرحلة من قبل الكابتن",
         'driver_finish_order' => "تم انهاء الطلب من قبل الكابتن",
