@@ -60,7 +60,7 @@ class SingleOrderResource extends JsonResource
                     'url' => route('order.customer_profile', ['customer_id' => optional($this->client)->id])
                 ]
             ]),
-            'qr_code' => $this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter', $order->qrCode),
+            'qr_code' => $this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter', $this->qrCode),
             'gender' => $this->when(auth('api')->user()->user_type == 'babysitter' && $this->to == 'sitter', optional($order->client)->gender),
             'child_center_location' => $this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center', optional(optional($this->center)->profile)->location),
             'lat' => $this->when(auth('api')->user()->user_type == 'client' && $this->to == 'center', optional(optional($this->center)->profile)->lat),

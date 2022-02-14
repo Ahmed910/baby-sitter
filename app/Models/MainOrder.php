@@ -2,14 +2,40 @@
 
 namespace App\Models;
 
+use App\Traits\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class MainOrder extends Model
 {
+    use QrCode;
     protected $guarded = ['created_at','updated_at'];
     protected $dates = ['finished_at'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($data) {
+
+            if (!isset($data['qr_code']) || !$data['qr_code'] != "") {
+                // dd('sss');
+               self::generateQrCode('main_order',$data);
+            }
+        });
+    }
+
+    public function getQrCodeAttribute()
+    {
+
+        if (isset($this->attributes['qr_code']) && $this->attributes['qr_code']) {
+            return asset('storage/images/main_order') . '/' . $this->attributes['qr_code'];
+        } else {
+            return '';
+        }
+
+    }
 
     public function sitter_order()
     {
