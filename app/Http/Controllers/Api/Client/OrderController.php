@@ -68,7 +68,7 @@ class OrderController extends Controller
 
     public function getDaysInMonthServiceForOrder($order_id)
     {
-
+       dd(auth('api')->id());
         $main_order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
         // dd($main_order);
        // $order = $main_order->to == 'sitter' ? SitterOrder::where(['status'=>'with_the_child','service_id'=>2])->firstOrFail():CenterOrder::where(['status'=>'active','service_id'=>2])->firstOrFail();
