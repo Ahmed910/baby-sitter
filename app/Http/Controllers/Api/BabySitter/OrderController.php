@@ -109,9 +109,9 @@ class OrderController extends Controller
 
         try {
             $sitter_order->update(['status' => 'canceled']);
-            if ($sitter_order->pay_type == 'wallet') {
-                $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
-            }
+            // if ($sitter_order->pay_type == 'wallet') {
+             $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
+            // }
             DB::commit();
             $main_order->refresh();
             $fcm_notes =  [
@@ -140,9 +140,9 @@ class OrderController extends Controller
 
         try {
             $sitter_order->update(['status' => 'rejected']);
-            if ($sitter_order->pay_type == 'wallet') {
+            // if ($sitter_order->pay_type == 'wallet') {
                 $this->chargeWallet($order->price_after_offer, $sitter_order->client_id);
-            }
+            // }
             DB::commit();
             $sitter_order->refresh();
             $order->refresh();
