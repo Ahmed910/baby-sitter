@@ -43,7 +43,7 @@ class OrderController extends Controller
                 if ($request->order_type == 'new_orders') {
                     $q->where('status', 'pending');
                 } elseif ($request->order_type == 'active_orders') {
-                    $q->where('status', 'active');
+                    $q->whereIn('status', ['active','process']);
                 }
             });
         })->get();

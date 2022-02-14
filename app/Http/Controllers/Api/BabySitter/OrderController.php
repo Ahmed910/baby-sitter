@@ -48,7 +48,7 @@ class OrderController extends Controller
     {
         $data = [];
         $active_orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->whereHas('sitter_order', function ($q) {
-            $q->whereIn('status', ['waiting', 'with_the_child']);
+            $q->whereIn('status', ['waiting','process', 'with_the_child']);
         })->get();
         $data['active_orders'] = NewOrderResource::collection($active_orders);
         $expired_orders = MainOrder::where(['to' => 'sitter', 'sitter_id' => auth('api')->id()])->whereHas('sitter_order', function ($q) {

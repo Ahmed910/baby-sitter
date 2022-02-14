@@ -75,7 +75,7 @@ class OrderController extends Controller
        // $order = $main_order->to == 'sitter' ? SitterOrder::where(['status'=>'with_the_child','service_id'=>2])->firstOrFail():CenterOrder::where(['status'=>'active','service_id'=>2])->firstOrFail();
         if ($main_order->to == 'sitter') {
 
-            $sitter_order = SitterOrder::where(['main_order_id'=>$order_id,'status'=>'with_the_child','service_id'=>2])->firstOrFail();
+            $sitter_order = SitterOrder::where(['main_order_id'=>$order_id,'service_id'=>2])->firstOrFail();
             // dd($sitter_order->months);
             $days = $sitter_order->months->month_dates;
         //    dd($sitter_order->months);
