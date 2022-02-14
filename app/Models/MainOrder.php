@@ -24,6 +24,7 @@ class MainOrder extends Model
                self::generateQrCode('main_order',$data);
             }
             
+
         });
     }
 
