@@ -11,6 +11,7 @@ class CustomerController extends Controller
 {
     public function getCustomerProfile($customer_id)
     {
+        dd($customer_id,User::find($customer_id));
         $user = User::findOrFail($customer_id);
         return (new CustomerRateResource($user))->additional(['status'=>'success','message'=>'']);
     }
