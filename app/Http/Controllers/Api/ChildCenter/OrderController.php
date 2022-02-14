@@ -152,16 +152,17 @@ class OrderController extends Controller
                 return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
             }
             $center_order->update(['status' => 'canceled']);
-            if ($center_order->pay_type == 'wallet') {
 
-                $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
-            }
+
+            $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
+            DB::commit();
+            $main_order->refresh();
             $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
 
             $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
             Notification::send($admins, new CancelOrderNotification($main_order, ['database', 'broadcast']));
             pushFcmNotes($fcm_notes, optional($main_order->client)->devices);
-            DB::commit();
+
             return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
         } catch (\Exception $e) {
             DB::rollback();
