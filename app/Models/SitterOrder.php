@@ -8,33 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SitterOrder extends Model
 {
-    use QrCode;
+
     protected $guarded = ['created_at', 'updated_at'];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saved(function ($data) {
-
-            if (!isset($data['qr_code']) || !$data['qr_code'] != "") {
-                // dd('sss');
-               self::generateQrCode('sitter_order',$data);
-            }
-        });
-    }
-
-
-    public function getQrCodeAttribute()
-    {
-
-        if (isset($this->attributes['qr_code']) && $this->attributes['qr_code']) {
-            return asset('storage/images/sitter_order') . '/' . $this->attributes['qr_code'];
-        } else {
-            return '';
-        }
-
-    }
 
     public function kids()
     {
@@ -67,5 +42,5 @@ class SitterOrder extends Model
     {
         return $this->belongsTo(MainOrder::class,'main_order_id');
     }
-   
+
 }

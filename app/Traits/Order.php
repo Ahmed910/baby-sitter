@@ -123,9 +123,9 @@ trait Order
         $financials = $this->getAppProfit($request->price_after_offer);
         $center = User::findOrFail($request->center_id);
         $service = Service::findOrFail($request->service_id);
-        DB::beginTransaction();
+        // DB::beginTransaction();
 
-        try {
+        // try {
 
 
             $price = $service->service_type == 'hour' ? ['price_per_hour'=>$center->user_services()->where('service_id',$request->service_id)->firstOrFail()->price] : ['price_per_hour_for_month'=>$center->user_services()->where('service_id',$request->service_id)->firstOrFail()->price];
@@ -146,7 +146,7 @@ trait Order
                 $this->withdrawFromWallet($order->price_after_offer, auth('api')->id());
             }
 
-            DB::commit();
+            // DB::commit();
             $fcm_notes = [
                 'title'=>['dashboard.notification.order_has_been_created_title'],
                  'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
@@ -158,10 +158,10 @@ trait Order
             Notification::send($admins, new CreateOrderNotification($main_order, ['database', 'broadcast']));
             pushFcmNotes($fcm_notes,$center->devices);
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_created_successfully')]);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+        // }
     }
 
     private function checkOfferExisting($offer_id = null,$request_price_after_offer)
