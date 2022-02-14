@@ -16,7 +16,7 @@ class CustomerRateResource extends JsonResource
     public function toArray($request)
     {
         // $rates = Rate::where('to',$this->id)->get();
-        // dd($rates);
+        dd('ssjdjj');
         return [
             'id'=>$this->id,
             'avatar'=>$this->avatar,
