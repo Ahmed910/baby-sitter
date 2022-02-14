@@ -23,6 +23,7 @@ class MainOrder extends Model
                 // dd('sss');
                self::generateQrCode('main_order',$data);
             }
+            
         });
     }
 
