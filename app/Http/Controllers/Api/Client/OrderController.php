@@ -43,9 +43,9 @@ class OrderController extends Controller
         $orders = MainOrder::where('client_id', auth('api')->id())->when(isset($request->order_type), function ($q) use ($request) {
             if ($request->order_type == 'current') {
                 $q->whereHas('sitter_order', function ($q) {
-                    $q->whereIn('status', ['pending', 'waiting', 'with_the_child']);
+                    $q->whereIn('status', ['pending', 'waiting', 'with_the_child','process']);
                 })->orWhereHas('center_order', function ($q) {
-                    $q->whereIn('status', ['pending', 'waiting', 'active']);
+                    $q->whereIn('status', ['pending', 'waiting', 'active','process']);
                 });
             } elseif ($request->order_type == 'previous') {
                 $q->whereHas('sitter_order', function ($q) {
