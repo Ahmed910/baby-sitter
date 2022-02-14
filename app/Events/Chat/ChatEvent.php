@@ -59,8 +59,8 @@ class ChatEvent implements ShouldBroadcastNow
         ];
     }
 
-    // public function broadcastAs()
-    // {
-    //     return 'NewMessage';
-    // }
+    public function broadcastAs()
+    {
+        return 'NewMessage';
+    }
 }

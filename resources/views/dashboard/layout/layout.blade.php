@@ -59,7 +59,7 @@
 
 
      </script>
-
+     <script src="//{{ Request::getHost() }}:6041/socket.io/socket.io.js"></script>
      <script src="{{ asset('js/app.js') }}"></script>
 </body>
 <!-- END: Body-->
