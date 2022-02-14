@@ -12,7 +12,6 @@ class MainOrder extends Model
     use QrCode;
     protected $guarded = ['created_at','updated_at'];
     protected $dates = ['finished_at'];
-
     protected static function boot()
     {
         parent::boot();
