@@ -107,14 +107,20 @@ class OrderController extends Controller
 
             $center_order = CenterOrder::where('status', 'pending')->findOrFail(optional($order->center_order)->id);
             $center_order->update(['status' => 'rejected']);
-            if ($center_order->pay_type == 'wallet') {
-                $this->chargeWallet($center_order->price, $center_order->client_id);
-            }
-            $order->client->notify(new RejectOrderNotification($order, ['database']));
 
+            $this->chargeWallet($center_order->price, $center_order->client_id);
+
+            DB::commit();
+            $fcm_notes = [
+                'title' => ['dashboard.notification.order_has_been_rejected_title'],
+                'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'sender_data' => new SenderResource(auth('api')->user())
+            ];
+            $order->refresh();
+            $order->client->notify(new RejectOrderNotification($order, ['database']));
             $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
             Notification::send($admins, new RejectOrderNotification($order, ['database', 'broadcast']));
-            DB::commit();
+            pushFcmNotes($fcm_notes, optional($order->client)->devices);
             return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
         } catch (\Exception $e) {
             DB::rollback();
