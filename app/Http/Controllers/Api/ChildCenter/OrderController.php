@@ -135,8 +135,8 @@ class OrderController extends Controller
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-            $center_order = CenterOrder::where('status', 'waiting')->findOrFail($main_order->center_order->id);
-            if ($center_order->status == 'waiting') {
+            $center_order = CenterOrder::findOrFail($main_order->center_order->id);
+            if ($center_order->status == 'waiting' || $center_order->status == 'process') {
                 $center_order_period = optional($center_order->service)->service_type == 'hour'
                     ? $center_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
                     : $center_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();

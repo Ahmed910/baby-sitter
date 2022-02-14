@@ -92,10 +92,10 @@ class OrderController extends Controller
     {
         // dd(auth('api')->user());
         $main_order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
-
+        // SitterOrder::where('status', 'waiting')->findOrFail($main_order->sitter_order->id);
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-        $sitter_order = SitterOrder::where('status', 'waiting')->findOrFail($main_order->sitter_order->id);
-        if ($sitter_order->status == 'waiting') {
+        $sitter_order = SitterOrder::findOrFail($main_order->sitter_order->id);
+        if ($sitter_order->status == 'waiting' || $sitter_order->status == 'process') {
             $sitter_order_period = optional($sitter_order->service)->service_type == 'hour'
                 ? $sitter_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
                 : $sitter_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
