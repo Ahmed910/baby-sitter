@@ -155,7 +155,7 @@ class OrderController extends Controller
             return (new SingleOrderResource($main_order))->additional(['status' => 'success', 'message' => '']);
         } catch (\Exception $e) {
             DB::rollback();
-            // something went wrong
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
         }
     }
 }
