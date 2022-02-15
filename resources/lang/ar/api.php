@@ -26,6 +26,7 @@ return[
           'offer_has_been_updated'=>'تم تعديل العرض بنجاح',
           'order_status_has_been_changed_to_with_the_child'=>'تم تغيير حالة الطلب إلى لديه طفل',
           'completation_has_been_done'=>'تم الإكتمال',
+          'notifictions_has_been_deleted'=>'تم حذف الإشعارات',
           'the_max_num_for_offer_has_been_used'=>'لقد تم استخدام الحد الاقصي لهذا العرض',
           'request_has_been_sent'=>'تم إرسال الطلب',
           'your_balance_in_wallet_is_insufficiant'=>'رصيدك فى المحفظة اقل من المبلغ المطلوب',

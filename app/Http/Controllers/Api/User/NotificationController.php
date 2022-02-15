@@ -28,10 +28,10 @@ class NotificationController extends Controller
     public function clearAllNotifications()
     {
         $notifications = auth('api')->user()->notifications()->get();
-        $notification_ids = $notifications->pluck('id');
-        dd($notification_ids);
-        Notification::whereIn('id',$notification_ids)->delete();
-        return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>'']);
+        foreach ($notifications as $notification) {
+            $notification->delete();
+       }
+        return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>trans('api.messages.notifictions_has_been_deleted')]);
     }
 
 
