@@ -60,7 +60,7 @@ trait OTP
 
             $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
 
-            $sitter_order = $order_for_sitter->months->month_dates()->where(['status' => $current_status, 'otp_code' => $request->otp_code])->orderBy('date', 'ASC')->firstOrFail();
+            $sitter_order = $order_for_sitter->months->month_dates()->where(['order_month_dates.status' => $current_status, 'order_month_dates.otp_code' => $request->otp_code])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
             // dd('ss');
             // dd($sitter_order);
         }
