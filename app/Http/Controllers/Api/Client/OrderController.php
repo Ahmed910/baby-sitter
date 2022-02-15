@@ -66,6 +66,7 @@ class OrderController extends Controller
 
     public function getOrderDetails($order_id)
     {
+        dd(now()->format('Y-m-d H:i:s'),now()->addHours(12)->format('Y-m-d H:i:s'));
         $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
 
         return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => '']);
