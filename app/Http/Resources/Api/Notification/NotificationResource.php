@@ -128,6 +128,7 @@ class NotificationResource extends JsonResource
 
     protected function getImageData($notify_data)
     {
+        $image = null;
         switch ($notify_data['notify_type']) {
             case 'new_order':
                 $order = MainOrder::find($notify_data['order_id']);
