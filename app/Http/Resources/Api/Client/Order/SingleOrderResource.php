@@ -101,7 +101,7 @@ class SingleOrderResource extends JsonResource
             } else {
                 $waiting_check = false;
             }
-            $waiting_check = false;
+            
         }
 
         return $waiting_check;

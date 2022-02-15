@@ -147,7 +147,7 @@ class OrderController extends Controller
             $main_order->refresh();
             $fcm_notes =  [
                 'title' => ['dashboard.notification.client_cancel_order_title'],
-                'body' => ['dashboard.notification.client_cancel_order_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'body' => ['dashboard.notification.client_cancel_order_body'],
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
 
@@ -189,7 +189,7 @@ class OrderController extends Controller
                 $order->refresh();
                 $fcm_notes = [
                     'title' => ['dashboard.notification.sitter_has_been_recieved_childern_title'],
-                    'body' => ['dashboard.notification.sitter_has_been_recieved_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                    'body' => ['dashboard.notification.sitter_has_been_recieved_childern_body'],
                     'sender_data' => new SenderResource(auth('api')->user())
                 ];
                 $order->client->notify(new RecieveChildernNotification($order, ['database']));
@@ -299,7 +299,7 @@ class OrderController extends Controller
         $order->refresh();
         $fcm_notes = [
             'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
-            'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body'],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         $order->client->notify(new DeliverChildernNotification($order, ['database']));

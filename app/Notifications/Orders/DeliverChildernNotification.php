@@ -70,7 +70,7 @@ class DeliverChildernNotification extends Notification implements ShouldBroadcas
 
         return [
             'title'=>['dashboard.notification.sitter_has_been_deliver_childern_title'],
-            'body'=> ['dashboard.notification.sitter_has_been_deliver_childern_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'body'=> ['dashboard.notification.sitter_has_been_deliver_childern_body'],
             'sender_data' => new SenderResource(auth('api')->user()),
             'notify_type'=>'change_order_status',
             'route' => route('dashboard.orders.show',$this->booking->id),

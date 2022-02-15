@@ -48,7 +48,7 @@ class ActiveOrderNotification extends Notification implements ShouldBroadcast
 
         return [
             'title'=>['dashboard.notification.order_has_been_active_title'],
-            'body'=> ['dashboard.notification.order_has_been_active_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'body'=> ['dashboard.notification.order_has_been_active_body'],
             'sender_data' => new SenderResource(auth('api')->user()),
             'notify_type'=>'change_order_status',
             'route' => route('dashboard.orders.show',$this->booking->id),

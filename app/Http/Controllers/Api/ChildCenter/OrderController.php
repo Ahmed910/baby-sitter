@@ -86,7 +86,7 @@ class OrderController extends Controller
         //   dd($center_order);
         $fcm_notes = [
             'title' => ['dashboard.notification.order_has_been_accepted_title'],
-            'body' => ['dashboard.notification.order_has_been_accepted_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'body' => ['dashboard.notification.order_has_been_accepted_body'],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         $order->client->notify(new AcceptOrderNotification($order, ['database']));
@@ -113,7 +113,7 @@ class OrderController extends Controller
             DB::commit();
             $fcm_notes = [
                 'title' => ['dashboard.notification.order_has_been_rejected_title'],
-                'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'body' => ['dashboard.notification.order_has_been_rejected_body'],
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $order->refresh();
@@ -137,7 +137,7 @@ class OrderController extends Controller
 
             $fcm_notes = [
                 'title' => ['dashboard.notification.order_has_been_rejected_title'],
-                'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'body' => ['dashboard.notification.order_has_been_rejected_body'],
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
@@ -175,7 +175,7 @@ class OrderController extends Controller
         $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
         $fcm_notes = [
             'title' => ['dashboard.notification.order_has_been_active_title'],
-            'body' => ['dashboard.notification.order_has_been_active_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'body' => ['dashboard.notification.order_has_been_active_body'],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
@@ -206,7 +206,7 @@ class OrderController extends Controller
             $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
             $fcm_notes = [
                 'title' => ['dashboard.notification.order_has_been_completed_title'],
-                'body' => ['dashboard.notification.order_has_been_completed_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'body' => ['dashboard.notification.order_has_been_completed_body'],
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);

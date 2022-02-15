@@ -91,7 +91,7 @@ trait Order
             DB::commit();
             $fcm_notes = [
                 'title'=>['dashboard.notification.order_has_been_created_title'],
-                 'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                 'body'=> ['dashboard.notification.order_has_been_created_body'],
                  'sender_data' => new SenderResource(auth('api')->user())
               ];
             $sitter->notify(new CreateOrderNotification($main_order, ['database']));
@@ -149,7 +149,7 @@ trait Order
             // DB::commit();
             $fcm_notes = [
                 'title'=>['dashboard.notification.order_has_been_created_title'],
-                 'body'=> ['dashboard.notification.order_has_been_created_body',['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                 'body'=> ['dashboard.notification.order_has_been_created_body'],
                  'sender_data' => new SenderResource(auth('api')->user())
               ];
             $center->notify(new CreateOrderNotification($main_order, ['database']));

@@ -77,7 +77,7 @@ class OrderController extends Controller
         $order->refresh();
         $fcm_notes = [
             'title' => ['dashboard.notification.order_has_been_accepted_title'],
-            'body' => ['dashboard.notification.order_has_been_accepted_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+            'body' => ['dashboard.notification.order_has_been_accepted_body'],
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         $order->client->notify(new AcceptOrderNotification($order, ['database']));
@@ -116,7 +116,7 @@ class OrderController extends Controller
             $main_order->refresh();
             $fcm_notes =  [
                 'title' => ['dashboard.notification.client_cancel_order_title'],
-                'body' => ['dashboard.notification.client_cancel_order_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'body' => ['dashboard.notification.client_cancel_order_body'],
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
@@ -148,7 +148,7 @@ class OrderController extends Controller
             $order->refresh();
             $fcm_notes = [
                 'title' => ['dashboard.notification.order_has_been_rejected_title'],
-                'body' => ['dashboard.notification.order_has_been_rejected_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                'body' => ['dashboard.notification.order_has_been_rejected_body'],
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $order->client->notify(new RejectOrderNotification($order, ['database']));
