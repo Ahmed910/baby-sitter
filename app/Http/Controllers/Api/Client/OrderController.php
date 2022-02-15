@@ -168,9 +168,9 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
+            $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
-            if ($service_id == 1) {
+            if ($service_id == HOUR_SERVICE) {
                 $sitter_order = SitterOrder::where(['status' => 'waiting',  'main_order_id' => $order->id])->firstOrFail();
             } else {
 
@@ -181,9 +181,12 @@ class OrderController extends Controller
                 // dd($sitter_order);
             }
 
+
             if (isset($sitter_order) && $sitter_order) {
 
                 $sitter_order->update(['status' => 'with_the_child']);
+                DB::commit();
+                $order->refresh();
                 $fcm_notes = [
                     'title' => ['dashboard.notification.sitter_has_been_recieved_childern_title'],
                     'body' => ['dashboard.notification.sitter_has_been_recieved_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
@@ -195,7 +198,8 @@ class OrderController extends Controller
                 Notification::send($admins, new RecieveChildernNotification($order, ['database', 'broadcast']));
                 pushFcmNotes($fcm_notes, optional($order->client)->devices);
             }
-            return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
+            return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
+            // return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -207,12 +211,13 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-        $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
+        $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
         $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
-        if ($service_id == 1) {
+
+        if ($service_id == HOUR_SERVICE) {
             $sitter_order = SitterOrder::where(['status' => 'with_the_child',  'main_order_id' => $order->id])->firstOrFail();
             $order->update(['finished_at' => now()]);
-
+            $sitter_order->update(['status'=>'completed']);
             if ($sitter_order->pay_type == 'wallet') {
 
                 $sitter = User::findOrFail($sitter_order->sitter_id);
@@ -291,6 +296,7 @@ class OrderController extends Controller
 
 
         DB::commit();
+        $order->refresh();
         $fcm_notes = [
             'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
             'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
@@ -301,7 +307,8 @@ class OrderController extends Controller
         $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
         pushFcmNotes($fcm_notes, optional($order->client)->devices);
         Notification::send($admins, new DeliverChildernNotification($order, ['database', 'broadcast']));
-        return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.completation_has_been_done')]);
+        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => trans('api.messages.completation_has_been_done')]);
+
     } catch (\Exception $e) {
         DB::rollback();
         return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
