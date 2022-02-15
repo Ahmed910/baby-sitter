@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Rate\RateRequest;
+use App\Http\Resources\Api\Client\Order\SingleOrderResource;
 use App\Http\Resources\Api\User\RateForSpecificOrderResource;
 use App\Models\BabySitter;
 use App\Models\CenterOrder;
@@ -89,8 +90,8 @@ class RateController extends Controller
             $rate_avg = Rate::where('to_client',$request->to_client)->avg('rate');
             User::findOrFail($request->to_client)->update(['rate_avg'=>$rate_avg]);
         }
-
-        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.successfully_evaluated')]);
+        return (new SingleOrderResource($order))->additional(['status'=>'success','message'=>trans('api.messages.successfully_evaluated')]);
+        // return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.successfully_evaluated')]);
     }
 
     public function getRateForMeOnOrder($order_id)

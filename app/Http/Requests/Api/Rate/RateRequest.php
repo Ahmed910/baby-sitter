@@ -27,7 +27,7 @@ class RateRequest extends ApiMasterRequest
     {
         if(auth('api')->user()->user_type == 'childcenter' || auth('api')->user()->user_type == 'babysitter'){
             $variable = ['client'];
-            $type = ['required', Rule::in([$variable])];
+            $type = ['required', Rule::in($variable)];
 
         }else{
             $variable = ['sitter','sitter_worker','center'];
