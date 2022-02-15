@@ -31,6 +31,8 @@ return[
         'update_gallery'=>'update image in gallery',
         'cant_send_request'=>'cant send request',
         'offer_has_been_updated'=>'offer has been updated',
+        'order_status_has_been_changed_to_with_the_child'=>'Order status has been changed to with the child',
+        'completation_has_been_done'=>'Completation has been done',
         'schedules_created_successfully'=>'schedules created successfully',
         'schedules_updated_successfully'=>'schedules updated successfully',
         'kid_updated_successfully'=>'kid data updated successfully',

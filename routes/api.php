@@ -91,6 +91,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
             // Route::get('get_center_order_details/{order_id}','OrderController@getCenterOrderDetails');
             Route::get('cancel_order/{order_id}','OrderController@cancelOrder');
+            Route::get('with_the_child_order/{order_id}','OrderController@withTheChildOrder');
+            Route::get('complete_order/{order_id}','OrderController@completeOrder');
             // Kids
             Route::apiResource('kid','KidController');
 

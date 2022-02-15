@@ -24,7 +24,8 @@ return[
         'cant_finish_order_before_received_from_client' => "لايمكنك انهاء الطلب قبل تأكيد استلام الطلب من العميل",
           'offer_created_successfully'=>'تم إنشاء العرض بنجاح',
           'offer_has_been_updated'=>'تم تعديل العرض بنجاح',
-
+          'order_status_has_been_changed_to_with_the_child'=>'تم تغيير حالة الطلب إلى لديه طفل',
+          'completation_has_been_done'=>'تم الإكتمال',
           'the_max_num_for_offer_has_been_used'=>'لقد تم استخدام الحد الاقصي لهذا العرض',
           'request_has_been_sent'=>'تم إرسال الطلب',
           'your_balance_in_wallet_is_insufficiant'=>'رصيدك فى المحفظة اقل من المبلغ المطلوب',

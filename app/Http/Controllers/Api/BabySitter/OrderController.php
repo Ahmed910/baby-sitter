@@ -170,7 +170,7 @@ class OrderController extends Controller
     }
     public function checkOtpValidityAndRecieveChildern(OTPRequest $request)
     {
-        return $this->checkOtpValidity($request, 'waiting', 'with_the_child');
+        return $this->checkOtpValidity($request, 'waiting');
     }
 
     public function sendOTPToDeliverChildern($order_id)
@@ -194,7 +194,7 @@ class OrderController extends Controller
 
     public function checkOtpValidityAndDeliverChildern(OTPRequest $request)
     {
-        return $this->checkOtpValidity($request, 'with_the_child', 'completed');
+        return $this->checkOtpValidity($request, 'with_the_child');
     }
 
     protected function sendVerifyOTP($order)
