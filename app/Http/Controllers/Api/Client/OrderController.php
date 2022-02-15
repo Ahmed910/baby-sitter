@@ -165,9 +165,9 @@ class OrderController extends Controller
 
     public function withTheChildOrder($order_id)
     {
-        // DB::beginTransaction();
+        DB::beginTransaction();
 
-        // try {
+        try {
             $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
             if ($service_id == HOUR_SERVICE) {
@@ -185,7 +185,7 @@ class OrderController extends Controller
             if (isset($sitter_order) && $sitter_order) {
 
                 $sitter_order->update(['status' => 'with_the_child']);
-                // DB::commit();
+                DB::commit();
                 $order->refresh();
                 $fcm_notes = [
                     'title' => ['dashboard.notification.sitter_has_been_recieved_childern_title'],
@@ -201,10 +201,10 @@ class OrderController extends Controller
             return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
             // return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
 
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+        }
     }
     public function completeOrder($order_id)
     {
