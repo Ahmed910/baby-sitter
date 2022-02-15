@@ -29,6 +29,7 @@ class NotificationController extends Controller
     {
         $notifications = auth('api')->user()->notifications()->get();
         $notification_ids = $notifications->pluck('id');
+        dd($notification_ids);
         Notification::whereIn('id',$notification_ids)->delete();
         return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>'']);
     }
