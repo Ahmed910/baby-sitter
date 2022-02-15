@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Notification\{NotificationResource , NotificationCollection};
+use Illuminate\Notifications\Notification;
 
 class NotificationController extends Controller
 {
@@ -20,6 +21,14 @@ class NotificationController extends Controller
         foreach ($unreadnotifications as $notification) {
              $notification->markAsRead();
         }
+        return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>'']);
+    }
+
+    public function clearAllNotifications()
+    {
+        $notifications = auth('api')->user()->notifications()->get();
+        $notification_ids = $notifications->pluck('id');
+        Notification::whereIn('id',$notification_ids)->delete();
         return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>'']);
     }
 
