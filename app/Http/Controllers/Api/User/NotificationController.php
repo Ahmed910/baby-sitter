@@ -31,7 +31,7 @@ class NotificationController extends Controller
         foreach ($notifications as $notification) {
             $notification->delete();
        }
-        return (new NotificationCollection($notifications))->additional(['status' => 'success','message'=>trans('api.messages.notifictions_has_been_deleted')]);
+        return response()->json(['data'=>null,'status' => 'success','message'=>trans('api.messages.notifictions_has_been_deleted')]);
     }
 
 
