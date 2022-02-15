@@ -43,6 +43,7 @@ class NotificationResource extends JsonResource
             'id' => $this->id,
             'title' => isset($this->data['title']) ? $title : '',
             'body' => isset($this->data['body']) ? $body : '',
+            'sender_data' => isset($this->data['sender_data']) ? $this->data['sender_data'] : '',
             'notify_type' => isset($this->data['notify_type']) ? $this->getNotifyType($this->data['notify_type']) : 'management',
             'order' => isset($this->data['order_id']) ? $this->orderData($this->data['order_id']) : null,
             'offer' => isset($this->data['offer_id']) ? $this->offerData($this->data['offer_id']) : null,
@@ -57,7 +58,7 @@ class NotificationResource extends JsonResource
     {
         $order = MainOrder::find($order_id);
         $data = null;
-        if ($order) {
+        if (isset($order) && $order) {
             $data = [
                 'order_id' => $order->id,
                 'client_id' => $order->client_id,
@@ -130,20 +131,20 @@ class NotificationResource extends JsonResource
         switch ($notify_data['notify_type']) {
             case 'new_order':
                 $order = MainOrder::find($notify_data['order_id']);
-                if($order->to == 'sitter'){
+                if(isset($order) && $order->to == 'sitter'){
 
                     $image = $order ? ($order->sitter_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->sitter_id ? $order->sitter->avatar : setting('logo'))) : setting('logo');
-                }else{
+                }elseif(isset($order) && $order->to == 'center'){
 
                     $image = $order ? ($order->center_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->center_id ? $order->center->avatar : setting('logo'))) : setting('logo');
                 }
                 break;
             case 'change_order_status':
                 $order = MainOrder::find($notify_data['order_id']);
-                if($order->to == 'sitter'){
+                if(isset($order) && $order->to == 'sitter'){
 
                     $image = $order ? ($order->sitter_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->sitter_id ? $order->sitter->avatar : setting('logo'))) : setting('logo');
-                }else{
+                }elseif(isset($order) && $order->to == 'center'){
 
                     $image = $order ? ($order->center_id == auth('api')->id() ? $order->client->avatar : ($order->client_id == auth('api')->id() && $order->center_id ? $order->center->avatar : setting('logo'))) : setting('logo');
                 }
