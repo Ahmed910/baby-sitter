@@ -63,7 +63,7 @@ class CancelOrderAfterPassedTime extends Command
                         if ($sitter_order->months && $sitter_order->months->month_dates->count() > 0) {
                             // Log::info($sitter_order->months);
 
-                            $sitter_order_month = $sitter_order->months->month_dates()->where('status', 'waiting')->where('date', '<', now()->format('Y-m-d'))->firstOrFail();
+                            $sitter_order_month = $sitter_order->months->month_dates()->where('order_month_dates.status','<>', 'completed')->where('order_month_dates.date', '<', now()->format('Y-m-d'))->firstOrFail();
                             // $sitter_order_month->update(['status'=>'canceled']);
                             // Log::info($sitter_order->months->month_dates);
 
@@ -87,7 +87,7 @@ class CancelOrderAfterPassedTime extends Command
 
                         if ($center_order->months) {
 
-                            $center_order_month = $center_order->months->month_dates()->where('status', 'waiting')->where('date', '<', now()->format('Y-m-d'))->firstOrFail();
+                            $center_order_month = $center_order->months->month_dates()->where('order_month_dates.status','<>', 'completed')->where('order_month_dates.date', '<', now()->format('Y-m-d'))->firstOrFail();
                             // $center_order_month->update(['status'=>'canceled']);
                             // Log::info($center_order->months->month_dates);
                             // $start_time = optional($center_order_month->order_day)->start_time;
