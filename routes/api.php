@@ -54,8 +54,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             Route::apiResource('chat', 'ChatController')->only('index', 'store', 'destroy');
             Route::put('chat/{chat_id}/message_is_seen', 'ChatController@messageIsSeen');
             // Notification
-            Route::apiResource('notifications','NotificationController')->only('index','show','destroy');
             Route::delete('notifications/clear_all','NotificationController@clearAllNotifications');
+            Route::apiResource('notifications','NotificationController')->only('index','show','destroy');
             // Wallet
             // Route::apiResource('wallet_transfers','WalletTransfersController')->only('index','show','store');
             // Route::get('wallet','WalletController@index');
