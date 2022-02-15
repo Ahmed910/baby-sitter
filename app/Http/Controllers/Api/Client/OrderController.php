@@ -176,7 +176,7 @@ class OrderController extends Controller
 
                 $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
 
-                $sitter_order = $order_for_sitter->months->month_dates()->where('status', 'waiting')->orderBy('date', 'ASC')->firstOrFail();
+                $sitter_order = $order_for_sitter->months->month_dates()->where('order_month_dates.status', 'waiting')->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
                 // dd('ss');
                 // dd($sitter_order);
             }
