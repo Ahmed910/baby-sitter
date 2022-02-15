@@ -47,21 +47,24 @@ class CancelOrder extends Command
         DB::beginTransaction();
 
         try {
-            $sitter_orders = SitterOrder::where('status', 'pending')->whereBetween('created_at', [now()->format('Y-m-d H:i:s'), now()->addHours(12)->format('Y-m-d H:i:s')])->get();
+            $sitter_orders = SitterOrder::where('status', 'pending')->get();
 
-            $center_orders = CenterOrder::where('status', 'pending')->whereBetween('created_at', [now()->format('Y-m-d H:i:s'), now()->addHours(12)->format('Y-m-d H:i:s')])->get();
+            $center_orders = CenterOrder::where('status', 'pending')->get();
 
             if ($sitter_orders->count() > 0) {
                 foreach ($sitter_orders as $sitter_order) {
-
-                    $sitter_order->update(['status' => 'canceled']);
-                    $this->chargeWallet(optional($sitter_order->main_order)->price_after_offer, $sitter_order->client_id);
+                    if ($sitter_order->created_at->addHours(12)->format('Y-m-d H:i:s') < now()->format('Y-m-d H:i:s')) {
+                        $sitter_order->update(['status' => 'canceled']);
+                        $this->chargeWallet(optional($sitter_order->main_order)->price_after_offer, $sitter_order->client_id);
+                    }
                 }
             }
             if ($center_orders->count() > 0) {
                 foreach ($center_orders as $center_order) {
-                    $center_order->update(['status' => 'canceled']);
-                    $this->chargeWallet(optional($center_order->main_order)->price_after_offer, $center_order->client_id);
+                    if ($center_order->created_at->addHours(12)->format('Y-m-d H:i:s') < now()->format('Y-m-d H:i:s')) {
+                        $center_order->update(['status' => 'canceled']);
+                        $this->chargeWallet(optional($center_order->main_order)->price_after_offer, $center_order->client_id);
+                    }
                 }
             }
             DB::commit();
