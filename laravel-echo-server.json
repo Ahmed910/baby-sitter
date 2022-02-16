@@ -20,8 +20,8 @@
 	"protocol": "https",
 	"socketio": {},
 	"secureOptions": 67108864,
-	"sslCertPath": "/home/ataaitd/ssl/certs/babysitter_at_aait_d_com_ce6a9_009bf_1644969599_be2f560cab4decf9c604963f0f643d36.crt",
-	"sslKeyPath": "/home/ataaitd/ssl/keys/ce6a9_009bf_aa14eb3fb79f7ee76a04d0472ff758c1.key",
+	"sslCertPath": "/home/ataaitd/ssl/certs/babysitter_at_aait_d_com_c5e92_b1a9d_1651535999_0198372191f9695ce140591c0ef99586.crt",
+	"sslKeyPath": "/home/ataaitd/ssl/keys/a31fb_00879_3d5907eb4bdc47e10141d71df6eccc9e.key",
 	"sslCertChainPath": "",
 	"sslPassphrase": "",
 	"subscribers": {
