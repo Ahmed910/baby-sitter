@@ -10,5 +10,7 @@ abstract class Statuses
     const COMPLETED='completed';
     const WITHTHECHILD='with_the_child';
     const CANCELED = 'canceled';
+    const HOUR_SERVICE = 1;
+    const MONTH_SERVICE = 2;
 }
 ?>

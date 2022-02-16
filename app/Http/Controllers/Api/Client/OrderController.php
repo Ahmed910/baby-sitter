@@ -159,7 +159,7 @@ class OrderController extends Controller
         try {
             $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
-            if ($service_id == HOUR_SERVICE) {
+            if ($service_id == Statuses::HOUR_SERVICE) {
                 $sitter_order = SitterOrder::where(['status' => 'waiting',  'main_order_id' => $order->id])->firstOrFail();
             } else {
 
@@ -203,7 +203,7 @@ class OrderController extends Controller
             $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
 
-            if ($service_id == HOUR_SERVICE) {
+            if ($service_id == Statuses::HOUR_SERVICE) {
                 $this->completeOrderForHourService($order);
             } else {
 

@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-const HOUR_SERVICE = 1;
-const MONTH_SERVICE = 2;
+
 Route::namespace('Api')->middleware('setLocale')->group(function(){
     Route::namespace('User')->group(function(){
 

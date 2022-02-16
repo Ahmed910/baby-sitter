@@ -21,7 +21,7 @@ trait OTP
         //optional($order->sitter_order)->id
         $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
 
-        if ($service_id == HOUR_SERVICE) {  // 1=>hour
+        if ($service_id == Statuses::HOUR_SERVICE) {  // 1=>hour
             $otp_order = SitterOrder::where('status', $status)->findOrFail(optional($order->sitter_order)->id);
         } else {
 
@@ -49,7 +49,7 @@ trait OTP
         try {
             $order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($request->order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
-            if ($service_id == HOUR_SERVICE) {
+            if ($service_id == Statuses::HOUR_SERVICE) {
                 $sitter_order = SitterOrder::where(['status' => $current_status, 'otp_code' => $request->otp_code, 'main_order_id' => $order->id])->firstOrFail();
             } else {
                 $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
@@ -62,7 +62,7 @@ trait OTP
             } else {
                 // $sitter_order->update(['status'=>$updated_status]);
                 // $sitter_order->update(['status' => $updated_status, 'otp_code' => NULL]);
-                if ($service_id == HOUR_SERVICE) {
+                if ($service_id == Statuses::HOUR_SERVICE) {
                     $this->completeOrderForHourService($order);
                 } else {
                     $sitter_order->update(['status' => $updated_status, 'otp_code' => NULL]);
