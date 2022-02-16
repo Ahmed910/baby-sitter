@@ -2,35 +2,23 @@
 
 namespace App\Http\Controllers\Api\Client;
 
+use App\Traits\{CompleteOrderHourService, CompleteOrderMonthService, Order};
+use App\Classes\Statuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\OrderSitterRequest;
 use App\Http\Requests\Api\ChildCenter\OrderCenterRequest;
-use App\Http\Resources\Api\Client\Order\MonthDaysInOrderResource;
-use App\Http\Resources\Api\Client\Order\NewOrderResource;
-use App\Http\Resources\Api\Client\Order\OrderResource;
-use App\Http\Resources\Api\Client\Order\SingleCenterResource;
-use App\Http\Resources\Api\Client\Order\SingleOrderResource;
-use App\Http\Resources\Api\Client\Order\SingleSitterOrderResource;
+use App\Http\Resources\Api\Client\Order\{MonthDaysInOrderResource, NewOrderResource, SingleOrderResource};
 use App\Http\Resources\Api\Notification\SenderResource;
-use App\Models\CenterOrder;
-use App\Models\MainOrder;
-use App\Models\OrderMonthDate;
-use App\Models\SitterOrder;
-use App\Models\User;
-use App\Models\Wallet;
-use App\Notifications\Orders\CancelOrderNotification;
-use App\Notifications\Orders\DeliverChildernNotification;
-use App\Notifications\Orders\RecieveChildernNotification;
-use App\Traits\Order;
+use App\Models\{CenterOrder, MainOrder, OrderMonthDate, SitterOrder, User, Wallet};
+use App\Notifications\Orders\{CancelOrderNotification, DeliverChildernNotification, RecieveChildernNotification};
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\{DB, Notification};
 
 class OrderController extends Controller
 {
-    use Order;
+    use Order, CompleteOrderHourService, CompleteOrderMonthService;
+
     public function createOrderForSitter(OrderSitterRequest $request)
     {
         return $this->SitterOrder($request);
@@ -212,107 +200,44 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-        $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
-        $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
+            $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
+            $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
 
-        if ($service_id == HOUR_SERVICE) {
-            $sitter_order = SitterOrder::where(['status' => 'with_the_child',  'main_order_id' => $order->id])->firstOrFail();
-            $order->update(['finished_at' => now()]);
-            $sitter_order->update(['status'=>'completed']);
-            if ($sitter_order->pay_type == 'wallet') {
+            if ($service_id == HOUR_SERVICE) {
+                $this->completeOrderForHourService($order);
+            } else {
 
-                $sitter = User::findOrFail($sitter_order->sitter_id);
-                $wallet_before = $sitter->wallet;
-                $this->chargeWallet($order->final_price, $sitter_order->sitter_id);
-                Wallet::create(['amount' => $order->final_price, 'wallet_before' => $wallet_before, 'wallet_after' => $sitter->wallet, 'user_id' => $order->sitter_id, 'transferd_by' => $order->client_id, 'order_id' => $order->id]);
-            }
+                $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
 
-        } else {
-            //    dd($sitter_order);
-            //     $sitter_order_month = $sitter_order->months->month_dates()->where('status','with_the_child')->first();
-            //     dd($sitter_order_month);
-            // $start_time = optional($center_order_month->order_day)->start_time;
-            // $end_time = optional($center_order_month->order_day)->end_time;
-            // $hours = $end_time->diffInHours($start_time);
-            // $price = $hours*optional($center_order->months)->price_per_hour_for_month;
-            // $this->chargeWallet($price,$center_order->client_id);
-            // dd($sitter_order);
-            $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
-
-            $sitter_order = $order_for_sitter->months->month_dates()->where('status', 'waiting')->orderBy('date', 'ASC')->firstOrFail();
-            $sitter_order->update(['status'=>'with_the_child']);
-            if (isset($sitter_order) && $sitter_order) {
-                $last_day = OrderMonthDate::where('order_month_id',$order->sitter_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
+                $sitter_order = $order_for_sitter->months->month_dates()->whereIn('order_month_dates.status', ['waiting', 'with_the_child'])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
+                $sitter_order->update(['status' => 'completed']);
+                $last_day = OrderMonthDate::where('order_month_id', $order->sitter_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
                 // dd($last_day == $sitter_order);
-            }
+                if ($last_day->id == $sitter_order->id) {
 
-            if ($last_day->id == $sitter_order->id) {
-
-                $order->sitter_order()->update(['status'=>'completed']);
-                if (optional($order->sitter_order)->pay_type == 'wallet') {
-                    $total_canceled_price = 0;
-                    $total_completed_price = 0;
-                    $canceled_dates = OrderMonthDate::where(['order_month_id' => optional($sitter_order->month)->id, 'status' => 'canceled'])->get();
-
-                    $completed_dates = OrderMonthDate::where(['order_month_id' => optional($sitter_order->month)->id, 'status' => 'completed'])->get();
-
-                    foreach ($canceled_dates as $cancel_date) {
-                        $start_time = optional($cancel_date->order_day)->start_time;
-                        $end_time = optional($cancel_date->order_day)->end_time;
-                        $hours = $end_time->diffInHours($start_time);
-                        $total_canceled_price += ($hours * optional($cancel_date->month)->price_per_hour_for_month);
-                    }
-
-                    foreach ($completed_dates as $completed_date) {
-                        $start_time = optional($completed_date->order_day)->start_time;
-                        $end_time = optional($completed_date->order_day)->end_time;
-                        $hours = $end_time->diffInHours($start_time);
-                        $total_completed_price += ($hours * optional($completed_date->month)->price_per_hour_for_month);
-                    }
-
-
-
-                    if ($total_canceled_price > 0) {
-
-                        $client = $order->client;
-                        $client_wallet_before = $client->wallet;
-                        $client_wallet_after = $client->wallet + $total_canceled_price;
-                        Wallet::create(['amount' => $total_canceled_price, 'wallet_before' => $client_wallet_before, 'wallet_after' => $client_wallet_after, 'user_id' => $order->client_id, 'transferd_by' => $order->sitter_id, 'order_id' => $order->id]);
-                        $this->chargeWallet($total_canceled_price, optional($order->sitter_order)->client_id);
-                    }
-                    if ($total_completed_price > 0) {
-
-                        $sitter = $order->sitter;
-                        $sitter_wallet_before = $sitter->wallet;
-                        $sitter_wallet_after = $sitter->wallet + $total_completed_price;
-                        Wallet::create(['amount' => $total_completed_price, 'wallet_before' => $sitter_wallet_before, 'wallet_after' => $sitter_wallet_after, 'user_id' => $order->sitter_id, 'transferd_by' => $order->client_id, 'order_id' => $order->id]);
-                        $this->chargeWallet($total_completed_price, optional($order->sitter_order)->sitter_id);
-                    }
-
-                    //  Wallet::create(['amount'=>$order->final_price,'wallet_before'=>$wallet_before,'wallet_after'=>$sitter->wallet,'user_id'=>$order->sitter_id,'transferd_by'=>$order->client_id,'order_id'=>$order->id]);
+                    // $sitter_order->update(['status' => 'with_the_child']);
+                    $order->sitter_order()->update(['status' => Statuses::COMPLETED]);
+                    $this->chargeWalletForProvider($order, $order->client, Statuses::CANCELED);
+                    $this->chargeWalletForProvider($order, $order->sitter, Statuses::COMPLETED);
 
                 }
             }
+            DB::commit();
+            $order->refresh();
+            $fcm_notes = [
+                'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
+                'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body'],
+                'sender_data' => new SenderResource(auth('api')->user())
+            ];
+            $order->client->notify(new DeliverChildernNotification($order, ['database']));
+
+            $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+            pushFcmNotes($fcm_notes, optional($order->client)->devices);
+            Notification::send($admins, new DeliverChildernNotification($order, ['database', 'broadcast']));
+            return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => trans('api.messages.completation_has_been_done')]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
         }
-
-
-        DB::commit();
-        $order->refresh();
-        $fcm_notes = [
-            'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
-            'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body'],
-            'sender_data' => new SenderResource(auth('api')->user())
-        ];
-        $order->client->notify(new DeliverChildernNotification($order, ['database']));
-
-        $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
-        pushFcmNotes($fcm_notes, optional($order->client)->devices);
-        Notification::send($admins, new DeliverChildernNotification($order, ['database', 'broadcast']));
-        return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => trans('api.messages.completation_has_been_done')]);
-
-    } catch (\Exception $e) {
-        DB::rollback();
-        return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-    }
     }
 }

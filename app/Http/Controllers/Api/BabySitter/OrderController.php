@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\BabySitter;
 
 use App\Classes\OrderStatuses;
+use App\Classes\Statuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\Order\OTPRequest;
 use App\Http\Requests\Api\BabySitter\Order\ResendOTPRequest;
@@ -166,16 +167,16 @@ class OrderController extends Controller
     public function sendOTPToReceiveChildern($order_id)
     {
         // third param in [1,2]
-        return $this->sendOTP($order_id, 'waiting');
+        return $this->sendOTP($order_id, Statuses::WAITING);
     }
     public function checkOtpValidityAndRecieveChildern(OTPRequest $request)
     {
-        return $this->checkOtpValidity($request, 'waiting','with_the_child');
+        return $this->checkOtpValidity($request, Statuses::WAITING,Statuses::WITHTHECHILD);
     }
 
     public function sendOTPToDeliverChildern($order_id)
     {
-        return $this->sendOTP($order_id, 'with_the_child');
+        return $this->sendOTP($order_id, Statuses::WITHTHECHILD);
     }
 
     public function resendOTP(ResendOTPRequest $request)
