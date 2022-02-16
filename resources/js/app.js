@@ -4,7 +4,7 @@ import Echo from "laravel-echo"
 
  window.Echo = new Echo({
      broadcaster: 'socket.io',
-     host: window.location.hostname + ':6001'
+     host: window.location.hostname + ':6041'
  });
  var userId=window.Data.user_id;
  var unread_notifications=window.Data.unread_notifications;
