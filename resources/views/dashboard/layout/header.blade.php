@@ -34,7 +34,7 @@
           </form>
       </li>  --}}
 
-      {{--  <li class="nav-item dropdown dropdown-notification mr-25"><a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span class="badge badge-pill badge-danger badge-up notify_count">{{ auth()->user()->unreadnotifications()->count() }}</span></a>
+     <li class="nav-item dropdown dropdown-notification mr-25"><a class="nav-link" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span class="badge badge-pill badge-danger badge-up notify_count">{{ auth()->user()->unreadnotifications()->count() }}</span></a>
           <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
               <li class="dropdown-menu-header">
                   <div class="dropdown-header d-flex">
@@ -105,12 +105,12 @@
                       <i class="feather icon-bell align-middle font-medium-3 text-white text-bold-700"></i>
                       <span class="align-middle text-bold-700 font-medium-3 ">{!! trans('dashboard.notification.no_notifications') !!}</span>
                   </a>
-                  {{-- <li class="empty-cart d-none p-2 no_notifications">{!! trans('dashboard.notification.no_notifications') !!}.</li>
+                   <li class="empty-cart d-none p-2 no_notifications">{!! trans('dashboard.notification.no_notifications') !!}.</li>
               @endforelse
               </li>
               <li class="dropdown-menu-footer"><a class="btn btn-primary btn-block" href="{!! route('dashboard.notification.index') !!}">{!! trans('dashboard.general.show_all') !!}</a></li>
           </ul>
-      </li>  --}}
+      </li>
 
       <li class="nav-item dropdown dropdown-user"><a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="user-nav d-sm-flex d-none">
