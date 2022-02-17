@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\Statuses;
 use App\Models\CenterOrder;
 use App\Models\SitterOrder;
 use App\Traits\Order;
@@ -46,8 +47,8 @@ class CancelOrderAfterPassedTime extends Command
         DB::beginTransaction();
 
         try {
-            $sitter_orders = SitterOrder::whereIn('status', ['waiting', 'process'])->get();
-            $center_orders = CenterOrder::whereIn('status', ['waiting', 'process'])->get();
+            $sitter_orders = SitterOrder::whereIn('status', [Statuses::WAITING, Statuses::PROCESS])->get();
+            $center_orders = CenterOrder::whereIn('status', [Statuses::WAITING, Statuses::PROCESS])->get();
             if ($sitter_orders->count() > 0) {
                 foreach ($sitter_orders as $sitter_order) {
                     if (optional($sitter_order->service)->service_type == 'hour') {
@@ -88,13 +89,7 @@ class CancelOrderAfterPassedTime extends Command
                         if ($center_order->months) {
 
                             $center_order_month = $center_order->months->month_dates()->where('order_month_dates.status','<>', 'completed')->where('order_month_dates.date', '<', now()->format('Y-m-d'))->firstOrFail();
-                            // $center_order_month->update(['status'=>'canceled']);
-                            // Log::info($center_order->months->month_dates);
-                            // $start_time = optional($center_order_month->order_day)->start_time;
-                            // $end_time = optional($center_order_month->order_day)->end_time;
-                            // $hours = $end_time->diffInHours($start_time);
-                            // $price = $hours*optional($center_order->months)->price_per_hour_for_month;
-                            // $this->chargeWallet($price,$center_order->client_id);
+
                             $center_order_month->update(['status' => 'canceled']);
 
                             // Log::info($hours*optional($sitter_order->months)->price_per_hour_for_month);
