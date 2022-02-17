@@ -166,7 +166,7 @@ class OrderController extends Controller
 
     public function sendOTPToReceiveChildern($order_id)
     {
-        // third param in [1,2]
+      
         return $this->sendOTP($order_id, Statuses::WAITING);
     }
     public function checkOtpValidityAndRecieveChildern(OTPRequest $request)

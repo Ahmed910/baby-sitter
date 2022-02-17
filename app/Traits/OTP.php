@@ -27,7 +27,7 @@ trait OTP
 
             $sitter_order = SitterOrder::where(['status' => 'process', 'service_id' => $service_id])->findOrFail(optional($order->sitter_order)->id);
             // dd($sitter_order);
-            $otp_order = $sitter_order->months->month_dates()->where('status', $status)->orderBy('date', 'ASC')->firstOrFail();
+            $otp_order = $sitter_order->months->month_dates()->where('order_month_dates.status', $status)->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
         }
         $otp = 1111;
         if (setting('use_sms_service') == 'enable') {
