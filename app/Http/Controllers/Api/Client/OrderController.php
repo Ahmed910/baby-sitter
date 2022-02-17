@@ -135,8 +135,8 @@ class OrderController extends Controller
             DB::commit();
             $main_order->refresh();
             $fcm_notes =  [
-                'title' => ['dashboard.notification.client_cancel_order_title'],
-                'body' => ['dashboard.notification.client_cancel_order_body'],
+                'title' => trans('dashboard.notification.client_cancel_order_title',[],$main_order->to == 'sitter'?$main_order->sitter->current_lang:$main_order->center->current_lang),
+                'body' => trans('dashboard.notification.client_cancel_order_body',[],$main_order->to == 'sitter'?$main_order->sitter->current_lang:$main_order->center->current_lang).auth('api')->user()->name,
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
 
@@ -172,11 +172,11 @@ class OrderController extends Controller
             if (isset($sitter_order) && $sitter_order) {
 
                 $sitter_order->update(['status' => 'with_the_child']);
-            
+
                 $order->refresh();
                 $fcm_notes = [
-                    'title' => ['dashboard.notification.sitter_has_been_recieved_childern_title'],
-                    'body' => ['dashboard.notification.sitter_has_been_recieved_childern_body'],
+                    'title' => trans('dashboard.notification.sitter_has_been_recieved_childern_title',[],$order->sitter->current_lang),
+                    'body' => trans('dashboard.notification.sitter_has_been_recieved_childern_body',[],$order->sitter->current_lang).auth('api')->user()->name,
                     'sender_data' => new SenderResource(auth('api')->user())
                 ];
                 $order->client->notify(new RecieveChildernNotification($order, ['database']));
@@ -220,8 +220,8 @@ class OrderController extends Controller
             DB::commit();
             $order->refresh();
             $fcm_notes = [
-                'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
-                'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body'],
+                'title' => trans('dashboard.notification.sitter_has_been_deliver_childern_title',[],$order->sitter->current_lang),
+                'body' => trans('dashboard.notification.sitter_has_been_deliver_childern_body',[],$order->sitter->current_lang).auth('api')->user()->name,
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $order->client->notify(new DeliverChildernNotification($order, ['database']));

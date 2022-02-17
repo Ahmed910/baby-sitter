@@ -77,8 +77,8 @@ class OrderController extends Controller
         }
         $order->refresh();
         $fcm_notes = [
-            'title' => ['dashboard.notification.order_has_been_accepted_title'],
-            'body' => ['dashboard.notification.order_has_been_accepted_body'],
+            'title' => trans('dashboard.notification.order_has_been_accepted_title',[],$order->client->current_lang),
+            'body' => trans('dashboard.notification.order_has_been_accepted_body',[],$order->client->current_lang).auth('api')->user()->name,
             'sender_data' => new SenderResource(auth('api')->user())
         ];
         $order->client->notify(new AcceptOrderNotification($order, ['database']));
@@ -116,8 +116,8 @@ class OrderController extends Controller
             DB::commit();
             $main_order->refresh();
             $fcm_notes =  [
-                'title' => ['dashboard.notification.client_cancel_order_title'],
-                'body' => ['dashboard.notification.client_cancel_order_body'],
+                'title' => trans('dashboard.notification.client_cancel_order_title',[],$main_order->client->current_lang),
+                'body' => trans('dashboard.notification.client_cancel_order_body',[],$main_order->client->current_lang).auth('api')->user()->name,
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
@@ -148,8 +148,8 @@ class OrderController extends Controller
             $sitter_order->refresh();
             $order->refresh();
             $fcm_notes = [
-                'title' => ['dashboard.notification.order_has_been_rejected_title'],
-                'body' => ['dashboard.notification.order_has_been_rejected_body'],
+                'title' => trans('dashboard.notification.order_has_been_rejected_title',[],$order->client->current_lang),
+                'body' => trans('dashboard.notification.order_has_been_rejected_body',[],$order->client->current_lang).auth('api')->name,
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $order->client->notify(new RejectOrderNotification($order, ['database']));
@@ -166,7 +166,7 @@ class OrderController extends Controller
 
     public function sendOTPToReceiveChildern($order_id)
     {
-      
+
         return $this->sendOTP($order_id, Statuses::WAITING);
     }
     public function checkOtpValidityAndRecieveChildern(OTPRequest $request)

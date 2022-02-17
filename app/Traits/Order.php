@@ -90,8 +90,8 @@ trait Order
             $chat = Chat::create(['sender_id' => auth('api')->id(), 'order_id' => $main_order->id, 'receiver_id' => $main_order->sitter_id, 'last_message' => '']);
             DB::commit();
             $fcm_notes = [
-                'title'=>['dashboard.notification.order_has_been_created_title'],
-                 'body'=> ['dashboard.notification.order_has_been_created_body'],
+                 'title'=>trans('dashboard.notification.order_has_been_created_title',[],$order->sitter->current_lang),
+                 'body'=> trans('dashboard.notification.order_has_been_created_body',[],$order->sitter->current_lang).auth('api')->user()->name,
                  'sender_data' => new SenderResource(auth('api')->user())
               ];
             $sitter->notify(new CreateOrderNotification($main_order, ['database']));
@@ -148,8 +148,8 @@ trait Order
 
             // DB::commit();
             $fcm_notes = [
-                'title'=>['dashboard.notification.order_has_been_created_title'],
-                 'body'=> ['dashboard.notification.order_has_been_created_body'],
+                'title'=>trans('dashboard.notification.order_has_been_created_title',[],$order->center->current_lang),
+                 'body'=> trans('dashboard.notification.order_has_been_created_body',[],$order->center->current_lang).auth('api')->user()->fullname,
                  'sender_data' => new SenderResource(auth('api')->user())
               ];
             $center->notify(new CreateOrderNotification($main_order, ['database']));

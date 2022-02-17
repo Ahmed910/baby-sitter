@@ -83,8 +83,8 @@ trait OTP
                 DB::commit();
 
                 $fcm_notes = [
-                    'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
-                    'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+                    'title' => trans('dashboard.notification.sitter_has_been_deliver_childern_title'),
+                    'body' => trans('dashboard.notification.sitter_has_been_deliver_childern_body').auth('api')->user()->name,
                     'sender_data' => new SenderResource(auth('api')->user())
                 ];
                 $order->client->notify(new DeliverChildernNotification($order, ['database']));
