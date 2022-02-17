@@ -154,18 +154,16 @@ class OrderController extends Controller
 
     public function withTheChildOrder($order_id)
     {
-        DB::beginTransaction();
 
-        try {
             $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
             if ($service_id == Statuses::HOUR_SERVICE) {
-                $sitter_order = SitterOrder::where(['status' => 'waiting',  'main_order_id' => $order->id])->firstOrFail();
+                $sitter_order = SitterOrder::where(['status' => Statuses::WAITING,  'main_order_id' => $order->id])->firstOrFail();
             } else {
 
-                $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
+                $order_for_sitter = SitterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $order->id])->firstOrFail();
 
-                $sitter_order = $order_for_sitter->months->month_dates()->where('order_month_dates.status', 'waiting')->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
+                $sitter_order = $order_for_sitter->months->month_dates()->where('order_month_dates.status', Statuses::WAITING)->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
                 // dd('ss');
                 // dd($sitter_order);
             }
@@ -174,7 +172,7 @@ class OrderController extends Controller
             if (isset($sitter_order) && $sitter_order) {
 
                 $sitter_order->update(['status' => 'with_the_child']);
-                DB::commit();
+            
                 $order->refresh();
                 $fcm_notes = [
                     'title' => ['dashboard.notification.sitter_has_been_recieved_childern_title'],
@@ -190,10 +188,7 @@ class OrderController extends Controller
             return (new SingleOrderResource($order))->additional(['status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
             // return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.order_status_has_been_changed_to_with_the_child')]);
 
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
-        }
+
     }
     public function completeOrder($order_id)
     {
@@ -204,7 +199,7 @@ class OrderController extends Controller
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
 
             if ($service_id == Statuses::HOUR_SERVICE) {
-                $this->completeOrderForHourService($order);
+                $this->completeOrderForHourUsingScanQrCode($order);
             } else {
 
                 $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();

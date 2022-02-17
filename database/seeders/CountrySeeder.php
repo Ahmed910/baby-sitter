@@ -21,6 +21,6 @@ class CountrySeeder extends Seeder
          ]);
 
          CountryTranslation::create(['name'=>'السعودية','nationality'=>'سعودى','country_id'=>$country->id,'locale'=>'ar']);
-         CountryTranslation::create(['name'=>'saudia','nationality'=>'Egyptian','country_id'=>$country->id,'locale'=>'en']);
+         CountryTranslation::create(['name'=>'saudia','nationality'=>'Saudian','country_id'=>$country->id,'locale'=>'en']);
     }
 }

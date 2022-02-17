@@ -13,7 +13,7 @@ trait WithTheChild
     {
 
         $sitter_order->update(['status' => $updated_status, 'otp_code' => NULL]);
-        DB::commit();
+        // DB::commit();
         $fcm_notes = [
             'title' => ['dashboard.notification.sitter_has_been_recieved_childern_title'],
             'body' => ['dashboard.notification.sitter_has_been_recieved_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],

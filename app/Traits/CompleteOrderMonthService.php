@@ -2,8 +2,8 @@
 
 namespace App\Traits;
 
-use App\Models\{MainOrder,OrderMonthDate,SitterOrder,User,Wallet};
-
+use App\Models\{MainOrder, OrderMonthDate, SitterOrder, User, Wallet};
+use Illuminate\Support\Facades\DB;
 
 trait CompleteOrderMonthService
 {
@@ -27,15 +27,14 @@ trait CompleteOrderMonthService
         $total_price = $this->totalDates($order, $status);
 
         if ($total_price > 0) {
+
             $user_wallet_before = $user->wallet;
             $user_wallet_after = $user->wallet + $total_price;
             $user->update(['wallet' => $user_wallet_after]);
             if (optional($order->sitter_order)->pay_type == 'wallet') {
                 Wallet::create(['amount' => $total_price, 'wallet_before' => $user_wallet_before, 'wallet_after' => $user_wallet_after, 'user_id' => $order->client_id, 'transferd_by' => $order->sitter_id, 'order_id' => $order->id]);
             }
-
             // $this->chargeWallet($total_canceled_price, optional($order->sitter_order)->client_id);
         }
-
     }
 }
