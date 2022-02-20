@@ -4,27 +4,14 @@ namespace App\Http\Controllers\Api\ChildCenter;
 
 use App\Classes\OrderStatuses;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\Client\Order\NewOrderResource;
-use App\Http\Resources\Api\Client\Order\OrderResource;
-use App\Http\Resources\Api\Client\Order\SingleCenterResource;
-use App\Http\Resources\Api\Client\Order\SingleOrderResource;
+use App\Http\Resources\Api\Client\Order\{NewOrderResource,SingleOrderResource};
 use App\Http\Resources\Api\Notification\SenderResource;
-use App\Models\CenterOrder;
-use App\Models\MainOrder;
-use App\Models\OrderMonthDate;
-use App\Models\User;
-use App\Models\Wallet;
-use App\Notifications\Orders\AcceptOrderNotification;
-use App\Notifications\Orders\ActiveOrderNotification;
-use App\Notifications\Orders\CancelOrderNotification;
-use App\Notifications\Orders\CompleteOrderNotification;
-use App\Notifications\Orders\RejectOrderNotification;
-use App\Traits\AppProfit;
+use App\Models\{CenterOrder,MainOrder,OrderMonthDate,User,Wallet};
+use App\Notifications\Orders\{AcceptOrderNotification,ActiveOrderNotification,CancelOrderNotification,CompleteOrderNotification,RejectOrderNotification};
 use App\Traits\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\{DB,Notification};
 
 class OrderController extends Controller
 {
@@ -37,7 +24,7 @@ class OrderController extends Controller
     public function getNewAndActiveOrders(Request $request)
     {
 
-
+        // dd(auth('api')->user());
         $orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
             $q->whereHas('center_order', function ($q) use ($request) {
                 if ($request->order_type == 'new_orders') {

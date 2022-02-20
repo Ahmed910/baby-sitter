@@ -146,7 +146,7 @@ trait Order
                 $this->withdrawFromWallet($order->price_after_offer, auth('api')->id());
             }
 
-            // DB::commit();
+            DB::commit();
             $fcm_notes = [
                 'title'=>trans('dashboard.notification.order_has_been_created_title',[],$order->center->current_lang),
                  'body'=> trans('dashboard.notification.order_has_been_created_body',[],$order->center->current_lang).auth('api')->user()->fullname,

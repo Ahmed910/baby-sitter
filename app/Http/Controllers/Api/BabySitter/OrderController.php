@@ -142,14 +142,14 @@ class OrderController extends Controller
         try {
             $sitter_order->update(['status' => 'rejected']);
             // if ($sitter_order->pay_type == 'wallet') {
-                $this->chargeWallet($order->price_after_offer, $sitter_order->client_id);
+            $this->chargeWallet($order->price_after_offer, $sitter_order->client_id);
             // }
             DB::commit();
             $sitter_order->refresh();
             $order->refresh();
             $fcm_notes = [
-                'title' => trans('dashboard.notification.order_has_been_rejected_title',[],$order->client->current_lang),
-                'body' => trans('dashboard.notification.order_has_been_rejected_body',[],$order->client->current_lang).auth('api')->name,
+                'title' => trans('dashboard.notification.order_has_been_rejected_title', [], $order->client->current_lang),
+                'body' => trans('dashboard.notification.order_has_been_rejected_body', [], $order->client->current_lang).auth('api')->name,
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             $order->client->notify(new RejectOrderNotification($order, ['database']));
