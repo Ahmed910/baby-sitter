@@ -75,7 +75,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Route::get('offers/{offer_id}','OfferController@showOffer');
             Route::post('offers','OfferController@acceptOffer');
             Route::post('apply_offer','OfferController@applyOffer');
-
+            Route::get('get_rates_for_client','RateClientController@index');
             // favorites
             Route::post('toggle_favorites/{user_id}','FavoriteController@toggleFavorites');
 

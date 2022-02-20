@@ -24,8 +24,7 @@ class RateController extends Controller
      */
     public function index()
     {
-        $reviews = Rate::where('to',auth('api')->id())->get();
-        return RateFromUserResource::collection($reviews)->additional(['status'=>'success','message'=>'']);
+       //
     }
 
     /**
