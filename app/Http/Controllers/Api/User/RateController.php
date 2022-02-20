@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Rate\RateRequest;
 use App\Http\Resources\Api\Client\Order\SingleOrderResource;
 use App\Http\Resources\Api\User\RateForSpecificOrderResource;
+use App\Http\Resources\Api\User\RateFromUserResource;
 use App\Models\BabySitter;
 use App\Models\CenterOrder;
 use App\Models\MainOrder;
@@ -23,7 +24,8 @@ class RateController extends Controller
      */
     public function index()
     {
-        // $reviews = Rate::where('to')->get();
+        $reviews = Rate::where('to',auth('api')->id())->get();
+        return RateFromUserResource::collection($reviews)->additional(['status'=>'success','message'=>'']);
     }
 
     /**
