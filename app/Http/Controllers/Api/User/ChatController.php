@@ -102,10 +102,10 @@ class ChatController extends Controller
            'message_object' => $this->getMessageObject($message),
        ];
        if ($chat->sender_id == auth('api')->id()) {
-           pushFcmNotes($fcm_data,[$chat->receiver_id]);
+           pushFcmNotes($fcm_data,$chat->receiver->devices);
            // $chat->receiver->notify(new FCMNotification($fcm_data,['fcm']));
        }else{
-           pushFcmNotes($fcm_data,[$chat->sender_id]);
+           pushFcmNotes($fcm_data,$chat->sender->devices);
            // $chat->sender->notify(new FCMNotification($fcm_data,['fcm']));
        }
        data_set($message , 'message_position' , ($message->sender_id == auth('api')->id() ? 'me' : 'other'));
