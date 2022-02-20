@@ -66,7 +66,7 @@ class CancelOrderAfterPassedTime extends Command
 
                             $sitter_order_month = $sitter_order->months->month_dates()->where('order_month_dates.status','<>', 'completed')->where('order_month_dates.date', '<', now()->format('Y-m-d'))->firstOrFail();
                             // $sitter_order_month->update(['status'=>'canceled']);
-                            // Log::info($sitter_order->months->month_dates);
+                            Log::info($sitter_order_month);
 
                             $sitter_order_month->update(['status' => 'canceled']);
                             // Log::info($hours*optional($sitter_order->months)->price_per_hour_for_month);
