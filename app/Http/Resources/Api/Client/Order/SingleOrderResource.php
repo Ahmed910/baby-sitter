@@ -38,10 +38,10 @@ class SingleOrderResource extends JsonResource
             'total_price' => (float)$this->price_after_offer,
 
             'chat_id' => $this->when(isset($this->sitter_order), optional($this->chat)->id),
-            'sitter_rate' => $this->when(isset($this->sitter_order) && optional($this->sitter_order)->status == 'completed', new RateForSpecificOrderResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to', '<>', null)->first())),
-            'center_rate' => $this->when(isset($this->center_order) && optional($this->center_order)->status == 'completed', new RateForSpecificOrderResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to_center', '<>', null)->first())),
-            'baby_sitter_rate' => $this->when(isset($this->center_order) && optional($this->center_order)->status == 'completed', new RateForBabySitterResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to_baby_sitter', '<>', null)->first())),
-            'client_rate' => $this->when(((isset($this->center_order) && optional($this->center_order)->status == 'completed') || (isset($this->sitter_order) && optional($this->sitter_order)->status == 'completed')) && (auth('api')->user()->user_type != 'client'), new RateForSpecificOrderResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to_client', '<>', null)->first())),
+            'sitter_rate' =>  new RateForSpecificOrderResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to', '<>', null)->first()),
+            'center_rate' =>  new RateForSpecificOrderResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to_center', '<>', null)->first()),
+            'baby_sitter_rate' =>  new RateForBabySitterResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to_baby_sitter', '<>', null)->first()),
+            'client_rate' =>  new RateForSpecificOrderResource(Rate::where(['from' => auth('api')->id(), 'order_id' => $this->id])->where('to_client', '<>', null)->first()),
             'sitter_worker_id' => $this->when(isset($this->center_order),$order->baby_sitter_id),
             //  'order_data'=> new OrderDetailsResource($this->to == 'sitter' ? $this->sitter_order:$this->center_order)
             'status' => $order->status,
