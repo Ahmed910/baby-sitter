@@ -60,7 +60,7 @@ class CancelOrderAfterPassedTime extends Command
                         }
                     } else {
 
-
+                        Log::info($sitter_order->months->month_dates);
                         if ($sitter_order->months && $sitter_order->months->month_dates->count() > 0) {
                             // Log::info($sitter_order->months);
 
