@@ -83,7 +83,7 @@ class RecieveChildernNotification extends Notification implements ShouldBroadcas
 
         return new BroadcastMessage([
             'title'=>trans('dashboard.notification.sitter_has_been_recieved_childern_title',[],$notifiable->current_lang),
-            'body'=> trans('dashboard.notification.sitter_has_been_recieved_childern_body',['body' => auth()->user()->name ?? auth()->user()->phone],$notifiable->current_lang),
+            'body'=> trans('dashboard.notification.sitter_has_been_recieved_childern_body',[],$notifiable->current_lang),
             'notify_type'=>'receive_childern',
             'route' => route('dashboard.orders.show',$this->booking->id),
             'order_id' => optional($this->booking)->id,

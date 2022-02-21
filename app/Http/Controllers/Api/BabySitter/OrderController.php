@@ -2,28 +2,18 @@
 
 namespace App\Http\Controllers\Api\BabySitter;
 
-use App\Classes\OrderStatuses;
-use App\Classes\Statuses;
+use App\Classes\{OrderStatuses,Statuses};
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\BabySitter\Order\OTPRequest;
-use App\Http\Requests\Api\BabySitter\Order\ResendOTPRequest;
-use App\Http\Resources\Api\Client\Order\NewOrderResource;
-use App\Http\Resources\Api\Client\Order\OrderResource;
-use App\Http\Resources\Api\Client\Order\SingleOrderResource;
-use App\Http\Resources\Api\Client\Order\SingleSitterOrderResource;
+use App\Http\Requests\Api\BabySitter\Order\{OTPRequest,ResendOTPRequest};
+use App\Http\Resources\Api\Client\Order\{NewOrderResource,SingleOrderResource};
 use App\Http\Resources\Api\Notification\SenderResource;
-use App\Models\MainOrder;
-use App\Models\SitterOrder;
-use App\Models\User;
-use App\Notifications\Orders\AcceptOrderNotification;
-use App\Notifications\Orders\CancelOrderNotification;
-use App\Notifications\Orders\RejectOrderNotification;
-use App\Traits\Order;
-use App\Traits\OTP;
+use App\Models\{MainOrder,SitterOrder,User};
+use App\Notifications\Orders\{AcceptOrderNotification,CancelOrderNotification,RejectOrderNotification};
+use App\Traits\{Order,OTP};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\{DB,Notification};
+
 
 class OrderController extends Controller
 {

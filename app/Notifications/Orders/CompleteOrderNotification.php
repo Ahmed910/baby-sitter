@@ -84,7 +84,7 @@ class CompleteOrderNotification extends Notification implements ShouldBroadcast
 
         return new BroadcastMessage([
             'title'=>trans('dashboard.notification.order_has_been_completed_title',[],$notifiable->current_lang),
-            'body'=> trans('dashboard.notification.order_has_been_completed_body',['body' => auth()->user()->name ?? auth()->user()->phone],$notifiable->current_lang),
+            'body'=> trans('dashboard.notification.order_has_been_completed_body',[],$notifiable->current_lang),
             'notify_type'=>'complete_order',
             'route' => route('dashboard.orders.show',$this->booking->id),
             'order_id' => optional($this->booking)->id,

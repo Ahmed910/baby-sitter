@@ -85,7 +85,7 @@ class CancelOrderNotification extends Notification implements ShouldBroadcast
 
         return new BroadcastMessage([
             'title'=>trans('dashboard.notification.client_cancel_order_title',[],$notifiable->current_lang),
-            'body'=> trans('dashboard.notification.client_cancel_order_body',['body' => auth()->user()->name ?? auth()->user()->phone],$notifiable->current_lang),
+            'body'=> trans('dashboard.notification.client_cancel_order_body',[],$notifiable->current_lang),
             'notify_type'=>'cancel_order',
             'route' => route('dashboard.orders.show',$this->booking->id),
             'order_id' => optional($this->booking)->id,
