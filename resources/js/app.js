@@ -8,6 +8,7 @@ import Echo from "laravel-echo"
  });
  var userId=window.Data.user_id;
  var unread_notifications=window.Data.unread_notifications;
+ console.log(window.location.hostname);
 //  console.log(unread_notifications)
  window.Echo.private('babysitters-notification.' + userId)
     .notification((notification) => {
