@@ -11,7 +11,7 @@ import Echo from "laravel-echo"
 //  console.log(unread_notifications)
  window.Echo.private('babysitters-notification.' + userId)
     .notification((notification) => {
-        
+        console.log(notification);
         $('.notification_list').prepend('<a class="d-flex" href="'+notification.route+'">'+
         '<div class="media d-flex align-items-start">'+
             '<div class="media-left">'+
