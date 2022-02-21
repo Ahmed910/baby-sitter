@@ -187,10 +187,10 @@ class OrderController extends Controller
 
     public function completeOrder($order_id)
     {
+        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
         DB::beginTransaction();
 
         try {
-            $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
             $fcm_notes = [
                 'title' => trans('dashboard.notification.order_has_been_completed_title',[],$main_order->client->current_lang),
                 'body' => trans('dashboard.notification.order_has_been_completed_body',[],$main_order->client->current_lang).auth('api')->user()->name,
@@ -201,10 +201,10 @@ class OrderController extends Controller
             if (optional($center_order->service)->service_type == 'hour') {
                 $center_order->update(['status' => 'completed']);
                 $main_order->update(['finished_at' => now()]);
+                $center = User::findOrFail($main_order->center_id);
+                $wallet_before = $center->wallet;
+                $this->chargeWallet($main_order->final_price, $main_order->center_id);
                 if ($center_order->pay_type == 'wallet') {
-                    $center = User::findOrFail($main_order->center_id);
-                    $wallet_before = $center->wallet;
-                    $this->chargeWallet($main_order->final_price, $main_order->center_id);
                     Wallet::create(['amount' => $main_order->final_price, 'wallet_before' => $wallet_before, 'wallet_after' => $center->wallet, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
                 }
                 $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
@@ -223,7 +223,7 @@ class OrderController extends Controller
                 // dd($last_day->id == $center_order_month->id);
                 if (isset($last_day) && $last_day->id == $center_order_month->id) {
                     $center_order->update(['status' => 'completed']);
-                    if ($center_order->pay_type == 'wallet') {
+                    
                         $total_canceled_price = 0;
                         $total_completed_price = 0;
                         $canceled_dates = OrderMonthDate::where(['order_month_id' => optional($center_order->months)->id, 'status' => 'canceled'])->get();
@@ -247,18 +247,22 @@ class OrderController extends Controller
                             $client = $center_order->client;
                             $client_wallet_before = $client->wallet;
                             $client_wallet_after = $client->wallet + $total_canceled_price;
-                            Wallet::create(['amount' => $total_canceled_price, 'wallet_before' => $client_wallet_before, 'wallet_after' => $client_wallet_after, 'user_id' => $main_order->client_id, 'transferd_by' => $order->center_id, 'order_id' => $main_order->id]);
                             $this->chargeWallet($total_canceled_price, $center_order->client_id);
+                            if ($center_order->pay_type == 'wallet') {
+                            Wallet::create(['amount' => $total_canceled_price, 'wallet_before' => $client_wallet_before, 'wallet_after' => $client_wallet_after, 'user_id' => $main_order->client_id, 'transferd_by' => $order->center_id, 'order_id' => $main_order->id]);
+                            }
                         }
                         if ($total_completed_price > 0) {
                             $center = $center_order->center;
                             $center_wallet_before = $center->wallet;
                             $center_wallet_after = $center->wallet + $total_completed_price;
 
-                            Wallet::create(['amount' => $total_completed_price, 'wallet_before' => $center_wallet_before, 'wallet_after' => $center_wallet_after, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
                             $this->chargeWallet($total_completed_price, $center_order->center_id);
+                            if ($center_order->pay_type == 'wallet') {
+                            Wallet::create(['amount' => $total_completed_price, 'wallet_before' => $center_wallet_before, 'wallet_after' => $center_wallet_after, 'user_id' => $main_order->center_id, 'transferd_by' => $main_order->client_id, 'order_id' => $main_order->id]);
+                            }
                         }
-                    }
+                    
                     $main_order->client->notify(new CompleteOrderNotification($main_order, ['database']));
 
                     $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();

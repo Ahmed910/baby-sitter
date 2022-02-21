@@ -42,6 +42,37 @@ trait CompleteOrderHourService
             // return true;
     }
 
+    // public function completeOrderForHourServiceForCenter(MainOrder $order)
+    // {
+    //         $center_order = CenterOrder::findOrFail($main_order->center_order->id);
+    //         $sitter_order = SitterOrder::where(['status' => Statuses::WITHTHECHILD, 'otp_code' => $otp_code, 'main_order_id' => $order->id])->first();
+    //         if(!$sitter_order){
+    //             return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.otp_is_not_valid')], 400);
+    //         }
+    //     DB::beginTransaction();
+
+    //     try {
+    //         $this->updateData($order,$sitter_order);
+    //         DB::commit();
+    //         $fcm_notes = [
+    //             'title' => ['dashboard.notification.sitter_has_been_deliver_childern_title'],
+    //             'body' => ['dashboard.notification.sitter_has_been_deliver_childern_body', ['body' => auth('api')->user()->name ?? auth('api')->user()->phone]],
+    //             'sender_data' => new SenderResource(auth('api')->user())
+    //         ];
+    //         $order->client->notify(new DeliverChildernNotification($order, ['database']));
+
+    //         $admins = User::whereIn('user_type', ['superadmin', 'admin'])->get();
+    //         pushFcmNotes($fcm_notes, optional($order->client)->devices);
+    //         Notification::send($admins, new DeliverChildernNotification($order, ['database', 'broadcast']));
+    //         return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.otp_is_valid')]);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again')], 400);
+    //     }
+    //         // return true;
+    // }
+
+
     public function completeOrderForHourUsingScanQrCode(MainOrder $order)
     {
         $sitter_order = SitterOrder::where(['status' => Statuses::WITHTHECHILD,  'main_order_id' => $order->id])->firstOrFail();
