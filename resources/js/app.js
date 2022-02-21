@@ -19,7 +19,7 @@ import Echo from "laravel-echo"
             '</div>'+
             '<div class="media-body">'+
                     '<p class="media-heading"><span class="font-weight-bolder">'+notification.title+'</p>'+
-                    '<small class="notification-text">'+ (notification.body)+'</small>'+
+                    '<small class="notification-text">'+ (notification.body.substring(0,100))+'</small>'+
                      '</div>'+
             '</div></a>'
             );
