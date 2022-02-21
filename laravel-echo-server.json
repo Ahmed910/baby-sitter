@@ -1,5 +1,5 @@
 {
-	"authHost": "https://babysitter.at.aait-d.com",
+	"authHost": "https://at.aait-d.com/baby-sitter/public",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [
 		{
@@ -20,8 +20,8 @@
 	"protocol": "https",
 	"socketio": {},
 	"secureOptions": 67108864,
-	"sslCertPath": "/home/ataaitd/ssl/certs/babysitter_at_aait_d_com_c5e92_b1a9d_1651535999_0198372191f9695ce140591c0ef99586.crt",
-	"sslKeyPath": "/home/ataaitd/ssl/keys/a31fb_00879_3d5907eb4bdc47e10141d71df6eccc9e.key",
+	"sslCertPath": "/home/ataaitd/ssl/certs/at_aait_d_com_b0f0c_cf7b1_1649894399_70a0d58e6f154ebbe384fd3c596e6ef6.crt",
+	"sslKeyPath": "/home/ataaitd/ssl/keys/b0f0c_cf7b1_60f25042fb558693e5f90adc293034c4.key",
 	"sslCertChainPath": "",
 	"sslPassphrase": "",
 	"subscribers": {
@@ -30,7 +30,7 @@
 	},
 	"apiOriginAllow": {
 		"allowCors": true,
-		"allowOrigin": "https://babysitter.at.aait-d.com:6041",
+		"allowOrigin": "https://at.aait-d.com/baby-sitter/public:6041",
 		"allowMethods": "GET, POST",
 		"allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
 	}

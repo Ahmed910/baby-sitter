@@ -45,11 +45,12 @@ class CancelOrderAfterPassedTime extends Command
      */
     public function handle()
     {
+        $sitter_orders = SitterOrder::get();
+        $center_orders = CenterOrder::get();
         DB::beginTransaction();
 
         try {
-            $sitter_orders = SitterOrder::get();
-            $center_orders = CenterOrder::get();
+
 
             if ($sitter_orders->count() > 0) {
                 foreach ($sitter_orders as $sitter_order) {
