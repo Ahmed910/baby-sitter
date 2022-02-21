@@ -71,7 +71,7 @@ class CreateOrderNotification extends Notification implements ShouldBroadcastNow
 
         return new BroadcastMessage([
             'title'=> trans('dashboard.notification.order_has_been_created_title',[],$notifiable->current_lang),
-            'body'=> trans('dashboard.notification.order_has_been_created_body',[],$notifiable->current_lang),
+            'body'=> trans('dashboard.notification.order_has_been_created_body',[],$notifiable->current_lang) . auth('api')->user()->name??auth('api')->user()->phone,
             'notify_type'=>'create_order',
             'route' => route('dashboard.orders.show',$this->booking->id),
             'order_id' => optional($this->booking)->id,

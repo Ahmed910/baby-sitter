@@ -192,10 +192,10 @@ class OrderController extends Controller
     }
     public function completeOrder($order_id)
     {
+        $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
         DB::beginTransaction();
 
         try {
-            $order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
             $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
 
             if ($service_id == Statuses::HOUR_SERVICE) {

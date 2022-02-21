@@ -86,17 +86,17 @@
                           @endphp
                       <a class="d-flex" href="{{ $route }}">
                           <div class="media d-flex align-items-start">
-                              <div class="media-left">
+                              {{--  <div class="media-left">
                                   <div class="avatar"><img src="../../../app-assets/images/portrait/small/avatar-s-15.jpg" alt="avatar" width="32" height="32"></div>
                                   @isset($notification->data['order_id'])
                                       <i class="feather icon-shopping-cart font-medium-5 primary"></i>
                                   @else
                                       <i class="feather icon-message-square font-medium-5 primary"></i>
                                   @endisset
-                              </div>
+                              </div>  --}}
                               <div class="media-body">
                                   <p class="media-heading"><span class="font-weight-bolder">{{ $title }}</p>
-                                      <small class="notification-text"> {{ str_limit($body,100,'...') }}</small>
+                                      <small class="notification-text"> {{ str_limit($body,100,'...') . $notification->data['sender_data']['fullname'] }}</small>
                               </div>
                           </div>
                       </a>

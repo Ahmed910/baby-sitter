@@ -83,7 +83,7 @@ class AcceptOrderNotification extends Notification implements ShouldBroadcast
 
         return new BroadcastMessage([
             'title'=>trans('dashboard.notification.order_has_been_accepted_title',[],$notifiable->current_lang),
-            'body'=> trans('dashboard.notification.order_has_been_accepted_body',[],$notifiable->current_lang),
+            'body'=> trans('dashboard.notification.order_has_been_accepted_body',[],$notifiable->current_lang) . auth('api')->user()->name??auth('api')->user()->phone,
             'notify_type'=>'accept_order',
             'route' => route('dashboard.orders.show',$this->booking->id),
             'order_id' => optional($this->booking)->id,

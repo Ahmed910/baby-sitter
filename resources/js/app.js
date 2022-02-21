@@ -11,7 +11,7 @@ import Echo from "laravel-echo"
 //  console.log(unread_notifications)
  window.Echo.private('babysitters-notification.' + userId)
     .notification((notification) => {
-
+        
         $('.notification_list').prepend('<a class="d-flex" href="'+notification.route+'">'+
         '<div class="media d-flex align-items-start">'+
             '<div class="media-left">'+
@@ -19,7 +19,7 @@ import Echo from "laravel-echo"
             '</div>'+
             '<div class="media-body">'+
                     '<p class="media-heading"><span class="font-weight-bolder">'+notification.title+'</p>'+
-                    '<small class="notification-text">'+ (notification.body.substring(0,100))+'</small>'+
+                    '<small class="notification-text">'+ (notification.body.substring(0,100) + notification.sender_data.fullname)+'</small>'+
                      '</div>'+
             '</div></a>'
             );
