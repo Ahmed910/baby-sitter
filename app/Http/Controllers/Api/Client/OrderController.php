@@ -205,15 +205,15 @@ class OrderController extends Controller
                 $order_for_sitter = SitterOrder::where(['status' => 'process', 'main_order_id' => $order->id])->firstOrFail();
 
                 $sitter_order = $order_for_sitter->months->month_dates()->whereIn('order_month_dates.status', ['waiting', 'with_the_child'])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
-                $sitter_order->update(['status' => 'completed']);
+                $sitter_order->update(['order_month_dates.status' => 'completed']);
                 $last_day = OrderMonthDate::where('order_month_id', $order->sitter_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
                 // dd($last_day == $sitter_order);
                 if ($last_day->id == $sitter_order->id) {
 
                     // $sitter_order->update(['status' => 'with_the_child']);
                     $order->sitter_order()->update(['status' => Statuses::COMPLETED]);
-                    $this->chargeWalletForProvider($order, $order->client, Statuses::CANCELED);
-                    $this->chargeWalletForProvider($order, $order->sitter, Statuses::COMPLETED);
+                    $this->chargeWalletForProvider($order, $order->client, Statuses::CANCELED,$order->sitter_order);
+                    $this->chargeWalletForProvider($order, $order->sitter, Statuses::COMPLETED,$order->sitter_order);
 
                 }
             }

@@ -33,6 +33,7 @@ return[
           'updated_successfully'=>'تم التعديل بنجاح',
           'the_required_amount_is_greater_than_order_price'=>'المبلغ المطلوب اكبر من سعر الطلب',
           'otp_has_been_sent'=>'تم إرسال الرقم التأكيدى',
+          'data_not_found'=>'لا يمكن العثور على بيانات',
           'wallet_has_been_cashout'=>'تم شحن الحافظة',
           'otp_is_not_valid'=>'الرقم التأكيدى غير صحيح',
           'successfully_evaluated'=>'تم التقييم بنجاح',

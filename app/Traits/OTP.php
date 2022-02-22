@@ -69,7 +69,7 @@ trait OTP
             if (!$sitter_order) {
                 return response()->json(['data' => null, 'status' => 'fail', 'message' => trans('api.messages.otp_is_not_valid')], 400);
             }
-            $last_day = OrderMonthDate::where('order_month_id', $order->sitter_order->months->id)->orderBy('date', 'DESC')->firstOrFail();
+            $last_day = OrderMonthDate::where('order_month_id', $order->sitter_order->months->id)->orderBy('date', 'DESC')->first();
             DB::beginTransaction();
             try {
                 $sitter_order->update(['status' => Statuses::COMPLETED, 'otp_code' => NULL]);
@@ -77,8 +77,8 @@ trait OTP
                 if ($last_day->id == $sitter_order->id) {
 
                     $order->sitter_order()->update(['status' => Statuses::COMPLETED]);
-                    $this->chargeWalletForProvider($order, $order->client, Statuses::CANCELED);
-                    $this->chargeWalletForProvider($order, $order->sitter, Statuses::COMPLETED);
+                    $this->chargeWalletForProvider($order, $order->client, Statuses::CANCELED,$order->sitter_order);
+                    $this->chargeWalletForProvider($order, $order->sitter, Statuses::COMPLETED,$order->sitter_order);
                 }
                 DB::commit();
 
