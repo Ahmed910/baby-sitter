@@ -11,7 +11,7 @@ use App\Notifications\Orders\{AcceptOrderNotification, ActiveOrderNotification, 
 use App\Traits\{CompleteOrderHourService, CompleteOrderMonthService, Order};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{DB, Notification, Response};
+use Illuminate\Support\Facades\{DB, Notification};
 
 class OrderController extends Controller
 {
@@ -35,12 +35,12 @@ class OrderController extends Controller
                 }
             });
         })->get();
-        $response = Response::make(NewOrderResource::collection($orders), 200);
-        $response->header('Content-Type', 'application/json');
-        return $response;
+        // $response = Response::make(NewOrderResource::collection($orders), 200);
+        // $response->header('Content-Type', 'application/json');
+        // return $response;
         // return response()->json(['data'=>$orders,'status'=>'success','message'=>'']);
 
-        //  return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
+         return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
         // return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
     }
 
