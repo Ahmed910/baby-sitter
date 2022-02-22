@@ -35,10 +35,10 @@ class OrderController extends Controller
                 }
             });
         })->get();
-        // $response = Response::js->make(NewOrderResource::collection($orders), 200);
-        // $response->header('Content-Type', 'application/json');
-        // return $response;
-        return response()->json(['data'=>$orders,'status'=>'success','message'=>'']);
+        $response = Response::make(NewOrderResource::collection($orders), 200);
+        $response->header('Content-Type', 'application/json');
+        return $response;
+        // return response()->json(['data'=>$orders,'status'=>'success','message'=>'']);
 
         //  return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
         // return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
