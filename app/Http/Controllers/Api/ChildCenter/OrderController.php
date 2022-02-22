@@ -21,6 +21,19 @@ class OrderController extends Controller
     {
         $this->order = $order;
     }
+    public function getNewOrders(Request $request){
+        $orders = MainOrder::where(['to' => 'center', 'center_id' => auth('api')->id()])->when(isset($request->order_type), function ($q) use ($request) {
+            $q->whereHas('center_order', function ($q) use ($request) {
+                if ($request->order_type == 'new_orders') {
+                    $q->where('status', 'pending');
+                } elseif ($request->order_type == 'active_orders') {
+                    $q->whereIn('status', ['active', 'process']);
+                }
+            });
+        })->get();
+
+        return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
+    }
     public function getNewAndActiveOrders(Request $request)
     {
 

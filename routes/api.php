@@ -48,6 +48,8 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
 
             // customer rates
             Route::get('get_customer_profile/{customer_id}','CustomerController@getCustomerProfile')->name('order.customer_profile');
+            // Agora
+            Route::get('start/{order_id}','AgoraController@start');
             // Chat
             Route::get('chat/{order_id}/{receiver_id}', 'ChatController@show');
             Route::apiResource('chat', 'ChatController')->only('index', 'store', 'destroy');
@@ -150,6 +152,7 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Rate && Review
             Route::get('get_rates_for_center','RateCenterController@getRatesForCenter');
             // Order
+            Route::get('get_new_orders','OrderController@getNewOrders');
             Route::get('get_new_and_active_orders','OrderController@getNewAndActiveOrders');
             Route::get('get_waiting_and_expired_orders','OrderController@getWaitingAndExpiredOrders');
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');

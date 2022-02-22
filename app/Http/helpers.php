@@ -365,6 +365,20 @@ function pushFcmNotes($fcmData, $devices) {
     return 0;
 }
 
+function generate_agora_token($channelName, $userID, $expireTimeInSeconds)
+{
+    $appID = setting('agora_app_id') ? setting('agora_app_id') : '868376f16edc48e1ac880b528ed67c4a';
+    $appCertificate = setting('agora_app_certificate') ? setting('agora_app_certificate') : '77d5f6578dea4016b3304407a2612a08';
+    $channelName = $channelName;
+//    $userAccount = '0';
+    $role = \App\Agora\RtcTokenBuilder::RoleAttendee;
+    $expireTimeInSeconds = (int) $expireTimeInSeconds;
+    $currentTimestamp = (new \DateTime("now", new \DateTimeZone('Africa/Cairo')))->getTimestamp();
+    $privilegeExpiredTs = $currentTimestamp + $expireTimeInSeconds;
+    $token = \App\Agora\RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $userID, $role, $privilegeExpiredTs);
+    return $token;
+}
+
 // HISMS
 function send_sms($mobile, $msg)
 {
