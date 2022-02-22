@@ -152,7 +152,6 @@ Route::namespace('Api')->middleware('setLocale')->group(function(){
             // Rate && Review
             Route::get('get_rates_for_center','RateCenterController@getRatesForCenter');
             // Order
-            Route::get('get_new_orders','OrderController@getNewOrders');
             Route::get('get_new_and_active_orders','OrderController@getNewAndActiveOrders');
             Route::get('get_waiting_and_expired_orders','OrderController@getWaitingAndExpiredOrders');
             Route::get('get_order_details/{order_id}','OrderController@getOrderDetails');
