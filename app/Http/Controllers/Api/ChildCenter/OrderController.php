@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\ChildCenter;
 
-use App\Classes\{OrderStatuses,Statuses};
+use App\Classes\{OrderStatuses, Statuses};
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Client\Order\{NewOrderResource, SingleOrderResource};
 use App\Http\Resources\Api\Notification\SenderResource;
@@ -11,11 +11,11 @@ use App\Notifications\Orders\{AcceptOrderNotification, ActiveOrderNotification, 
 use App\Traits\{CompleteOrderHourService, CompleteOrderMonthService, Order};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{DB, Notification};
+use Illuminate\Support\Facades\{DB, Notification, Response};
 
 class OrderController extends Controller
 {
-    use Order, CompleteOrderHourService,CompleteOrderMonthService;
+    use Order, CompleteOrderHourService, CompleteOrderMonthService;
     public $order;
     public function __construct(OrderStatuses $order)
     {
@@ -35,8 +35,12 @@ class OrderController extends Controller
                 }
             });
         })->get();
+        // $response = Response::js->make(NewOrderResource::collection($orders), 200);
+        // $response->header('Content-Type', 'application/json');
+        // return $response;
+        return response()->json(['data'=>$orders,'status'=>'success','message'=>'']);
 
-        return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
+        //  return NewOrderResource::collection($orders)->additional(['status' => 'success', 'message' => '']);
         // return response()->json(['data'=>$data,'status'=>'success','message'=>'']);
     }
 
