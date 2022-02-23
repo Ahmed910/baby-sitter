@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Classes\Statuses;
 use App\Models\CenterOrder;
+use App\Models\OrderHour;
 use App\Models\OrderMonthDate;
 use App\Models\SitterOrder;
 use App\Traits\Order;
@@ -56,8 +57,9 @@ class CancelOrderAfterPassedTime extends Command
                 foreach ($sitter_orders as $sitter_order) {
                     if (optional($sitter_order->service)->service_type == 'hour') {
 
-                        $sitter_order_hour = $sitter_order->hours()->where('date', '<', now()->format('Y-m-d'))->first();
-                        if ($sitter_order_hour) {
+                        // $sitter_order_hour = $sitter_order->hours()->where('date', '<', now()->format('Y-m-d'))->first();
+                        $sitter_order_hour = OrderHour::where('order_hoursable_id',$sitter_order->id)->where('date', '<', now()->format('Y-m-d'))->first();
+                        if ($sitter_order_hour && $sitter_order->status != 'completed') {
                             $sitter_order->update(['status' => 'canceled']);
                             $this->chargeWallet(optional($sitter_order->main_order)->price_after_offer, $sitter_order->client_id);
                         }
@@ -85,8 +87,9 @@ class CancelOrderAfterPassedTime extends Command
                 foreach ($center_orders as $center_order) {
                     if (optional($center_order->service)->service_type == 'hour') {
 
-                        $center_order_hour = $center_order->hours()->where('date', '<', now()->format('Y-m-d'))->first();
-                        if ($center_order_hour) {
+                        // $center_order_hour = $center_order->hours()->where('date', '<', now()->format('Y-m-d'))->first();
+                        $center_order_hour = OrderHour::where('order_hoursable_id',$center_order->id)->where('date', '<', now()->format('Y-m-d'))->first();
+                        if ($center_order_hour && $center_order->status != 'completed') {
                             $center_order->update(['status' => 'canceled']);
                             $this->chargeWallet(optional($center_order->main_order)->price_after_offer, $center_order->client_id);
                         }
