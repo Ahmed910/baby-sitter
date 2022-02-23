@@ -59,9 +59,12 @@
                             <i class="fas fa-trash-alt font-medium-3"></i>
                         </a>
 
-                        <a href="{!! route('dashboard.center.edit',$center->id) !!}" class="text-primary mr-2" title="{!! trans('dashboard.general.edit') !!}">
+                        <a href="{!! route('dashboard.center.edit',$center->id) !!}" class="text-primary" title="{!! trans('dashboard.general.edit') !!}">
                             <i class="fas fa-edit font-medium-3"></i>
                         </a>
+                        {{--  <a href="{!!  route('dashboard.notification.store') !!}" class="text-success" title="{!! trans('dashboard.general.notify') !!}">
+                            <i  class="fa fa-bell font-medium-3"></i>
+                        </a>  --}}
                     </td>
                 </tr>
                     @endforeach

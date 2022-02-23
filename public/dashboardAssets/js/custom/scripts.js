@@ -44,6 +44,7 @@ function notify(itemId,route,user_type) {
 }
 
 function editModal() {
+
     var userId=$('#modal_notify #item').attr('item-id');
     var route=$('#modal_notify #item').attr('route');
     var user_type=$('#modal_notify #item').attr('user-type');
@@ -55,6 +56,7 @@ function editModal() {
 
     var title =$('#modal_notify input[name=title]').val();
     var body =$('#modal_notify textarea[name=body]').val();
+
     $('#modal_notify textarea[name=body]').val('');
     $('#modal_notify input[name=title]').val('');
     $("#modal_notify").modal('hide');
@@ -65,6 +67,7 @@ function editModal() {
       data:{user_id:userId,body:body,title:title,user_type:user_type,_token:token ,user_list: clients},
       success:function(data){
          if (data['value'] == 1) {
+
              if (clients.length > 0) {
                  console.log(clients);
                  clients = [];
@@ -76,6 +79,17 @@ function editModal() {
           }else{
              toastr.error(data['body'], '', { "progressBar": true });
           }
+        },
+        error:function(error){
+            let err = jQuery.parseJSON(error.responseText);
+            let erors = err.errors;
+            
+           for(er of Object.keys(erors)){
+               let toasterErrs = erors[er];
+               toastr.error(...toasterErrs, '', { "progressBar": true });
+
+           }
+
         }
       });
 }
