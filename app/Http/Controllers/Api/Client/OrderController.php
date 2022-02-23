@@ -91,7 +91,8 @@ class OrderController extends Controller
 
             if($main_order->to == 'sitter' && optional($main_order->sitter_order)->service_id == Statuses::MONTH_SERVICE){
                 $order_for_sitter = SitterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $main_order->id])->firstOrFail();
-                $order = $order_for_sitter->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->first();
+                // $order = $order_for_sitter->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->first();
+                $order = OrderMonthDate::where(['status' => Statuses::WAITING,'order_month_id'=>$order_for_sitter->months->id])->orderBy('date', 'ASC')->firstOrFail();
             }
             if($main_order->to == 'sitter' && optional($main_order->sitter_order)->service_id == Statuses::HOUR_SERVICE){
                 $order = SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id);
@@ -99,7 +100,8 @@ class OrderController extends Controller
 
             if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::MONTH_SERVICE){
                 $order_for_center = CenterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $order->id])->firstOrFail();
-                $order = $order_for_center->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
+                // $order = $order_for_center->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
+                $order = OrderMonthDate::where(['status' => Statuses::WAITING,'order_month_id'=>$order_for_center->months->id])->orderBy('date', 'ASC')->firstOrFail();
             }
             if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::HOUR_SERVICE){
                 $order = CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
@@ -113,7 +115,7 @@ class OrderController extends Controller
                 $order->update(['status' => 'canceled']);
                 $this->chargeWallet($main_order->price_after_offer, $order->client_id);
             }else{
-                dd($order);
+
                 $order->update(['order_month_dates.status' => 'canceled']);
             }
 
