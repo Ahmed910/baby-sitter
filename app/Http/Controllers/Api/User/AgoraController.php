@@ -63,13 +63,13 @@ class AgoraController extends Controller
                     'expire_time_in_seconds' => $agora_expire_time_in_seconds,
                     'token' => $agora_token,
                 ];
-                return response()->json(['status' => 'true', 'message' => trans('app.messages.sent_successfully'), 'data' => $agora_data + ['uid' => 0, 'order_id' => $order->id]]);
+                return response()->json(['status' => 'success', 'message' => trans('api.messages.sent_successfully'), 'data' => $agora_data + ['uid' => 0, 'order_id' => $order->id]]);
             }
-            return response()->json(['status' => 'true', 'message' => trans('app.messages.sent_successfully'), 'data' => null]);
+            return response()->json(['status' => 'success', 'message' => trans('api.messages.sent_successfully'), 'data' => null]);
         } catch (\Exception $e) {
             \DB::rollback();
             dd($e);
-            return response()->json(['status' => 'false', 'message' => trans('app.messages.something_went_wrong_please_try_again'), 'data' => null], 401);
+            return response()->json(['status' => 'fail', 'message' => trans('api.messages.there_is_an_error_try_again'), 'data' => null], 401);
         }
     }
 }

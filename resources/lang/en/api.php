@@ -29,6 +29,7 @@ return[
         'added_to_gallery'=>'you added to gallery',
         'offer_request_has_been_sent_management_to_reactive_offer'=>'offer request has been sent management to reactive offer',
         'update_gallery'=>'update image in gallery',
+        'sent_successfully'=>'Sent Successfully',
         'data_not_found'=>'data not found',
         'cant_send_request'=>'cant send request',
         'offer_has_been_updated'=>'offer has been updated',
