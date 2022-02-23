@@ -26,7 +26,7 @@ class ApplyOfferRequest extends ApiMasterRequest
     {
         return [
             'promo_code'=>'required|exists:offers,promo_code',
-           
+            'user_id'=>'required|exists:users,id'
         ];
     }
 }

@@ -16,7 +16,7 @@ class OfferController extends Controller
     public function applyOffer(ApplyOfferRequest $request)
     {
         // dd('dddddd');
-        $offer = Offer::where(['promo_code'=>$request->promo_code,'status'=>'active'])->where('end_date','>=',now()->format('Y-m-d'))->firstOrFail();
+        $offer = Offer::where(['promo_code'=>$request->promo_code,'user_id'=>$request->user_id,'status'=>'active'])->where('end_date','>=',now()->format('Y-m-d'))->firstOrFail();
 
         $orders_with_that_offer = MainOrder::where('offer_id',$offer->id)->count();
         if($orders_with_that_offer <= $offer->max_num)
