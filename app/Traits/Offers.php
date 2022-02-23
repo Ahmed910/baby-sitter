@@ -57,9 +57,10 @@ trait Offers{
         ->findOrFail($id);
         if($num_of_used < $offer->max_num){
             $offer->update(['status'=>'inactive']);
-            return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_has_been_inactive')]);
+            
+            return (new SingleOfferResource($offer))->additional(['status'=>'success','message'=>trans('api.messages.offer_has_been_inactive')]);
         }
-        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.cant_make_offer_inacitve_while_its_status_invalid')]);
+        return response()->json(['data'=>null,'status'=>'fail','message'=>trans('api.messages.cant_make_offer_inacitve_while_its_status_invalid')],400);
     }
 
     protected function reactiveForOffer(OfferRequest $request,$id)
@@ -85,4 +86,3 @@ trait Offers{
         return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_has_been_updated')]);
     }
 }
-?>

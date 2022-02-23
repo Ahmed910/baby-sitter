@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Notification\SenderResource;
 use App\Models\MainOrder;
+use App\Notifications\Orders\StartMeetingNotification;
 use Illuminate\Http\Request;
 
 class AgoraController extends Controller
@@ -33,16 +34,29 @@ class AgoraController extends Controller
             $order->update($agora_data);
             // notification to client
             if($order->sitter_id == auth('api')->id()){
-                
+                $data = [
+                    'title'=>trans('dashboard.notification.meeting_has_been_started_title',[],optional($order->client)->current_lang),
+                    'body'=> trans('dashboard.notification.meeting_has_been_started_body',[],optional($order->client)->current_lang),
+                    'sender_data' => new SenderResource(auth('api')->user()),
+                    'agora_data' => $agora_data
+                ];
+                $order->client->notify(new StartMeetingNotification($order));
+                pushFcmNotes($data,optional($order->client)->devices);
             }
-            $data = [
-                'title'=>trans('dashboard.notification.meeting_has_been_started_title',[],auth('api')->user),
-                'body'=> ['dashboard.notification.meeting_has_been_started_body'],
-                'sender_data' => new SenderResource(auth('api')->user()),
-                'agora_data' => $agora_data
-            ];
-            $order->sitter->notify(new ApiNotification($data, ['database', 'fcm']));
+
+            if($order->client_id == auth('api')->id()){
+                $data = [
+                    'title'=>trans('dashboard.notification.meeting_has_been_started_title',[],optional($order->sitter)->current_lang),
+                    'body'=> trans('dashboard.notification.meeting_has_been_started_body',[],optional($order->sitter)->current_lang),
+                    'sender_data' => new SenderResource($order->client),
+                    'agora_data' => $agora_data
+                ];
+                $order->sitter->notify(new StartMeetingNotification($order));
+                pushFcmNotes($data,optional($order->sitter)->devices);
+            }
+
             \DB::commit();
+
             if ($order) {
                 $agora_data = [
                     'channel_name' => $agora_channel_name,
