@@ -88,6 +88,7 @@ class OrderController extends Controller
             $order_for_sitter = SitterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $main_order->id])->firstOrFail();
             // $order = $order_for_sitter->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->first();
             $order = OrderMonthDate::where(['status' => Statuses::WAITING,'order_month_id'=>$order_for_sitter->months->id])->orderBy('date', 'ASC')->firstOrFail();
+            $last_day = OrderMonthDate::where('order_month_id', $order_for_sitter->months->id)->orderBy('date', 'DESC')->first();
         }
         if(optional($main_order->sitter_order)->service_id == Statuses::HOUR_SERVICE){
             $order = SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id);
@@ -104,6 +105,11 @@ class OrderController extends Controller
             }else{
 
                 $order->update(['status' => 'canceled']);
+                if($last_day->id == $order->id){
+                    $order_for_sitter->update(['status' => Statuses::COMPLETED]);
+                    $this->chargeWalletForProvider($main_order, $main_order->client, Statuses::CANCELED,$main_order->sitter_order);
+                    $this->chargeWalletForProvider($main_order, $main_order->sitter, Statuses::COMPLETED,$main_order->sitter_order);
+                }
             }
             DB::commit();
             $main_order->refresh();
