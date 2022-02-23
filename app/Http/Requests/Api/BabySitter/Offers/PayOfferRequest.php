@@ -27,7 +27,7 @@ class PayOfferRequest extends ApiMasterRequest
         return [
             'pay_type'=>'required|in:credit,wallet',
             'transaction_id'=>'nullable|required_if:pay_type,credit',
-            'offer_fees'=>'required|numeric'
+            'offer_fees'=>'required|numeric|equal_to:'.setting('offer_fees')
         ];
     }
 }
