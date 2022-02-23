@@ -116,7 +116,7 @@ class OrderController extends Controller
                 $this->chargeWallet($main_order->price_after_offer, $order->client_id);
             }else{
 
-                $order->update(['order_month_dates.status' => 'canceled']);
+                $order->update(['status' => 'canceled']);
             }
 
              $user = $main_order->to =='sitter' ? $main_order->sitter : $main_order->center;
