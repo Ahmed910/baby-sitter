@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BabySitter\Order\{OTPRequest,ResendOTPRequest};
 use App\Http\Resources\Api\Client\Order\{NewOrderResource,SingleOrderResource};
 use App\Http\Resources\Api\Notification\SenderResource;
-use App\Models\{MainOrder,SitterOrder,User};
+use App\Models\{MainOrder, OrderMonthDate, SitterOrder,User};
 use App\Notifications\Orders\{AcceptOrderNotification,CancelOrderNotification,RejectOrderNotification};
 use App\Traits\{Order,OTP};
 use Carbon\Carbon;
@@ -83,26 +83,28 @@ class OrderController extends Controller
     {
         // dd(auth('api')->user());
         $main_order = MainOrder::where('sitter_id', auth('api')->id())->findOrFail($order_id);
-        // SitterOrder::where('status', 'waiting')->findOrFail($main_order->sitter_order->id);
-        // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-        $sitter_order = SitterOrder::findOrFail($main_order->sitter_order->id);
-        if ($sitter_order->status == 'waiting' || $sitter_order->status == 'process') {
-            $sitter_order_period = optional($sitter_order->service)->service_type == 'hour'
-                ? $sitter_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
-                : $sitter_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
-        }
-        // dd(Carbon::now()->addDay());
 
-        if (isset($sitter_order_period) && $sitter_order_period) {
-            return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
+        if(optional($main_order->sitter_order)->service_id == Statuses::MONTH_SERVICE){
+            $order_for_sitter = SitterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $main_order->id])->firstOrFail();
+            // $order = $order_for_sitter->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->first();
+            $order = OrderMonthDate::where(['status' => Statuses::WAITING,'order_month_id'=>$order_for_sitter->months->id])->orderBy('date', 'ASC')->firstOrFail();
         }
+        if(optional($main_order->sitter_order)->service_id == Statuses::HOUR_SERVICE){
+            $order = SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id);
+        }
+
+
         DB::beginTransaction();
 
         try {
-            $sitter_order->update(['status' => 'canceled']);
-            // if ($sitter_order->pay_type == 'wallet') {
-             $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
-            // }
+            $service_id = optional($order->sitter_order)->service_id ;
+            if($service_id == Statuses::HOUR_SERVICE){
+                $order->update(['status' => 'canceled']);
+                $this->chargeWallet($main_order->price_after_offer, $order->client_id);
+            }else{
+
+                $order->update(['status' => 'canceled']);
+            }
             DB::commit();
             $main_order->refresh();
             $fcm_notes =  [
