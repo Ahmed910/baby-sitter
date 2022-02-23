@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\BabySitter\Offers;
 
 use App\Http\Requests\Api\ApiMasterRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PayOfferRequest extends ApiMasterRequest
 {
@@ -27,7 +28,7 @@ class PayOfferRequest extends ApiMasterRequest
         return [
             'pay_type'=>'required|in:credit,wallet',
             'transaction_id'=>'nullable|required_if:pay_type,credit',
-            'offer_fees'=>'required|numeric|equal_to:'.setting('offer_fees')
+            'offer_fees'=>['required','numeric',Rule::in([setting('offer_fees')])]
         ];
     }
 }
