@@ -25,6 +25,7 @@ class OfferResource extends JsonResource
             'promo_code' => $this->promo_code,
             // 'admin_approved_status'=>$this->when((isset($user) && ($user->user_type == 'babysitter' || $user->user_type == 'childcenter')), $this->status),
             'status'=> $this->status,
+            'offer_fees'=>(double)setting('offer_fees'),
             'is_reactive'=>$this->getOfferIsReactive()
         ];
     }
