@@ -104,7 +104,7 @@ class OrderController extends Controller
                 $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
                 // }
                 $user = $main_order->to =='sitter' ? $main_order->sitter : $main_order->center;
-            }
+
 
             DB::commit();
             $main_order->refresh();
