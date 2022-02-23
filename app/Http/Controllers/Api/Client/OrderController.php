@@ -89,21 +89,34 @@ class OrderController extends Controller
 
         $main_order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
 
-        $sitter_order =$main_order->to == 'sitter' ? SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id) : CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
+            if($main_order->to == 'sitter' && optional($main_order->sitter_order)->service_id == Statuses::MONTH_SERVICE){
+                $order_for_sitter = SitterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $main_order->id])->firstOrFail();
+                $order = $order_for_sitter->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->first();
+            }
+            if($main_order->to == 'sitter' && optional($main_order->sitter_order)->service_id == Statuses::HOUR_SERVICE){
+                $order = SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id);
+            }
+
+            if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::MONTH_SERVICE){
+                $order_for_center = CenterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $order->id])->firstOrFail();
+                $order = $order_for_center->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
+            }
+            if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::HOUR_SERVICE){
+                $order = CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
+            }
+
         DB::beginTransaction();
 
         try {
+            $service_id = $order->to == 'sitter' ? optional($order->sitter_order)->service_id : optional($order->center_order)->service_id;
+            if($service_id == Statuses::HOUR_SERVICE){
+                $order->update(['status' => 'canceled']);
+                $this->chargeWallet($main_order->price_after_offer, $order->client_id);
+            }else{
+                $order->update(['order_month_dates.status' => 'canceled']);
+            }
 
-                // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-
-                //if($sitter_order->status == 'pending' && optional($sitter_order->service)->service_type =='hour' &&  optional($sitter_order->hours)->date )
-                $sitter_order->update(['status' => 'canceled']);
-
-                // if ($sitter_order->pay_type == 'wallet') {
-
-                $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
-                // }
-                $user = $main_order->to =='sitter' ? $main_order->sitter : $main_order->center;
+             $user = $main_order->to =='sitter' ? $main_order->sitter : $main_order->center;
 
 
             DB::commit();
