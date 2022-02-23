@@ -97,7 +97,7 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            $service_id = optional($order->sitter_order)->service_id ;
+            $service_id = optional($main_order->sitter_order)->service_id ;
             if($service_id == Statuses::HOUR_SERVICE){
                 $order->update(['status' => 'canceled']);
                 $this->chargeWallet($main_order->price_after_offer, $order->client_id);

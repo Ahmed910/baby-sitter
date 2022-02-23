@@ -122,10 +122,19 @@ class OrderController extends Controller
 
     public function cancelOrder($order_id)
     {
+        $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
+        if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::MONTH_SERVICE){
+            $order_for_center = CenterOrder::where(['status' => Statuses::PROCESS, 'main_order_id' => $main_order->id])->firstOrFail();
+            // $order = $order_for_center->months->month_dates()->where(['order_month_dates.status' => Statuses::WAITING])->orderBy('order_month_dates.date', 'ASC')->firstOrFail();
+            $order = OrderMonthDate::where(['status' => Statuses::WAITING,'order_month_id'=>$order_for_center->months->id])->orderBy('date', 'ASC')->firstOrFail();
+        }
+        if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::HOUR_SERVICE){
+            $order = CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
+        }
         DB::beginTransaction();
 
         try {
-            $main_order = MainOrder::where('center_id', auth('api')->id())->findOrFail($order_id);
+
 
             $fcm_notes = [
                 'title' => trans('dashboard.notification.order_has_been_rejected_title', [], $main_order->client->current_lang),
@@ -133,20 +142,14 @@ class OrderController extends Controller
                 'sender_data' => new SenderResource(auth('api')->user())
             ];
             // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-            $center_order = CenterOrder::findOrFail($main_order->center_order->id);
-            if ($center_order->status == 'waiting' || $center_order->status == 'process') {
-                $center_order_period = optional($center_order->service)->service_type == 'hour'
-                    ? $center_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
-                    : $center_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
+            $service_id = optional($main_order->center_order)->service_id;
+            if($service_id == Statuses::HOUR_SERVICE){
+                $order->update(['status' => 'canceled']);
+                $this->chargeWallet($main_order->price_after_offer, $order->client_id);
+            }else{
+
+                $order->update(['status' => 'canceled']);
             }
-
-            if (isset($center_order_period) && $center_order_period) {
-                return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
-            }
-            $center_order->update(['status' => 'canceled']);
-
-
-            $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
             DB::commit();
             $main_order->refresh();
             $main_order->client->notify(new CancelOrderNotification($main_order, ['database']));
