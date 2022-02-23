@@ -32,21 +32,12 @@ class AgoraController extends Controller
             }
             $order->update($agora_data);
             // notification to client
+            if($order->sitter_id == auth('api')->id()){
+                
+            }
             $data = [
-                'key' => "client_start_order",
-                'key_type' => "order",
-                'key_id' => $order->id,
-                'sound' => 'ring.mp3',
-                'order_type' => $order->type_order,
-                'status' => $order->status,
-                'title' => [
-                    'ar' => trans('app.notification.title.client_start_order', ['sender_name' => auth('api')->user()->fullname, 'order_number' => $order->id], 'ar'),
-                    'en' => trans('app.notification.title.client_start_order', ['sender_name' => auth('api')->user()->fullname, 'order_number' => $order->id], 'en'),
-                ],
-                'body' => [
-                    'ar' => trans('app.notification.body.client_start_order', ['sender_name' => auth('api')->user()->fullname, 'conusltation_number' => $order->id], 'ar'),
-                    'en' => trans('app.notification.body.client_start_order', ['sender_name' => auth('api')->user()->fullname, 'conusltation_number' => $order->id], 'en'),
-                ],
+                'title'=>trans('dashboard.notification.meeting_has_been_started_title',[],auth('api')->user),
+                'body'=> ['dashboard.notification.meeting_has_been_started_body'],
                 'sender_data' => new SenderResource(auth('api')->user()),
                 'agora_data' => $agora_data
             ];

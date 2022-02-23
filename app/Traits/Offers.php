@@ -46,7 +46,8 @@ trait Offers{
         }
 
         $offer->update($request->validated()+['status'=>'active']);
-        return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_has_been_activated')]);
+        return (new SingleOfferResource($offer))->additional(['status'=>'success','message'=>trans('api.messages.offer_has_been_activated')]);
+        // return response()->json(['data'=>null,'status'=>'success','message'=>trans('api.messages.offer_has_been_activated')]);
     }
 
     protected function inactiveForOffer($id)

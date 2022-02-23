@@ -723,10 +723,13 @@ return [
     'add_notification' => 'إضافة تنبية',
     'order_has_been_created_title'=>'تم إنشاء طلب حجز',
     'order_has_been_created_body'=>'تم إنشاء طلب حجز من قبل ',
+    'meeting_has_been_started_title'=>'تم إنشاء مكالمة فيديو',
+    'meeting_has_been_started_body'=>'تم إنشاء مكالمة فيديو من قبل',
     'send_notification' => 'إرسال تنبية',
     'last_notifications' => 'آخر التنبيهات',
     'no_notifications' => 'لاتوجد تنبيهات',
     'sender' => 'المرسل',
+
     'order_number' => "الطلب رقم :number",
     'order_refund_number' => "طلب الاسترجاع رقم :number",
     'new_order_title' => "طلب جديد",

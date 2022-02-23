@@ -44,10 +44,10 @@ class StartMeetingNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title'=>['dashboard.notification.order_has_been_accepted_title'],
-            'body'=> ['dashboard.notification.order_has_been_accepted_body'],
+            'title'=>['dashboard.notification.meeting_has_been_started_title'],
+            'body'=> ['dashboard.notification.meeting_has_been_started_body'],
             'sender_data' => new SenderResource(auth('api')->user()),
-            'notify_type'=>'change_order_status',
+            'notify_type'=>'start_meeting',
             'route' => route('dashboard.orders.show',$this->order->id),
             'order_id' => optional($this->order)->id,
         ];
