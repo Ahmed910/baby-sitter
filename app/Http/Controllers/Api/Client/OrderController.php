@@ -88,22 +88,14 @@ class OrderController extends Controller
     {
 
         $main_order = MainOrder::where('client_id', auth('api')->id())->findOrFail($order_id);
+
+        $sitter_order =$main_order->to == 'sitter' ? SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id) : CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
         DB::beginTransaction();
 
         try {
-            if ($main_order->to == 'sitter') {
-                // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-                $sitter_order = SitterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->sitter_order->id);
-                if (in_array($sitter_order->status, ['pending', 'waiting'])) {
-                    $sitter_order_period = optional($sitter_order->service)->service_type == 'hour'
-                        ? $sitter_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
-                        : $sitter_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
-                }
-                // dd(Carbon::now()->addDay());
 
-                if (isset($sitter_order_period) && $sitter_order_period) {
-                    return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
-                }
+                // $main_order->sitter_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
+
                 //if($sitter_order->status == 'pending' && optional($sitter_order->service)->service_type =='hour' &&  optional($sitter_order->hours)->date )
                 $sitter_order->update(['status' => 'canceled']);
 
@@ -111,25 +103,7 @@ class OrderController extends Controller
 
                 $this->chargeWallet($main_order->price_after_offer, $sitter_order->client_id);
                 // }
-                $user = $main_order->sitter;
-            } else {
-                //$main_order->center_order()->whereIn('status',['pending','waiting'])->update(['status'=>'canceled']);
-                $center_order = CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
-                if (in_array($center_order->status, ['pending', 'waiting'])) {
-                    $center_order_period = optional($center_order->service)->service_type == 'hour'
-                        ? $center_order->hours()->whereBetween('date', [Carbon::now(), Carbon::now()->addDay()])->first()
-                        : $center_order->months()->whereBetween('start_date', [Carbon::now(), Carbon::now()->addDay()])->first();
-                }
-
-                if (isset($center_order_period) && $center_order_period) {
-                    return response()->json(['data' => null, 'status' => 'fail', 'message' => __('api.messages.cannot_cancel_order_before_start_by_24_hour')], 400);
-                }
-                $center_order->update(['status' => 'canceled']);
-
-                // if ($center_order->pay_type == 'wallet') {
-                $this->chargeWallet($main_order->price_after_offer, $center_order->client_id);
-                // }
-                $user = $main_order->center;
+                $user = $main_order->to =='sitter' ? $main_order->sitter : $main_order->center;
             }
 
             DB::commit();
