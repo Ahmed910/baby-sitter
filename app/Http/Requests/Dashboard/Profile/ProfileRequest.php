@@ -24,7 +24,7 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'fullname' => 'required|string|between:2,200',
+            'name' => 'required|string|between:2,200',
             'email' => 'required|email|unique:users,email,' . auth()->id(),
             'phone' => 'required|numeric|digits_between:5,20|unique:users,phone,' . auth()->id(),
             // 'identity_number' => 'required|numeric|unique:users,identity_number,' . auth()->id(),

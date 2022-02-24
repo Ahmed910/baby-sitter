@@ -46,6 +46,7 @@ class NotificationController extends Controller
                 $q->whereIn('notifiable_id',$superAdmins);
             })->findOrFail($id);
             if (!$notification->read_at) {
+              
                $notification->update(['read_at' => now()]);
             }
             return view('dashboard.notification.show',compact('notification'));
