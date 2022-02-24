@@ -101,7 +101,7 @@ class OrderController extends Controller
             $service_id = optional($main_order->sitter_order)->service_id ;
             if($service_id == Statuses::HOUR_SERVICE){
                 $order->update(['status' => 'canceled']);
-                $this->chargeWallet($main_order->price_after_offer, $order->client_id);
+                $this->chargeWallet($main_order->price_after_offer, $main_order->client_id);
             }else{
 
                 $order->update(['status' => 'canceled']);
