@@ -108,12 +108,14 @@ class OrderController extends Controller
             if($main_order->to == 'center' && optional($main_order->center_order)->service_id == Statuses::HOUR_SERVICE){
                 $order = CenterOrder::whereIn('status', ['pending', 'waiting'])->findOrFail($main_order->center_order->id);
             }
-
+             
         DB::beginTransaction();
 
         try {
-            $service_id = $order->to == 'sitter' ? optional($main_order->sitter_order)->service_id : optional($main_order->center_order)->service_id;
+            $service_id = $main_order->to == 'sitter' ? optional($main_order->sitter_order)->service_id : optional($main_order->center_order)->service_id;
+            // dd($service_id);
             if($service_id == Statuses::HOUR_SERVICE){
+               
                 $order->update(['status' => 'canceled']);
                 $this->chargeWallet($main_order->price_after_offer, $order->client_id);
             }else{
