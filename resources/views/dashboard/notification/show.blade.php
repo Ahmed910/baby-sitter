@@ -32,7 +32,7 @@
 		<div class="card-body">
 			<div class="media align-items-center align-items-lg-start text-center text-lg-left flex-column flex-lg-row">
 				<div class="mr-lg-3 mb-3 mb-lg-0">
-					<a href="{{ isset($notification->data['sender_data']) && isset($notification->data['sender_data']['avatar']) ? $notification->data['sender_data']['avatar'] : asset('storage/images/defaults/notification.png') }}"
+					<a href="{{ isset($notification->data['sender_data']) && isset($notification->data['sender_data']['image']) ? $notification->data['sender_data']['image'] : asset('storage/images/defaults/notification.png') }}"
 						data-popup="lightbox">
 						<img src="{{ asset('storage/images/defaults/notification.png') }}" width="60" alt="">
 					</a>
@@ -48,9 +48,9 @@
 					<p class="mb-3">{{ $body . $notification->data['sender_data']['fullname'] }}</p>
 					<ul class="list-inline list-inline-dotted mb-0">
 						<li class="list-inline-item">{{ trans('dashboard.notification.sender') }}
-							@if (isset($notification->data['sender']))
+							@if (isset($notification->data['sender_data']))
 							<a
-								href="{{ json_decode($notification->data['sender'])->user_type == 'client' ? route('dashboard.client.show',json_decode($notification->data['sender'])->id) : '#' }}">{{ json_decode($notification->data['sender'])->fullname }}</a>
+								href="{{ $notification->data['sender_data']['user_type'] == 'client' ? route('dashboard.client.show',$notification->data['sender_data']['id']) : '#' }}">{{ $notification->data['sender_data']['fullname'] }}</a>
 							@endif
 						</li>
 						@if (isset($notification->data['route']) && $notification->data['route'])
@@ -59,9 +59,9 @@
 					</ul>
 				</div>
 				<div class="mt-3 mt-lg-0 ml-lg-3 text-center">
-					<a href="{{ isset($notification->data['sender']) && isset(json_decode($notification->data['sender'])->avatar) ? json_decode($notification->data['sender'])->avatar : asset('storage/images/defaults/default.jpg') }}"
+					<a href="{{ isset($notification->data['sender_data']) && isset($notification->data['sender_data']['image']) ? $notification->data['sender_data']['image'] : asset('storage/images/defaults/default.jpg') }}"
 						data-popup="lightbox">
-						<img src="{{ isset($notification->data['sender']) && isset(json_decode($notification->data['sender'])->avatar) ? json_decode($notification->data['sender'])->avatar : asset('storage/images/defaults/default.jpg') }}" width="96"
+						<img src="{{ isset($notification->data['sender_data']) && isset($notification->data['sender_data']['image']) ? $notification->data['sender_data']['image'] : asset('storage/images/defaults/default.jpg') }}" width="96"
 							alt="">
 					</a>
 				</div>
