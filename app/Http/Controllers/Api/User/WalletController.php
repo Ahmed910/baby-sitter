@@ -45,6 +45,7 @@ class WalletController extends Controller
             $wallet_withdraw->wallet()->create(['amount'=>$request->amount,'transaction_type'=>$request->transaction_type,'user_id' => auth('api')->id()]);
             //  $wallet_before = $user->wallet;
             // $wallet_after = $wallet_before - $request->amount;
+            
             // $user->update(['wallet'=>$wallet_after]); 
             
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.request_has_been_sent')]);
