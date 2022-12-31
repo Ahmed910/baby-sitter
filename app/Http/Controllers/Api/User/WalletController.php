@@ -46,8 +46,8 @@ class WalletController extends Controller
             //  $wallet_before = $user->wallet;
             // $wallet_after = $wallet_before - $request->amount;
             
-            // $user->update(['wallet'=>$wallet_after]); 
-            
+            // $user->update(['wallet'=>$wallet_after]);
+
             return response()->json(['data' => null, 'status' => 'success', 'message' => trans('api.messages.request_has_been_sent')]);
 
     }
